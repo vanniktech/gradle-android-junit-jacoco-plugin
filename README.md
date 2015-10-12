@@ -1,5 +1,7 @@
 # gradle-android-junit-jacoco-plugin
 
+[![Build Status](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin.svg)](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin)
+
 Gradle plugin that generates JaCoCo reports from an Android Gradle Project.
 
 # Set up
