@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin.svg)](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Gradle plugin that generates JaCoCo reports from an Android Gradle Project.
+Gradle plugin that generates JaCoCo reports from an Android Gradle Project. It goes over every subproject and creates the `jacocoReport` task.
 
 # Set up
 
-## Root build.gradle
+**root/build.gradle**
 
 ```groovy
 apply plugin: "com.vanniktech.android.junit.jacoco"
@@ -24,10 +24,29 @@ buildscript {
 }
 ```
 
-## Jacoco Reports
+## Get reports
 
 ```groovy
 ./gradlew jacocoReport
+```
+
+**XML reports**
+
+```
+<subproject>/build/reports/jacoco/jacoco.xml
+```
+
+**HTML reports**
+
+```
+<subproject>/build/reports/jacoco/index.html
+```
+
+**Exec files**
+
+```
+<subproject>/build/jacoco/testDebugUnitTest.exec
+<subproject>/build/jacoco/testReleaseUnitTest.exec
 ```
 
 # License
