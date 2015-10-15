@@ -10,16 +10,16 @@ Gradle plugin that generates JaCoCo reports from an Android Gradle Project. It g
 **root/build.gradle**
 
 ```groovy
-apply plugin: "com.vanniktech.android.junit.jacoco"
+apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 buildscript {
     repositories {
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.vanniktech:gradle-android-junit-jacoco-plugin:0.1.0"
+        classpath 'gradle.plugin.com.vanniktech:gradle-android-junit-jacoco-plugin:0.1.0'
     }
 }
 ```
