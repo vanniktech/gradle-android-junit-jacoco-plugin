@@ -5,6 +5,8 @@
 
 Gradle plugin that generates JaCoCo reports from an Android Gradle Project. It goes over every subproject and creates the `jacocoReport` task.
 
+Works with the latest Gradle Android Tools version 1.3.1.
+
 # Set up
 
 **root/build.gradle**
