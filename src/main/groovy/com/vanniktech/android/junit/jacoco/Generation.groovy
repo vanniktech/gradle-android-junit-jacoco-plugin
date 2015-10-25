@@ -11,7 +11,7 @@ class Generation implements Plugin<Project> {
             subProject.plugins.apply('jacoco')
 
             jacoco {
-                version '0.7.2.201409121644'
+                toolVersion '0.7.2.201409121644'
             }
 
             subProject.task("jacocoReport", type: JacocoReport, dependsOn: 'testDebugUnitTest') {
