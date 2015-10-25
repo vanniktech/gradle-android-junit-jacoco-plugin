@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = 'com.vanniktech'
-version = '0.1.0'
+version = '0.1.1'
 
 pluginBundle {
     website = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
@@ -40,7 +40,6 @@ pluginBundle {
             displayName = 'Gradle Android JaCoCo Plugin'
             tags = ['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage']
             description = 'Gradle plugin that generates JaCoCo reports from an Android Gradle Project'
-            version = '0.1.0'
         }
     }
 }
