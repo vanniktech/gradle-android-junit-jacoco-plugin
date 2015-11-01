@@ -21,7 +21,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'gradle.plugin.com.vanniktech:gradle-android-junit-jacoco-plugin:0.1.1'
+        classpath 'gradle.plugin.com.vanniktech:gradle-android-junit-jacoco-plugin:0.2.0'
     }
 }
 ```

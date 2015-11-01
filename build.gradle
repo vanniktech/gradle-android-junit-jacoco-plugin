@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = 'com.vanniktech'
-version = '0.1.1'
+version = '0.2.0'
 
 pluginBundle {
     website = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
