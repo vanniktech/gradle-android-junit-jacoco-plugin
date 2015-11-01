@@ -10,11 +10,11 @@ class Generation implements Plugin<Project> {
         project.subprojects { subProject ->
             subProject.plugins.apply('jacoco')
 
-            jacoco {
+            subProject.jacoco {
                 toolVersion '0.7.2.201409121644'
             }
 
-            subProject.task("jacocoReport", type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+            subProject.task('jacocoReport', type: JacocoReport, dependsOn: 'testDebugUnitTest') {
                 group = 'Reporting'
                 description = 'Generate Jacoco coverage reports after running tests.'
 
@@ -47,6 +47,37 @@ class Generation implements Plugin<Project> {
                         }
                     }
                 }
+            }
+        }
+
+        project.plugins.apply('jacoco')
+
+        project.jacoco {
+            toolVersion '0.7.2.201409121644'
+        }
+
+        project.task('jacocoFullReport', type: JacocoReport, group: 'Coverage reports') {
+            group = 'Reporting'
+            description = 'Generate Jacoco coverage reports aggregated from all subprojects.'
+            dependsOn(project.subprojects.jacocoReport)
+
+            executionData = project.files(project.subprojects.jacocoReport.executionData)
+            classDirectories = project.files(project.subprojects.jacocoReport.classDirectories)
+            sourceDirectories = project.files(project.subprojects.jacocoReport.sourceDirectories)
+
+            reports {
+                xml {
+                    enabled = true
+                    destination "${project.buildDir}/reports/jacoco/full/jacoco.xml"
+                }
+                html {
+                    enabled = true
+                    destination "${project.buildDir}/reports/jacoco/full"
+                }
+            }
+
+            doFirst {
+                executionData = project.files(executionData.findAll { it.exists() })
             }
         }
     }
