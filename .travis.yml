@@ -1,2 +1,15 @@
 language: groovy
+
+env:
+    global:
+        - secure: "bhL77OtWYWgz+wL/PhLMp72B5d37eIxr6F5XlVPjDkXqGw3F2Axf4UlKMYYu3UpjhBxIyeHiSU6bRLo4bwMa7B0/nBnUYdDgPO2s3a1/2z3kesxm83iVA+FSE4LWVoQi2+c2MEsnzniAtKsxM1svdaqTcP7XQ0h8J8/oKikpPdWiK+G/RYYWSr6bFwAuB+3VSGeRXwncY6aUMBoruCziLRhbKDoEwTym72fmo8kEp/eaQO2DIHLfdxkK9zg9ijZAirpaIm+JCJvqK4+0zTgzDGv46UCTSxaZtVZfXlUH/wypcWYgFqX89jFIdl9Xn5K/dWKaJKj/Az+Xt0yENY6sMJr8Tdpd6Df8L1GmjHGBufraCiko6g6ZamX+Nbu7ZQIMFV17hp4YsTEYuc/O00egb/CI4Ygjg/GxjgBg1hgDzzmTDoTOFm0RiUj1DOKCivCSZcCEzIwcEEy9+qopWjWmIBZI02lRLjZghKKC7MtITVc8E+0nZD8RuZB5WqjOz9tBnJQdy/w5IFKbVWmxrz1neEaQIXa91oup4//fTVkokXmIbhDP2K7XGiJ5+j9DxR65yxhrIk3SEqpdprxojFnyao8WWug1gOJmEORb9etxBGTwP9wRfQgciZHw8nzT0RekyeymM4VpABL1frLZ7M8Gz7LFhNhvMq6I8Zq94z9KSxk="
+        - secure: "36G/7z3B0ZCq2Mnf4WeGYii/CzcUXoftJAS4biHKNIIGPXL4sKeTXFucNFrHGeK/n0F5O+B+IFHsR+Ef10e+tzk6kMfJjC20leYdupxc8sbZv3gTUvRT8tns+4Nd/mwW+4St0Wx65NkREJPMqs3DbubbhVMC4pfUIBfO2SPv5qkGTUmH84bObvWWHG7d8C6RGHqQJzSAfWZUfdUDvIJadiAUtgEksfbatpQ4jjsEtv0uDXwACoi/8Zuc0ttmjAvSZUENY5Zw+idPVrNN+kOZiXpGppaEQLfAusX8r/G0xf6XbgwXI1LNMZFMhvIhwvO64PxvheTP8U14IhC97T50GXjIAJNnCiBqEiu0RGoioFadE1DAs4DbMJbI3CbB2m8/Dc0RVmaYLkHrLvjk7EWBy9XbigGljaoWpkbpPkneKn1lTTbBciysoeODbPI0QRouYNWVe57YZoVqGFvt8bhh7okkVaJl0yqLuRLBkyYkQ9mRvH5GqcTx9VrtXv4NCobvdQbbdGSnGrUwOOIm1slR5+kMyfnYIVcS4wW98iyn4L7QlfypynV1Wh/0TLMbI7jy34Jrteg44v/7K+0159v6W54Dc19GnEeIRp3TWeEo6OHpfUedPlUgFjRT8SWCrZq9Qk/belXEF1ZS3HyZGbC5AAeNyT62SxrreUX/Vzb3ces="
+
 script: ./gradlew clean build
+
+after_success:
+    - .buildscript/deploy_snapshot.sh
+
+cache:
+    directories:
+        - $HOME/.gradle
