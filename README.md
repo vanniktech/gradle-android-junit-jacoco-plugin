@@ -78,10 +78,8 @@ classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.2.1-SNAPSHOT'
 <root>/build/reports/jacoco/full/index.html
 ```
 
-
-
 # License
 
-Copyright (C) 2014-2015 Vanniktech - Niklas Baudy
+Copyright (C) 2015 Vanniktech - Niklas Baudy
 
 Licensed under the Apache License, Version 2.0
