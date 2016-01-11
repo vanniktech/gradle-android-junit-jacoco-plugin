@@ -34,8 +34,8 @@ group = GROUP
 version = VERSION_NAME
 
 pluginBundle {
-    website = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
-    vcsUrl = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
+    website = POM_URL
+    vcsUrl = POM_SCM_URL
 
     plugins {
         androidJaCoCo {
