@@ -33,7 +33,8 @@ class Generation implements Plugin<Project> {
                         dir: 'build/intermediates/classes/debug',
                         excludes: [
                                 '**/R*.class',
-                                '**/BuildConfig*'
+                                '**/BuildConfig*',
+                                '**/*$$*'
                         ]
                 )
 
