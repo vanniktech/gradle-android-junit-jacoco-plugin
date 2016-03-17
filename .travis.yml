@@ -31,3 +31,4 @@ sudo: false
 cache:
     directories:
         - $HOME/.gradle
+        - $HOME/.m2
