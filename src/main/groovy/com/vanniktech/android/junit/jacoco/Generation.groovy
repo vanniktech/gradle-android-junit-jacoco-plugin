@@ -7,11 +7,13 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 class Generation implements Plugin<Project> {
     @Override
     void apply(final Project project) {
+        project.extensions.create('junitJacoco', JunitJacocoExtension)
+
         project.subprojects { subProject ->
             subProject.plugins.apply('jacoco')
 
             subProject.jacoco {
-                toolVersion '0.7.2.201409121644'
+                toolVersion project.junitJacoco.jacocoVersion
             }
 
             subProject.task('jacocoReport', type: JacocoReport, dependsOn: 'testDebugUnitTest') {
@@ -61,7 +63,7 @@ class Generation implements Plugin<Project> {
         project.plugins.apply('jacoco')
 
         project.jacoco {
-            toolVersion '0.7.2.201409121644'
+            toolVersion project.junitJacoco.jacocoVersion
         }
 
         project.task('jacocoFullReport', type: JacocoReport, group: 'Coverage reports') {
