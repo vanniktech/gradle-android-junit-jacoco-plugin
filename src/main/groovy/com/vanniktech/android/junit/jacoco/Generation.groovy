@@ -31,11 +31,18 @@ class Generation implements Plugin<Project> {
 
                 classDirectories = fileTree(
                         dir: 'build/intermediates/classes/debug',
-                        excludes: [
-                                '**/R*.class',
-                                '**/BuildConfig*',
-                                '**/*$$*'
-                        ]
+                        excludes: ['**/R.class',
+                                   '**/R$*.class',
+                                   '**/*$$*',
+                                   '**/*$ViewInjector*.*',
+                                   '**/*$ViewBinder*.*',
+                                   '**/BuildConfig.*',
+                                   '**/Manifest*.*',
+                                   '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
+                                   '**/*Dagger*.*', // Dagger auto-generated code.
+                                   '**/*MembersInjector*.*', // Dagger auto-generated code.
+                                   '**/*_Provide*Factory*.*' // Dagger auto-generated code.
+                       ]
                 )
 
                 sourceDirectories = files('src/main/java')
