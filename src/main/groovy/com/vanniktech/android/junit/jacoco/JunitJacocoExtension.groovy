@@ -10,4 +10,10 @@ class JunitJacocoExtension {
      * @since 0.3.0
      */
     String jacocoVersion = '0.7.2.201409121644'
+
+    /**
+     * subprojects that should be ignored
+     * @since 0.3.0
+     */
+    String[] ignoreProjects = []
 }
