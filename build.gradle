@@ -36,7 +36,7 @@ pluginBundle {
     vcsUrl = POM_SCM_URL
 
     plugins {
-        androidJaCoCo {
+        androidJacoco {
             id = 'com.vanniktech.android.junit.jacoco'
             displayName = POM_NAME
             tags = ['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage']

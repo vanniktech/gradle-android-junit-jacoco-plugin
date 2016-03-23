@@ -2,11 +2,27 @@
 
 [![Build Status](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin.svg?branch=master)](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![Java 8 required](https://img.shields.io/badge/java-8-brightgreen.svg)
+![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
-Gradle plugin that generates JaCoCo reports from an Android Gradle Project. It goes over every subproject and creates the `jacocoReport` task. If you want an aggregated report from all subprojects use the `jacocoFullReport` task.
+Gradle plugin that generates Jacoco reports from a Gradle Project. Android Application, Android Library and Java Plugins are supported by this plugin. When this plugin is applied it goes over every subproject and creates the corresponding Jacoco tasks.
 
-Works with the latest Gradle Android Tools version 1.5.0. This plugin is compiled using Java 8 hence you also need Java 8 in order to use it.
+### Android project
+
+- Task `jacocoTestReport<BuildType>`
+  - Executes the `test<BuildType>` task before
+  - Gets executed when the `check` task is executed
+  - Generated Jacoco reports can be found under `build/reports/jacoco/<BuildType>`.
+
+Where `<BuildType>` usually is `debug` and `release` unless additional build types where specified. For instance when having `debug` and `release` build types the following tasks would be created: `jacocoTestReportDebug`, `jacocoTestReportRelease`.
+
+### Java project
+
+- Task `jacocoTestReport`
+  - Executes the `test` task before
+  - Gets executed when the `check` task is executed
+  - Generated Jacoco reports can be found under `build/reports/jacoco/`.
+
+Works with the latest Gradle Android Tools version 1.5.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
@@ -18,7 +34,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.2.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.3.0'
     }
 }
 
@@ -35,47 +51,15 @@ Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-android-
 classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.2.1-SNAPSHOT'
 ```
 
-## Get reports for each subproject
+### Configuration (since 0.3.0)
+
+Those are all available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/android/junit/jacoco/JunitJacocoExtension.groovy).
 
 ```groovy
-./gradlew jacocoReport
-```
-
-**XML reports**
-
-```
-<subproject>/build/reports/jacoco/jacoco.xml
-```
-
-**HTML reports**
-
-```
-<subproject>/build/reports/jacoco/index.html
-```
-
-**Exec files**
-
-```
-<subproject>/build/jacoco/testDebugUnitTest.exec
-<subproject>/build/jacoco/testReleaseUnitTest.exec
-```
-
-## Get aggreated report from all subprojects
-
-```groovy
-./gradlew jacocoFullReport
-```
-
-**XML reports**
-
-```
-<root>/build/reports/jacoco/full/jacoco.xml
-```
-
-**HTML reports**
-
-```
-<root>/build/reports/jacoco/full/index.html
+junitJacoco {
+    jacocoVersion = '0.7.2.201409121644' // type String
+    ignoreProjects = [] // type String array
+}
 ```
 
 # License
