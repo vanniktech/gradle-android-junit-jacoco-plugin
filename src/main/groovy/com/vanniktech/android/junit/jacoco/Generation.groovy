@@ -9,11 +9,21 @@ class Generation implements Plugin<Project> {
     void apply(final Project rootProject) {
         rootProject.extensions.create('junitJacoco', JunitJacocoExtension)
 
-        rootProject.subprojects { subProject ->
-            afterEvaluate {
+        final def hasSubProjects = rootProject.subprojects.size() > 0
+
+        if (hasSubProjects) {
+            rootProject.subprojects { subProject ->
+                afterEvaluate {
+                    final def extension = rootProject.junitJacoco
+
+                    addJacoco(subProject, extension)
+                }
+            }
+        } else {
+            rootProject.afterEvaluate {
                 final def extension = rootProject.junitJacoco
 
-                addJacoco(subProject, extension)
+                addJacoco(rootProject, extension)
             }
         }
     }
