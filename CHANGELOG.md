@@ -1,7 +1,9 @@
 # Change Log
 
-Version 0.4.0 *(In development)*
+Version 0.4.0 *(2016-04-10)*
 --------------------------------
+
+- Add Single project support [\#25](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/25) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.3.0 *(2016-03-23)*
 --------------------------------
