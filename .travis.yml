@@ -7,6 +7,9 @@ groovy:
 jdk:
     - oraclejdk8
 
+before_install:
+    - pip install --user codecov
+
 install: true
 
 script: ./gradlew clean build
@@ -22,6 +25,9 @@ env:
 branches:
     except:
         - gh-pages
+
+after_success:
+    - codecov
 
 notifications:
     email: false
