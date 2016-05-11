@@ -23,7 +23,7 @@ Where `<BuildType>` usually is `debug` and `release` unless additional build typ
   - Gets executed when the `check` task is executed
   - Generated Jacoco reports can be found under `build/reports/jacoco/`.
 
-Works with the latest Gradle Android Tools version 1.5.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 2.1.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
