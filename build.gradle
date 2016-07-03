@@ -25,6 +25,8 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
     compile 'com.android.tools.build:gradle:2.1.0'
+
+    testCompile 'junit:junit:4.12'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -47,7 +49,7 @@ pluginBundle {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '2.14'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
