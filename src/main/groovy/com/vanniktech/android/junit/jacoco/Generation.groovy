@@ -85,7 +85,7 @@ class Generation implements Plugin<Project> {
         }
 
         final def buildTypes = subProject.android.buildTypes.collect { type -> type.name }
-        final def productFlavors = android.productFlavors.collect { flavor -> flavor.name }
+        final def productFlavors = subProject.android.productFlavors.collect { flavor -> flavor.name }
 
         // When no product flavors defined, use empty
         if (!productFlavors) productFlavors.add('')
