@@ -85,42 +85,57 @@ class Generation implements Plugin<Project> {
         }
 
         final def buildTypes = subProject.android.buildTypes.collect { type -> type.name }
+        final def productFlavors = android.productFlavors.collect { flavor -> flavor.name }
 
-        buildTypes.each { buildTypeName ->
-            final def taskName = "jacocoTestReport${buildTypeName.capitalize()}"
-            final def testTaskName = "test${buildTypeName.capitalize()}UnitTest"
+        // When no product flavors defined, use empty
+        if (!productFlavors) productFlavors.add('')
 
-            subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
-                group = 'Reporting'
-                description = "Generate Jacoco coverage reports after running ${buildTypeName} tests."
+        productFlavors.each { productFlavorName ->
+            buildTypes.each { buildTypeName ->
 
-                reports {
-                    xml {
-                        enabled = true
-                        destination "${subProject.buildDir}/reports/jacoco/${buildTypeName}/jacoco.xml"
+                def sourceName, sourcePath
+                if (!productFlavorName) {
+                    sourceName = sourcePath = "${buildTypeName}"
+                } else {
+                    sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
+                    sourcePath = "${productFlavorName}/${buildTypeName}"
+                }
+                final def testTaskName = "test${sourceName.capitalize()}UnitTest"
+                final def taskName = "jacocoTestReport${sourceName.capitalize()}"
+
+                subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
+                    group = 'Reporting'
+                    description = "Generate Jacoco coverage reports after running ${sourceName.capitalize()} tests."
+
+                    reports {
+                        xml {
+                            enabled = true
+                            destination "${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml"
+                        }
+                        html {
+                            enabled = true
+                            destination "${subProject.buildDir}/reports/jacoco/${sourceName}"
+                        }
                     }
-                    html {
-                        enabled = true
-                        destination "${subProject.buildDir}/reports/jacoco/${buildTypeName}"
-                    }
+
+                    classDirectories = subProject.fileTree(
+                            dir: "${subProject.buildDir}/intermediates/classes/${sourcePath}",
+                            excludes: getExcludes()
+                    )
+
+                    final def coverageSourceDirs = [
+                            "src/main/java",
+                            "src/$productFlavorName/java",
+                            "src/$buildTypeName/java"
+                    ]
+
+                    additionalSourceDirs = subProject.files(coverageSourceDirs)
+                    sourceDirectories = subProject.files(coverageSourceDirs)
+                    executionData = subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
                 }
 
-                classDirectories = subProject.fileTree(
-                        dir: "build/intermediates/classes/${buildTypeName}",
-                        excludes: getExcludes()
-                )
-
-                final def coverageSourceDirs = [
-                        'src/main/java',
-                        "src/$buildTypeName/java"
-                ]
-
-                additionalSourceDirs = subProject.files(coverageSourceDirs)
-                sourceDirectories = subProject.files(coverageSourceDirs)
-                executionData = subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
+                subProject.check.dependsOn "${taskName}"
             }
-
-            subProject.check.dependsOn "${taskName}"
         }
     }
 
