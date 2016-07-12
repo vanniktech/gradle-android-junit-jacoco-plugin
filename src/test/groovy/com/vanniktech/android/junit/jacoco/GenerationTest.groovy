@@ -11,7 +11,7 @@ import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
 public class GenerationTest {
 
     @Test
-    public void addJacocoAnroidAppWithFlavors() {
+    public void addJacocoAndroidAppWithFlavors() {
 
         // Given
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).withRedBlueFlavors().get()
@@ -24,7 +24,7 @@ public class GenerationTest {
     }
 
     @Test
-    public void addJacocoAnroidLibraryWithFlavors() {
+    public void addJacocoAndroidLibraryWithFlavors() {
 
         // Given
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).withRedBlueFlavors().get()
