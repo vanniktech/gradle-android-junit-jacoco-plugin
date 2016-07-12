@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 
 public class GenerationTest {
+
     private Project rootProject
     private Project javaProject
     private Project androidAppProject
@@ -36,14 +37,14 @@ public class GenerationTest {
     public void addJacocoAndroidApp() {
         Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
 
-        assertJacocoAndroid(androidAppProject)
+        assertJacocoAndroidWithoutFlavors(androidAppProject)
     }
 
     @Test
     public void addJacocoAndroidLibrary() {
         Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        assertJacocoAndroid(androidLibraryProject)
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject)
     }
 
     @Test
@@ -79,7 +80,7 @@ public class GenerationTest {
         }
     }
 
-    private void assertJacocoAndroid(final Project project) {
+    private void assertJacocoAndroidWithoutFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
         assert project.jacoco.toolVersion == '0.7.2.201409121644'

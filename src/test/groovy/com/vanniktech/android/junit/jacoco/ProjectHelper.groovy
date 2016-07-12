@@ -11,7 +11,7 @@ public class ProjectHelper {
     private final ProjectType projectType;
     private final Project project;
 
-    public ProjectHelper(ProjectType projectType) {
+    private ProjectHelper(ProjectType projectType) {
         this.projectType = projectType;
 
         switch (projectType){
@@ -67,6 +67,16 @@ public class ProjectHelper {
      */
     public Project get(){
         return project
+    }
+
+    /**
+     * 
+     *
+     * @param projectType
+     * @return
+     */
+    public static ProjectHelper prepare(ProjectType projectType){
+        return new ProjectHelper(projectType)
     }
 
     /**
