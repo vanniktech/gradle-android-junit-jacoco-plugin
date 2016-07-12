@@ -8,61 +8,65 @@ import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.Before
 import org.junit.Test
 
+import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
+
 public class GenerationTest {
-
-    private Project rootProject
-    private Project javaProject
-    private Project androidAppProject
-    private Project androidLibraryProject
-
-    private Project[] projects
-
-    @Before
-    public void setUp() {
-        rootProject = ProjectBuilder.builder().withName('root').build()
-
-        javaProject = ProjectBuilder.builder().withName('java').withParent(rootProject).build()
-        javaProject.plugins.apply('java')
-
-        androidAppProject = ProjectBuilder.builder().withName('android app').build()
-        androidAppProject.plugins.apply('com.android.application')
-
-        androidLibraryProject = ProjectBuilder.builder().withName('android library').build()
-        androidLibraryProject.plugins.apply('com.android.library')
-
-        projects = [javaProject, androidAppProject, androidLibraryProject]
-    }
 
     @Test
     public void addJacocoAndroidApp() {
+
+        // Given
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+
+        // When
         Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
 
+        // Then
         assertJacocoAndroidWithoutFlavors(androidAppProject)
     }
 
     @Test
     public void addJacocoAndroidLibrary() {
+
+        // Given
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+
+        // When
         Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
+        // Then
         assertJacocoAndroidWithoutFlavors(androidLibraryProject)
     }
 
     @Test
     public void addJacocoJava() {
+
+        // Given
+        def javaProject = ProjectHelper.prepare(JAVA).get()
+
+        // When
         Generation.addJacoco(javaProject, new JunitJacocoExtension())
 
+        // Then
         assertJacocoJava(javaProject)
     }
 
     @Test
     public void jacocoVersion() {
+
+        // Given
         final def extension = new JunitJacocoExtension()
         extension.jacocoVersion = '0.7.6.201602180812'
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+        def javaProject = ProjectHelper.prepare(JAVA).get()
 
+        // When
         Generation.addJacoco(androidAppProject, extension)
         Generation.addJacoco(androidLibraryProject, extension)
         Generation.addJacoco(javaProject, extension)
 
+        // Then
         assert androidAppProject.jacoco.toolVersion == '0.7.6.201602180812'
         assert androidLibraryProject.jacoco.toolVersion == '0.7.6.201602180812'
         assert javaProject.jacoco.toolVersion == '0.7.6.201602180812'
@@ -70,16 +74,69 @@ public class GenerationTest {
 
     @Test
     public void ignoreProjects() {
+        // Given
         final def extension = new JunitJacocoExtension()
+        final def projects = [
+                ProjectHelper.prepare(ANDROID_APPLICATION).get(),
+                ProjectHelper.prepare(ANDROID_LIBRARY).get(),
+                ProjectHelper.prepare(JAVA).get()] as Project[]
 
         for (final def project : projects) {
+            // When
             extension.ignoreProjects = [project.name]
 
+            // Then
             assert !Generation.addJacoco(project, extension)
             assert !project.plugins.hasPlugin(JacocoPlugin)
         }
     }
 
+    @Test
+    public void androidAppBuildExecutesJacocoTask() {
+
+        // Given
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+
+        // When
+        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
+
+        // Then
+        assert taskDependsOn(androidAppProject.check, 'jacocoTestReportDebug')
+        assert taskDependsOn(androidAppProject.check, 'jacocoTestReportRelease')
+    }
+
+    @Test
+    public void androidLibraryBuildExecutesJacocoTask() {
+
+        // Given
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+
+        // When
+        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+
+        // Then
+        assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportDebug')
+        assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportRelease')
+    }
+
+    @Test
+    public void javaBuildExecutesJacocoTask() {
+
+        // Given
+        def javaProject = ProjectHelper.prepare(JAVA).get()
+
+        // When
+        Generation.addJacoco(javaProject, new JunitJacocoExtension())
+
+        // Then
+        assert taskDependsOn(javaProject.check, 'jacocoTestReport')
+    }
+
+    /**
+     * Assert proper project construction for Android project without flavors
+     *
+     * @param project
+     */
     private void assertJacocoAndroidWithoutFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
@@ -144,6 +201,11 @@ public class GenerationTest {
         }
     }
 
+    /**
+     * Assert proper JAva project construction
+     *
+     * @param project
+     */
     private void assertJacocoJava(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
@@ -172,29 +234,6 @@ public class GenerationTest {
 
             assert taskDependsOn(task, 'test')
         }
-    }
-
-    @Test
-    public void androidAppBuildExecutesJacocoTask() {
-        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
-
-        assert taskDependsOn(androidAppProject.check, 'jacocoTestReportDebug')
-        assert taskDependsOn(androidAppProject.check, 'jacocoTestReportRelease')
-    }
-
-    @Test
-    public void androidLibraryBuildExecutesJacocoTask() {
-        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
-
-        assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportDebug')
-        assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportRelease')
-    }
-
-    @Test
-    public void javaBuildExecutesJacocoTask() {
-        Generation.addJacoco(javaProject, new JunitJacocoExtension())
-
-        assert taskDependsOn(javaProject.check, 'jacocoTestReport')
     }
 
     static boolean taskDependsOn(final Task task, final String taskName) {
