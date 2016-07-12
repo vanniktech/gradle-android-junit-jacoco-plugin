@@ -105,7 +105,7 @@ class Generation implements Plugin<Project> {
 
                 subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
                     group = 'Reporting'
-                    description = "Generate Jacoco coverage reports after running ${sourceName.capitalize()} tests."
+                    description = "Generate Jacoco coverage reports after running ${sourceName} tests."
 
                     reports {
                         xml {
@@ -125,9 +125,12 @@ class Generation implements Plugin<Project> {
 
                     final def coverageSourceDirs = [
                             "src/main/java",
-                            "src/$productFlavorName/java",
                             "src/$buildTypeName/java"
                     ]
+
+                    if (productFlavorName) {
+                        coverageSourceDirs.add("src/$productFlavorName/java")
+                    }
 
                     additionalSourceDirs = subProject.files(coverageSourceDirs)
                     sourceDirectories = subProject.files(coverageSourceDirs)

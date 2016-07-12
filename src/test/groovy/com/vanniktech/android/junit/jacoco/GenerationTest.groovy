@@ -1,7 +1,5 @@
 package com.vanniktech.android.junit.jacoco
 
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.internal.dsl.ProductFlavor
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
@@ -27,32 +25,11 @@ public class GenerationTest {
 
         androidAppProject = ProjectBuilder.builder().withName('android app').build()
         androidAppProject.plugins.apply('com.android.application')
-        provideFlavors(androidAppProject)
 
         androidLibraryProject = ProjectBuilder.builder().withName('android library').build()
         androidLibraryProject.plugins.apply('com.android.library')
 
         projects = [javaProject, androidAppProject, androidLibraryProject]
-    }
-
-    private void provideFlavors(Project project) {
-
-        def customFlavors = [
-                red: [
-                        applicationId: "com.example.red"
-                ],
-                blue: [
-                        applicationId: "com.example.blue"
-                ]
-        ]
-
-        project.android.productFlavors {
-            customFlavors.each {name, config ->
-                "$name" {
-                    applicationId config.applicationId
-                }
-            }
-        }
     }
 
     @Test
@@ -107,40 +84,36 @@ public class GenerationTest {
 
         assert project.jacoco.toolVersion == '0.7.2.201409121644'
 
-        final def redDebugTask = project.tasks.findByName('jacocoTestReportRedDebug')
+        final def debugTask = project.tasks.findByName('jacocoTestReportDebug')
 
-        assert redDebugTask != null
-        assert redDebugTask instanceof JacocoReport
+        assert debugTask instanceof JacocoReport
 
-        redDebugTask.with {
-            System.out.println(">>> " + description + " <<<")
-            assert description == 'Generate Jacoco coverage reports after running RedDebug tests.'
+        debugTask.with {
+            assert description == 'Generate Jacoco coverage reports after running debug tests.'
             assert group == 'Reporting'
 
-            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testRedDebugUnitTest.exec")
+            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testDebugUnitTest.exec")
 
-            assert additionalSourceDirs.size() == 3
+            assert additionalSourceDirs.size() == 2
             assert additionalSourceDirs.contains(project.file('src/main/java'))
             assert additionalSourceDirs.contains(project.file('src/debug/java'))
-            assert additionalSourceDirs.contains(project.file('src/red/java'))
 
-            assert sourceDirectories.size() == 3
+            assert sourceDirectories.size() == 2
             assert sourceDirectories.contains(project.file('src/main/java'))
             assert sourceDirectories.contains(project.file('src/debug/java'))
-            assert sourceDirectories.contains(project.file('src/red/java'))
 
             assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug/jacoco.xml'
+            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.xml'
             assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug'
+            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug'
 
             assert classDirectories.dir == project.file('build/intermediates/classes/debug')
 
-            assert taskDependsOn(redDebugTask, 'testRedDebugUnitTest')
-            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRedDebug')
+            assert taskDependsOn(debugTask, 'testDebugUnitTest')
+            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportDebug')
         }
 
-        final def releaseTask = project.tasks.findByName('jacocoTestReportRedRelease')
+        final def releaseTask = project.tasks.findByName('jacocoTestReportRelease')
 
         assert releaseTask instanceof JacocoReport
 
@@ -230,7 +203,7 @@ public class GenerationTest {
             final def item = it.next()
 
             if (item.toString().equals(taskName)) {
-                return true
+                return  true
             }
         }
 
