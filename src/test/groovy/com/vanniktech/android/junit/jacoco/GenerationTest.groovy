@@ -2,15 +2,39 @@ package com.vanniktech.android.junit.jacoco
 
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
-import org.junit.Before
 import org.junit.Test
 
 import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
 
 public class GenerationTest {
+
+    @Test
+    public void addJacocoAnroidAppWithFlavors() {
+
+        // Given
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).withRedBlueFlavors().get()
+
+        // When
+        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
+
+        // Then
+        assertJacocoAndroidWithFlavors(androidAppProject)
+    }
+
+    @Test
+    public void addJacocoAnroidLibraryWithFlavors() {
+
+        // Given
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).withRedBlueFlavors().get()
+
+        // When
+        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+
+        // Then
+        assertJacocoAndroidWithFlavors(androidLibraryProject)
+    }
 
     @Test
     public void addJacocoAndroidApp() {
@@ -132,11 +156,75 @@ public class GenerationTest {
         assert taskDependsOn(javaProject.check, 'jacocoTestReport')
     }
 
-    /**
-     * Assert proper project construction for Android project without flavors
-     *
-     * @param project
-     */
+    // TODO some cleanup needed code is almost the same for with and without flavors variants
+    private void assertJacocoAndroidWithFlavors(final Project project) {
+        assert project.plugins.hasPlugin(JacocoPlugin)
+
+        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+
+        final def redDebugTask = project.tasks.findByName('jacocoTestReportRedDebug')
+
+        assert redDebugTask instanceof JacocoReport
+
+        redDebugTask.with {
+            assert description == 'Generate Jacoco coverage reports after running redDebug tests.'
+            assert group == 'Reporting'
+
+            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testRedDebugUnitTest.exec")
+
+            assert additionalSourceDirs.size() == 3
+            assert additionalSourceDirs.contains(project.file('src/main/java'))
+            assert additionalSourceDirs.contains(project.file('src/debug/java'))
+            assert additionalSourceDirs.contains(project.file('src/red/java'))
+
+            assert sourceDirectories.size() == 3
+            assert sourceDirectories.contains(project.file('src/main/java'))
+            assert sourceDirectories.contains(project.file('src/debug/java'))
+            assert sourceDirectories.contains(project.file('src/red/java'))
+
+            assert reports.xml.enabled
+            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug/jacoco.xml'
+            assert reports.html.enabled
+            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug'
+
+            assert classDirectories.dir == project.file('build/intermediates/classes/red/debug')
+
+            assert taskDependsOn(redDebugTask, 'testRedDebugUnitTest')
+            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRedDebug')
+        }
+
+        final def blueReleaseTask = project.tasks.findByName('jacocoTestReportBlueRelease')
+
+        assert blueReleaseTask instanceof JacocoReport
+
+        blueReleaseTask.with {
+            assert description == 'Generate Jacoco coverage reports after running blueRelease tests.'
+            assert group == 'Reporting'
+
+            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testBlueReleaseUnitTest.exec")
+
+            assert additionalSourceDirs.size() == 3
+            assert additionalSourceDirs.contains(project.file('src/main/java'))
+            assert additionalSourceDirs.contains(project.file('src/release/java'))
+            assert additionalSourceDirs.contains(project.file('src/blue/java'))
+
+            assert sourceDirectories.size() == 3
+            assert sourceDirectories.contains(project.file('src/main/java'))
+            assert sourceDirectories.contains(project.file('src/release/java'))
+            assert sourceDirectories.contains(project.file('src/blue/java'))
+
+            assert reports.xml.enabled
+            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/blueRelease/jacoco.xml'
+            assert reports.html.enabled
+            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/blueRelease'
+
+            assert classDirectories.dir == project.file('build/intermediates/classes/blue/release')
+
+            assert taskDependsOn(blueReleaseTask, 'testBlueReleaseUnitTest')
+            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportBlueRelease')
+        }
+    }
+
     private void assertJacocoAndroidWithoutFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
@@ -243,7 +331,7 @@ public class GenerationTest {
             final def item = it.next()
 
             if (item.toString().equals(taskName)) {
-                return  true
+                return true
             }
         }
 
