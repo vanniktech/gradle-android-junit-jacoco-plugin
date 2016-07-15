@@ -9,88 +9,63 @@ import org.junit.Test
 import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
 
 public class GenerationTest {
-
     @Test
     public void addJacocoAndroidAppWithFlavors() {
-
-        // Given
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).withRedBlueFlavors().get()
 
-        // When
         Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
 
-        // Then
         assertJacocoAndroidWithFlavors(androidAppProject)
     }
 
     @Test
     public void addJacocoAndroidLibraryWithFlavors() {
-
-        // Given
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).withRedBlueFlavors().get()
 
-        // When
         Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        // Then
         assertJacocoAndroidWithFlavors(androidLibraryProject)
     }
 
     @Test
     public void addJacocoAndroidApp() {
-
-        // Given
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
 
-        // When
         Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
 
-        // Then
         assertJacocoAndroidWithoutFlavors(androidAppProject)
     }
 
     @Test
     public void addJacocoAndroidLibrary() {
-
-        // Given
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
 
-        // When
         Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        // Then
         assertJacocoAndroidWithoutFlavors(androidLibraryProject)
     }
 
     @Test
     public void addJacocoJava() {
-
-        // Given
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        // When
         Generation.addJacoco(javaProject, new JunitJacocoExtension())
 
-        // Then
         assertJacocoJava(javaProject)
     }
 
     @Test
     public void jacocoVersion() {
-
-        // Given
         final def extension = new JunitJacocoExtension()
         extension.jacocoVersion = '0.7.6.201602180812'
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        // When
         Generation.addJacoco(androidAppProject, extension)
         Generation.addJacoco(androidLibraryProject, extension)
         Generation.addJacoco(javaProject, extension)
 
-        // Then
         assert androidAppProject.jacoco.toolVersion == '0.7.6.201602180812'
         assert androidLibraryProject.jacoco.toolVersion == '0.7.6.201602180812'
         assert javaProject.jacoco.toolVersion == '0.7.6.201602180812'
@@ -98,7 +73,6 @@ public class GenerationTest {
 
     @Test
     public void ignoreProjects() {
-        // Given
         final def extension = new JunitJacocoExtension()
         final def projects = [
                 ProjectHelper.prepare(ANDROID_APPLICATION).get(),
@@ -106,10 +80,8 @@ public class GenerationTest {
                 ProjectHelper.prepare(JAVA).get()] as Project[]
 
         for (final def project : projects) {
-            // When
             extension.ignoreProjects = [project.name]
 
-            // Then
             assert !Generation.addJacoco(project, extension)
             assert !project.plugins.hasPlugin(JacocoPlugin)
         }
@@ -117,111 +89,74 @@ public class GenerationTest {
 
     @Test
     public void androidAppBuildExecutesJacocoTask() {
-
-        // Given
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
 
-        // When
         Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
 
-        // Then
         assert taskDependsOn(androidAppProject.check, 'jacocoTestReportDebug')
         assert taskDependsOn(androidAppProject.check, 'jacocoTestReportRelease')
     }
 
     @Test
     public void androidLibraryBuildExecutesJacocoTask() {
-
-        // Given
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
 
-        // When
         Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        // Then
         assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportDebug')
         assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportRelease')
     }
 
     @Test
     public void javaBuildExecutesJacocoTask() {
-
-        // Given
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        // When
         Generation.addJacoco(javaProject, new JunitJacocoExtension())
 
-        // Then
         assert taskDependsOn(javaProject.check, 'jacocoTestReport')
     }
 
-    // TODO some cleanup needed code is almost the same for with and without flavors variants
     private void assertJacocoAndroidWithFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
         assert project.jacoco.toolVersion == '0.7.2.201409121644'
 
-        final def redDebugTask = project.tasks.findByName('jacocoTestReportRedDebug')
+        assertTask(project, 'red', 'debug')
+        assertTask(project, 'red', 'release')
+        assertTask(project, 'blue', 'debug')
+        assertTask(project, 'blue', 'release')
+    }
 
-        assert redDebugTask instanceof JacocoReport
+    private void assertTask(final Project project, final String flavor, final String buildType) {
+        final def task = project.tasks.findByName("jacocoTestReport${flavor.capitalize()}${buildType.capitalize()}")
 
-        redDebugTask.with {
-            assert description == 'Generate Jacoco coverage reports after running redDebug tests.'
+        assert task instanceof JacocoReport
+
+        task.with {
+            assert description == "Generate Jacoco coverage reports after running ${flavor}${buildType.capitalize()} tests."
             assert group == 'Reporting'
 
-            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testRedDebugUnitTest.exec")
+            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/test${flavor.capitalize()}${buildType.capitalize()}UnitTest.exec")
 
             assert additionalSourceDirs.size() == 3
             assert additionalSourceDirs.contains(project.file('src/main/java'))
-            assert additionalSourceDirs.contains(project.file('src/debug/java'))
-            assert additionalSourceDirs.contains(project.file('src/red/java'))
+            assert additionalSourceDirs.contains(project.file("src/${buildType}/java"))
+            assert additionalSourceDirs.contains(project.file("src/${flavor}/java"))
 
             assert sourceDirectories.size() == 3
             assert sourceDirectories.contains(project.file('src/main/java'))
-            assert sourceDirectories.contains(project.file('src/debug/java'))
-            assert sourceDirectories.contains(project.file('src/red/java'))
+            assert sourceDirectories.contains(project.file("src/${buildType}/java"))
+            assert sourceDirectories.contains(project.file("src/${flavor}/java"))
 
             assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug/jacoco.xml'
+            assert reports.xml.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml"
             assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/redDebug'
+            assert reports.html.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}"
 
-            assert classDirectories.dir == project.file('build/intermediates/classes/red/debug')
+            assert classDirectories.dir == project.file("build/intermediates/classes/${flavor}/${buildType}")
 
-            assert taskDependsOn(redDebugTask, 'testRedDebugUnitTest')
-            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRedDebug')
-        }
-
-        final def blueReleaseTask = project.tasks.findByName('jacocoTestReportBlueRelease')
-
-        assert blueReleaseTask instanceof JacocoReport
-
-        blueReleaseTask.with {
-            assert description == 'Generate Jacoco coverage reports after running blueRelease tests.'
-            assert group == 'Reporting'
-
-            assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testBlueReleaseUnitTest.exec")
-
-            assert additionalSourceDirs.size() == 3
-            assert additionalSourceDirs.contains(project.file('src/main/java'))
-            assert additionalSourceDirs.contains(project.file('src/release/java'))
-            assert additionalSourceDirs.contains(project.file('src/blue/java'))
-
-            assert sourceDirectories.size() == 3
-            assert sourceDirectories.contains(project.file('src/main/java'))
-            assert sourceDirectories.contains(project.file('src/release/java'))
-            assert sourceDirectories.contains(project.file('src/blue/java'))
-
-            assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/blueRelease/jacoco.xml'
-            assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/blueRelease'
-
-            assert classDirectories.dir == project.file('build/intermediates/classes/blue/release')
-
-            assert taskDependsOn(blueReleaseTask, 'testBlueReleaseUnitTest')
-            assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportBlueRelease')
+            assert taskDependsOn(task, "test${flavor.capitalize()}${buildType.capitalize()}UnitTest")
+            assert taskDependsOn(project.tasks.findByName('check'), "jacocoTestReport${flavor.capitalize()}${buildType.capitalize()}")
         }
     }
 
@@ -289,11 +224,6 @@ public class GenerationTest {
         }
     }
 
-    /**
-     * Assert proper JAva project construction
-     *
-     * @param project
-     */
     private void assertJacocoJava(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
