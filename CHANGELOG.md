@@ -1,7 +1,17 @@
 # Change Log
 
-Version 0.5.0 *(In development)*
---------------------------------
+Version 0.5.0 *(2016-07-17)*
+----------------------------
+
+- Add excludes to JunitJacoco extension [\#37](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/37) ([vanniktech](https://github.com/vanniktech))
+- Clean up tests [\#36](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/36) ([vanniktech](https://github.com/vanniktech))
+- Restore flavor iterations [\#34](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/34) ([outlying](https://github.com/outlying)) - many thanks to him
+- Update to Gradle 2.14 [\#33](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/33) ([vanniktech](https://github.com/vanniktech))
+- Fix Travis after\_success. [\#32](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/32) ([vanniktech](https://github.com/vanniktech))
+- Update to Gradle 2.13 [\#31](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/31) ([vanniktech](https://github.com/vanniktech))
+- Add Codecov file [\#30](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/30) ([vanniktech](https://github.com/vanniktech))
+- Update Android Gradle Build Tools to 2.1.0 [\#29](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/29) ([vanniktech](https://github.com/vanniktech))
+- Add Codecov Coverage [\#26](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/26) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.4.0 *(2016-04-10)*
 --------------------------------
