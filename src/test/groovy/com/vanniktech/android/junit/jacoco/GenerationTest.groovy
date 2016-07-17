@@ -267,4 +267,32 @@ public class GenerationTest {
 
         return false
     }
+
+    @Test
+    public void getExcludesDefault() {
+        final def excludes = Generation.getExcludes(new JunitJacocoExtension())
+
+        assert excludes.contains('**/R.class')
+        assert excludes.contains('**/R$*.class')
+        assert excludes.contains('**/*$$*')
+        assert excludes.contains('**/*$ViewInjector*.*')
+        assert excludes.contains('**/*$ViewBinder*.*')
+        assert excludes.contains('**/BuildConfig.*')
+        assert excludes.contains('**/Manifest*.*')
+        assert excludes.contains('**/*$Lambda$*.*')
+        assert excludes.contains('**/*Dagger*.*')
+        assert excludes.contains('**/*MembersInjector*.*')
+        assert excludes.contains('**/*_Provide*Factory*.*')
+    }
+
+    @Test
+    public void getExcludesCustom() {
+        final def extension = new JunitJacocoExtension()
+        extension.excludes = new ArrayList<>()
+        extension.excludes.add("**/*.java")
+
+        final def excludes = Generation.getExcludes(extension)
+
+        assert excludes == extension.excludes
+    }
 }

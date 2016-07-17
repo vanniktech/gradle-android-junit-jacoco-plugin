@@ -42,7 +42,7 @@ class Generation implements Plugin<Project> {
         return false
     }
 
-    private static void addJacocoJava(final Project subProject, final extension) {
+    private static void addJacocoJava(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -62,7 +62,7 @@ class Generation implements Plugin<Project> {
 
             classDirectories = subProject.fileTree(
                     dir: 'build/classes/main/',
-                    excludes: getExcludes()
+                    excludes: getExcludes(extension)
             )
 
             final def coverageSourceDirs = [
@@ -77,7 +77,7 @@ class Generation implements Plugin<Project> {
         subProject.check.dependsOn 'jacocoTestReport'
     }
 
-    private static void addJacocoAndroid(final Project subProject, final extension) {
+    private static void addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -120,7 +120,7 @@ class Generation implements Plugin<Project> {
 
                     classDirectories = subProject.fileTree(
                             dir: "${subProject.buildDir}/intermediates/classes/${sourcePath}",
-                            excludes: getExcludes()
+                            excludes: getExcludes(extension)
                     )
 
                     final def coverageSourceDirs = [
@@ -142,8 +142,8 @@ class Generation implements Plugin<Project> {
         }
     }
 
-    private static ArrayList<String> getExcludes() {
-        ['**/R.class',
+    static List<String> getExcludes(final JunitJacocoExtension extension) {
+        extension.excludes == null ? ['**/R.class',
          '**/R$*.class',
          '**/*$$*',
          '**/*$ViewInjector*.*',
@@ -154,7 +154,7 @@ class Generation implements Plugin<Project> {
          '**/*Dagger*.*', // Dagger auto-generated code.
          '**/*MembersInjector*.*', // Dagger auto-generated code.
          '**/*_Provide*Factory*.*' // Dagger auto-generated code.
-        ]
+        ] : extension.excludes
     }
 
     protected static boolean isAndroidProject(final Project project) {
