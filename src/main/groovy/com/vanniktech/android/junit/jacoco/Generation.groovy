@@ -142,7 +142,7 @@ class Generation implements Plugin<Project> {
         }
     }
 
-    private static ArrayList<String> getExcludes(final JunitJacocoExtension extension) {
+    static List<String> getExcludes(final JunitJacocoExtension extension) {
         extension.excludes == null ? ['**/R.class',
          '**/R$*.class',
          '**/*$$*',
