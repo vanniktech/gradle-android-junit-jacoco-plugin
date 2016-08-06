@@ -9,12 +9,17 @@ Gradle plugin that generates Jacoco reports from a Gradle Project. Android Appli
 
 ### Android project
 
-- Task `jacocoTestReport<BuildType>`
-  - Executes the `test<BuildType>` task before
+- Task `jacocoTestReport<Flavor><BuildType>`
+  - Executes the `test<Flavor><BuildType>UnitTest` task before
   - Gets executed when the `check` task is executed
-  - Generated Jacoco reports can be found under `build/reports/jacoco/<BuildType>`.
+  - Generated Jacoco reports can be found under `build/reports/jacoco/<Flavor>/<BuildType>`.
 
-Where `<BuildType>` usually is `debug` and `release` unless additional build types where specified. For instance when having `debug` and `release` build types the following tasks would be created: `jacocoTestReportDebug`, `jacocoTestReportRelease`.
+Where `<BuildType>` is usually `debug` & `release` unless additional build types where specified.
+`<Flavor>` is optional and will be ignored if not specified.
+
+For instance when having `debug` & `release` build types and no flavors the following tasks would be created: `jacocoTestReportDebug` and `jacocoTestReportRelease`.
+
+When having `debug` & `release` build types and `red` & `blue` flavors the following tasks would be created: `jacocoTestReportRedDebug`, `jacocoTestReportBlueDebug`, `jacocoTestReportRedRelease` and `jacocoTestReportBlueRelease`.
 
 ### Java project
 
@@ -35,7 +40,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.4.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
     }
 }
 
@@ -49,10 +54,10 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-android-junit-jacoco-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0-SNAPSHOT'
+classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.6.0-SNAPSHOT'
 ```
 
-### Configuration (since 0.3.0)
+### Configuration
 
 Those are all available configurations - shown with default values and their types. More information can be found in the [Java Documentation of the Extension](src/main/groovy/com/vanniktech/android/junit/jacoco/JunitJacocoExtension.groovy).
 
@@ -60,6 +65,7 @@ Those are all available configurations - shown with default values and their typ
 junitJacoco {
     jacocoVersion = '0.7.2.201409121644' // type String
     ignoreProjects = [] // type String array
+    exludes // type String List
 }
 ```
 
