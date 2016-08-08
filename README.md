@@ -65,7 +65,7 @@ Those are all available configurations - shown with default values and their typ
 junitJacoco {
     jacocoVersion = '0.7.2.201409121644' // type String
     ignoreProjects = [] // type String array
-    exludes // type String List
+    excludes // type String List
 }
 ```
 
