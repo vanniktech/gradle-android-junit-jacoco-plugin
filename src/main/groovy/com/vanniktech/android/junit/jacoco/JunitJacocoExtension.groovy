@@ -7,9 +7,9 @@ package com.vanniktech.android.junit.jacoco
 class JunitJacocoExtension {
     /**
      * define the version of jacoco which should be used
-     * @since 0.3.0
+     * @since 0.6.0
      */
-    String jacocoVersion = '0.7.2.201409121644'
+    String jacocoVersion = '0.7.7.201606060606'
 
     /**
      * subprojects that should be ignored
