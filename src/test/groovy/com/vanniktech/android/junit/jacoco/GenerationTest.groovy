@@ -321,4 +321,28 @@ public class GenerationTest {
 
         assert excludes == extension.excludes
     }
+
+    @Test
+    public void isIncludeNoLocationClassesRequired() {
+        // Test gradle version combinations
+        assert !Generation.isIncludeNoLocationClassesRequired("1.30", "0.7.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.1", "0.7.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.12", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.14.1", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("3.1", "0.7.3.0100123")
+
+        // Test jacoco version combinations
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.6.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.2.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.0.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.4.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.8")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.8")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "1.0")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "1.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "4.7.3.0100123")
+    }
 }
