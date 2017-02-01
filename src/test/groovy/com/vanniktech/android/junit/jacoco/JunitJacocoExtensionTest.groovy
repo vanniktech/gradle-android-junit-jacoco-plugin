@@ -7,7 +7,7 @@ public class JunitJacocoExtensionTest {
     public void defaults() {
         def extension = new JunitJacocoExtension()
 
-        assert extension.jacocoVersion == '0.7.2.201409121644'
+        assert extension.jacocoVersion == null
         assert extension.ignoreProjects.size() == 0
         assert extension.excludes == null
     }

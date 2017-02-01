@@ -2,6 +2,7 @@ package com.vanniktech.android.junit.jacoco
 
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.Test
@@ -55,9 +56,13 @@ public class GenerationTest {
     }
 
     @Test
-    public void jacocoVersion() {
+    public void jacocoVersionDefault() {
+        def defaultJacocoProject = ProjectBuilder.builder().build();
+        defaultJacocoProject.plugins.apply('jacoco');
+        def defaultJacocoVersion = defaultJacocoProject.jacoco.toolVersion;
+
         final def extension = new JunitJacocoExtension()
-        extension.jacocoVersion = '0.7.6.201602180812'
+
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
         def javaProject = ProjectHelper.prepare(JAVA).get()
@@ -66,9 +71,26 @@ public class GenerationTest {
         Generation.addJacoco(androidLibraryProject, extension)
         Generation.addJacoco(javaProject, extension)
 
-        assert androidAppProject.jacoco.toolVersion == '0.7.6.201602180812'
-        assert androidLibraryProject.jacoco.toolVersion == '0.7.6.201602180812'
-        assert javaProject.jacoco.toolVersion == '0.7.6.201602180812'
+        assert androidAppProject.jacoco.toolVersion == defaultJacocoVersion
+        assert androidLibraryProject.jacoco.toolVersion == defaultJacocoVersion
+        assert javaProject.jacoco.toolVersion == defaultJacocoVersion
+    }
+
+    @Test
+    public void jacocoVersion() {
+        final def extension = new JunitJacocoExtension()
+        extension.jacocoVersion = '0.7.6.test'
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+        def javaProject = ProjectHelper.prepare(JAVA).get()
+
+        Generation.addJacoco(androidAppProject, extension)
+        Generation.addJacoco(androidLibraryProject, extension)
+        Generation.addJacoco(javaProject, extension)
+
+        assert androidAppProject.jacoco.toolVersion == extension.jacocoVersion
+        assert androidLibraryProject.jacoco.toolVersion == extension.jacocoVersion
+        assert javaProject.jacoco.toolVersion == extension.jacocoVersion
     }
 
     @Test
@@ -119,7 +141,7 @@ public class GenerationTest {
     private void assertJacocoAndroidWithFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         assertTask(project, 'red', 'debug')
         assertTask(project, 'red', 'release')
@@ -163,7 +185,7 @@ public class GenerationTest {
     private void assertJacocoAndroidWithoutFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         final def debugTask = project.tasks.findByName('jacocoTestReportDebug')
 
@@ -227,7 +249,7 @@ public class GenerationTest {
     private void assertJacocoJava(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         final def task = project.tasks.findByName('jacocoTestReport')
 

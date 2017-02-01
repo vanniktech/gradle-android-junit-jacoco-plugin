@@ -45,8 +45,10 @@ class Generation implements Plugin<Project> {
     private static void addJacocoJava(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
-        subProject.jacoco {
-            toolVersion extension.jacocoVersion
+        if (extension.jacocoVersion != null) {
+            subProject.jacoco {
+                toolVersion extension.jacocoVersion
+            }
         }
 
         subProject.jacocoTestReport {
@@ -80,8 +82,10 @@ class Generation implements Plugin<Project> {
     private static void addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
-        subProject.jacoco {
-            toolVersion extension.jacocoVersion
+        if (extension.jacocoVersion != null) {
+            subProject.jacoco {
+                toolVersion extension.jacocoVersion
+            }
         }
 
         final def buildTypes = subProject.android.buildTypes.collect { type -> type.name }
