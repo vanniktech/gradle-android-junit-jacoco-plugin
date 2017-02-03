@@ -166,7 +166,8 @@ class Generation implements Plugin<Project> {
          '**/*_Provide*Factory*.*', // Dagger auto-generated code.
          '**/*$JsonObjectMapper.*', // LoganSquare auto-generated code.
          '**/*$inlined$*.*', // Kotlin specific, Jacoco can not handle several "$" in class name.
-         '**/*$Icepick.*' // Icepick auto-generated code.
+         '**/*$Icepick.*', // Icepick auto-generated code.
+         '**/*AutoValue_*.*' // AutoValue auto-generated code.
         ] : extension.excludes
     }
 
