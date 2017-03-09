@@ -143,11 +143,15 @@ class Generation implements Plugin<Project> {
     }
 
     static List<String> getExcludes(final JunitJacocoExtension extension) {
-        extension.excludes == null ? ['**/R.class',
+        extension.excludes == null ? [
+         '**/R.class',
+         '**/R2.class', // ButterKnife Gradle Plugin
          '**/R$*.class',
+         '**/R2$*.class', // ButterKnife Gradle Plugin
          '**/*$$*',
-         '**/*$ViewInjector*.*',
-         '**/*$ViewBinder*.*',
+         '**/*$ViewInjector*.*', // Older ButterKnife Versions
+         '**/*$ViewBinder*.*', // Older ButterKnife Versions
+         '**/*_ViewBinding*.*', // Newer ButterKnife Versions
          '**/BuildConfig.*',
          '**/Manifest*.*',
          '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
