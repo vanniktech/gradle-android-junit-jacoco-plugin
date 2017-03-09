@@ -66,9 +66,9 @@ public class GenerationTest {
         Generation.addJacoco(androidLibraryProject, extension)
         Generation.addJacoco(javaProject, extension)
 
-        assert androidAppProject.jacoco.toolVersion == extension.jacocoVersion
-        assert androidLibraryProject.jacoco.toolVersion == extension.jacocoVersion
-        assert javaProject.jacoco.toolVersion == extension.jacocoVersion
+        assert androidAppProject.jacoco.toolVersion == '0.7.6.201602180812'
+        assert androidLibraryProject.jacoco.toolVersion == '0.7.6.201602180812'
+        assert javaProject.jacoco.toolVersion == '0.7.6.201602180812'
     }
 
     @Test
