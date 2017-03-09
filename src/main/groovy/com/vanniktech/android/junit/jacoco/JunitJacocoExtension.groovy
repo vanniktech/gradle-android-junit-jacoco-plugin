@@ -22,4 +22,10 @@ class JunitJacocoExtension {
      * @since 0.5.0
      */
     List<String> excludes = null
+
+    /**
+     * Whether or not to include no location classes
+     * @since 0.6.0
+     */
+    boolean includeNoLocationClasses
 }
