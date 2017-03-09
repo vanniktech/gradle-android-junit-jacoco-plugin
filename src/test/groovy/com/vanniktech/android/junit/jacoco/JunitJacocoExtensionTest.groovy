@@ -10,6 +10,5 @@ public class JunitJacocoExtensionTest {
         assert extension.jacocoVersion == '0.7.2.201409121644'
         assert extension.ignoreProjects.size() == 0
         assert extension.excludes == null
-        assert !extension.includeNoLocationClasses
     }
 }
