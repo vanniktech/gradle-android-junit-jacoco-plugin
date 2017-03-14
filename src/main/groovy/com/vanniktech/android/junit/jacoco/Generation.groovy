@@ -84,13 +84,9 @@ class Generation implements Plugin<Project> {
             toolVersion extension.jacocoVersion
         }
 
-        subProject.android {
-            testOptions {
-                unitTests.all {
-                    jacoco {
-                        includeNoLocationClasses = extension.includeNoLocationClasses
-                    }
-                }
+        subProject.android.testOptions.unitTests {
+            it.testTasks.each {
+                it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
             }
         }
 
