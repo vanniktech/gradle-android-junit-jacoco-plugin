@@ -272,12 +272,15 @@ public class GenerationTest {
     public void getExcludesDefault() {
         final def excludes = Generation.getExcludes(new JunitJacocoExtension())
 
-        assert excludes.size == 15
+        assert excludes.size == 18
         assert excludes.contains('**/R.class')
+        assert excludes.contains('**/R2.class')
         assert excludes.contains('**/R$*.class')
+        assert excludes.contains('**/R2$*.class')
         assert excludes.contains('**/*$$*')
         assert excludes.contains('**/*$ViewInjector*.*')
         assert excludes.contains('**/*$ViewBinder*.*')
+        assert excludes.contains('**/*_ViewBinding*.*')
         assert excludes.contains('**/BuildConfig.*')
         assert excludes.contains('**/Manifest*.*')
         assert excludes.contains('**/*$Lambda$*.*')
