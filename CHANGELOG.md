@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.6.0 *(In development)*
---------------------------------
+Version 0.6.0 *(2017-03-20)*
+----------------------------
+
+- Fix includeNoLocationClasses. [\#61](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/61) ([vanniktech](https://github.com/vanniktech))
+- Add a few more default excludes. [\#58](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/58) ([vanniktech](https://github.com/vanniktech))
+- Add extension for includeNoLocationClasses [\#55](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/55) ([vanniktech](https://github.com/vanniktech))
+- Adding AutoValue to exclusion list [\#54](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/54) ([setheclark](https://github.com/setheclark))
+- Added several exclusions when generating report. [\#41](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/41) ([zsavely](https://github.com/zsavely))
 
 Version 0.5.0 *(2016-07-17)*
 ----------------------------

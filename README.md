@@ -40,7 +40,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.5.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.6.0'
     }
 }
 
@@ -63,9 +63,10 @@ Those are all available configurations - shown with default values and their typ
 
 ```groovy
 junitJacoco {
-    jacocoVersion = '0.7.2.201409121644' // type String
-    ignoreProjects = [] // type String array
-    excludes // type String List
+  jacocoVersion = '0.7.2.201409121644' // type String
+  ignoreProjects = [] // type String array
+  excludes // type String List
+  includeNoLocationClasses = false // type boolean
 }
 ```
 
