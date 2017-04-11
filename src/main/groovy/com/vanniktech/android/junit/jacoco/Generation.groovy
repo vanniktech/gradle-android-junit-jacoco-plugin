@@ -45,8 +45,10 @@ class Generation implements Plugin<Project> {
     private static void addJacocoJava(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
-        subProject.jacoco {
-            toolVersion extension.jacocoVersion
+        if (extension.jacocoVersion != null) {
+            subProject.jacoco {
+                toolVersion extension.jacocoVersion
+            }
         }
 
         subProject.jacocoTestReport {
@@ -80,8 +82,22 @@ class Generation implements Plugin<Project> {
     private static void addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension) {
         subProject.plugins.apply('jacoco')
 
-        subProject.jacoco {
-            toolVersion extension.jacocoVersion
+        if (extension.jacocoVersion != null) {
+            subProject.jacoco {
+                toolVersion extension.jacocoVersion
+            }
+        }
+
+        if (isIncludeNoLocationClassesRequired(subProject.gradle.gradleVersion, subProject.jacoco.toolVersion)) {
+            subProject.android {
+                testOptions {
+                    unitTests.all {
+                        jacoco {
+                            includeNoLocationClasses = true
+                        }
+                    }
+                }
+            }
         }
 
         subProject.android.testOptions.unitTests.all {
@@ -181,5 +197,17 @@ class Generation implements Plugin<Project> {
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
         return extension.ignoreProjects?.contains(project.name)
+    }
+
+    static boolean isIncludeNoLocationClassesRequired(final String gradleVersion, final String jacocoVersion) {
+        List tokenizedGradleVersion = gradleVersion.tokenize('.');
+        List tokenizedJacocoVersion = jacocoVersion.tokenize('.');
+        if ((tokenizedGradleVersion[0].toInteger() > 2 || (tokenizedGradleVersion[0].toInteger() == 2 && tokenizedGradleVersion[1].toInteger() >= 13))
+                && (tokenizedJacocoVersion[0].toInteger() > 0 || (tokenizedJacocoVersion[0].toInteger() == 0 && tokenizedJacocoVersion[1].toInteger() > 7) || (tokenizedJacocoVersion[0].toInteger() == 0 && tokenizedJacocoVersion[1].toInteger() == 7 && tokenizedJacocoVersion[2].toInteger() >= 3))) {
+            // Gradle version 2.13 and beyond AND Jacoco version 0.7.3 and beyond
+            return true;
+        }
+
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package com.vanniktech.android.junit.jacoco
 
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.Test
@@ -55,9 +56,30 @@ public class GenerationTest {
     }
 
     @Test
+    public void jacocoVersionDefault() {
+        def defaultJacocoProject = ProjectBuilder.builder().build();
+        defaultJacocoProject.plugins.apply('jacoco');
+        def defaultJacocoVersion = defaultJacocoProject.jacoco.toolVersion;
+
+        final def extension = new JunitJacocoExtension()
+
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+        def javaProject = ProjectHelper.prepare(JAVA).get()
+
+        Generation.addJacoco(androidAppProject, extension)
+        Generation.addJacoco(androidLibraryProject, extension)
+        Generation.addJacoco(javaProject, extension)
+
+        assert androidAppProject.jacoco.toolVersion == defaultJacocoVersion
+        assert androidLibraryProject.jacoco.toolVersion == defaultJacocoVersion
+        assert javaProject.jacoco.toolVersion == defaultJacocoVersion
+    }
+
+    @Test
     public void jacocoVersion() {
         final def extension = new JunitJacocoExtension()
-        extension.jacocoVersion = '0.7.6.201602180812'
+        extension.jacocoVersion = '0.7.6.test'
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
         def javaProject = ProjectHelper.prepare(JAVA).get()
@@ -119,7 +141,7 @@ public class GenerationTest {
     private void assertJacocoAndroidWithFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         assertTask(project, 'red', 'debug')
         assertTask(project, 'red', 'release')
@@ -163,7 +185,7 @@ public class GenerationTest {
     private void assertJacocoAndroidWithoutFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         final def debugTask = project.tasks.findByName('jacocoTestReportDebug')
 
@@ -227,7 +249,7 @@ public class GenerationTest {
     private void assertJacocoJava(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.7.2.201409121644'
+        assert project.jacoco.hasProperty('toolVersion')
 
         final def task = project.tasks.findByName('jacocoTestReport')
 
@@ -302,5 +324,29 @@ public class GenerationTest {
         final def excludes = Generation.getExcludes(extension)
 
         assert excludes == extension.excludes
+    }
+
+    @Test
+    public void isIncludeNoLocationClassesRequired() {
+        // Test gradle version combinations
+        assert !Generation.isIncludeNoLocationClassesRequired("1.30", "0.7.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.1", "0.7.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.12", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.14.1", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("3.1", "0.7.3.0100123")
+
+        // Test jacoco version combinations
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.6.3.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.2.0100123")
+        assert !Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.0.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.4.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.3")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.7.8")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "0.8")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "1.0")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "1.7.3.0100123")
+        assert Generation.isIncludeNoLocationClassesRequired("2.13", "4.7.3.0100123")
     }
 }
