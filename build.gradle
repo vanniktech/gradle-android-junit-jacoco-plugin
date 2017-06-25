@@ -49,8 +49,8 @@ pluginBundle {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+    gradleVersion = '4.0'
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 task groovydocJar(type: Jar, dependsOn: groovydoc) {
