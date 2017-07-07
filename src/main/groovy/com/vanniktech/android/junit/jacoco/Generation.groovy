@@ -1,5 +1,6 @@
 package com.vanniktech.android.junit.jacoco
 
+import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.testing.jacoco.tasks.JacocoReport
@@ -28,9 +29,10 @@ class Generation implements Plugin<Project> {
         }
     }
 
-    protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension) {
+    protected static boolean addJacoco(final Project subProject,
+            final JunitJacocoExtension extension) {
         if (!shouldIgnore(subProject, extension)) {
-            if (isAndroidProject(subProject)) {
+            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject)) {
                 addJacocoAndroid(subProject, extension)
                 return true
             } else if (isJavaProject(subProject)) {
@@ -84,65 +86,69 @@ class Generation implements Plugin<Project> {
             toolVersion extension.jacocoVersion
         }
 
-        subProject.android.testOptions.unitTests.all {
+        subProject.android.testOptions?.unitTests?.all {
             it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
         }
 
-        final def buildTypes = subProject.android.buildTypes.collect { type -> type.name }
-        final def productFlavors = subProject.android.productFlavors.collect { flavor -> flavor.name }
+        Collection<BaseVariant> variants = []
+        if (isAndroidApplication(subProject)) {
+            variants = subProject.android.applicationVariants
+        } else if (isAndroidLibrary(subProject)) {
+            variants = subProject.android.libraryVariants
+        }
 
-        // When no product flavors defined, use empty
-        if (!productFlavors) productFlavors.add('')
+        variants.all { variant ->
 
-        productFlavors.each { productFlavorName ->
-            buildTypes.each { buildTypeName ->
+            def productFlavorName = variant.getFlavorName()
+            def buildTypeName = variant.getBuildType().name
 
-                def sourceName, sourcePath
-                if (!productFlavorName) {
-                    sourceName = sourcePath = "${buildTypeName}"
-                } else {
-                    sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
-                    sourcePath = "${productFlavorName}/${buildTypeName}"
-                }
-                final def testTaskName = "test${sourceName.capitalize()}UnitTest"
-                final def taskName = "jacocoTestReport${sourceName.capitalize()}"
-
-                subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
-                    group = 'Reporting'
-                    description = "Generate Jacoco coverage reports after running ${sourceName} tests."
-
-                    reports {
-                        xml {
-                            enabled = true
-                            destination "${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml"
-                        }
-                        html {
-                            enabled = true
-                            destination "${subProject.buildDir}/reports/jacoco/${sourceName}"
-                        }
-                    }
-
-                    classDirectories = subProject.fileTree(
-                            dir: "${subProject.buildDir}/intermediates/classes/${sourcePath}",
-                            excludes: getExcludes(extension)
-                    )
-
-                    final def coverageSourceDirs = [
-                            "src/main/java",
-                            "src/$buildTypeName/java"
-                    ]
-
-                    if (productFlavorName) {
-                        coverageSourceDirs.add("src/$productFlavorName/java")
-                    }
-
-                    additionalSourceDirs = subProject.files(coverageSourceDirs)
-                    sourceDirectories = subProject.files(coverageSourceDirs)
-                    executionData = subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
-                }
-
-                subProject.check.dependsOn "${taskName}"
+            def sourceName, sourcePath
+            if (!productFlavorName) {
+                sourceName = sourcePath = "${buildTypeName}"
+            } else {
+                sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
+                sourcePath = "${productFlavorName}/${buildTypeName}"
             }
+
+            final def testTaskName = "test${sourceName.capitalize()}UnitTest"
+            final def taskName = "jacocoTestReport${sourceName.capitalize()}"
+
+            subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
+                group = 'Reporting'
+                description = "Generate Jacoco coverage reports after running ${sourceName} tests."
+
+                reports {
+                    xml {
+                        enabled = true
+                        destination "${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml"
+                    }
+                    html {
+                        enabled = true
+                        destination "${subProject.buildDir}/reports/jacoco/${sourceName}"
+                    }
+                }
+
+                classDirectories = subProject.fileTree(
+                        dir: "${subProject.buildDir}/intermediates/classes/${sourcePath}",
+                        excludes: getExcludes(extension)
+                )
+
+                final def coverageSourceDirs = [
+                        "src/main/java",
+                        "src/$buildTypeName/java"
+                ]
+
+                if (productFlavorName) {
+                    coverageSourceDirs.add("src/$productFlavorName/java")
+                }
+
+                additionalSourceDirs = subProject.files(coverageSourceDirs)
+                sourceDirectories = subProject.files(coverageSourceDirs)
+                executionData =
+                        subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
+            }
+
+            subProject.check.dependsOn "${taskName}"
         }
     }
 
@@ -169,10 +175,12 @@ class Generation implements Plugin<Project> {
         ] : extension.excludes
     }
 
-    protected static boolean isAndroidProject(final Project project) {
-        final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
-        final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
-        return isAndroidLibrary || isAndroidApp
+    protected static boolean isAndroidLibrary(final Project project) {
+        return project.plugins.hasPlugin('com.android.library')
+    }
+
+    protected static boolean isAndroidApplication(final Project project) {
+        return project.plugins.hasPlugin('com.android.application')
     }
 
     protected static boolean isJavaProject(final Project project) {
