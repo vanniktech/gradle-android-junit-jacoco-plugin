@@ -42,7 +42,7 @@ final class ProjectHelper {
                 androidMock.metaClass.getApplicationVariants = { appVariants }
                 androidMock.metaClass.testOptions = null
                 project.metaClass.android = androidMock
-                // fake all with each
+                // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.applicationVariants.metaClass.all = { delegate.each(it) }
                 break
             case ProjectType.ANDROID_LIBRARY:
@@ -63,7 +63,7 @@ final class ProjectHelper {
                 androidMock.metaClass.getLibraryVariants = { appVariants }
                 androidMock.metaClass.testOptions = null
                 project.metaClass.android = androidMock
-                // fake all with each
+                // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
                 break
         }
@@ -99,10 +99,12 @@ final class ProjectHelper {
         switch (projectType) {
             case ProjectType.ANDROID_APPLICATION:
                 project.android.metaClass.applicationVariants = variants
+                // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.applicationVariants.metaClass.all = { delegate.each(it) }
                 break
             case ProjectType.ANDROID_LIBRARY:
                 project.android.metaClass.libraryVariants = variants
+                // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
                 break
         }

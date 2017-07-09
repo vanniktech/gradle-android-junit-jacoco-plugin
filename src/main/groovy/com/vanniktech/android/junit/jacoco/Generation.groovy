@@ -144,8 +144,7 @@ class Generation implements Plugin<Project> {
 
                 additionalSourceDirs = subProject.files(coverageSourceDirs)
                 sourceDirectories = subProject.files(coverageSourceDirs)
-                executionData =
-                        subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
+                executionData = subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
             }
 
             subProject.check.dependsOn "${taskName}"
