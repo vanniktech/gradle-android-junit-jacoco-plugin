@@ -5,7 +5,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
-class Generation implements Plugin<Project> {
+class GenerationPlugin implements Plugin<Project> {
     @Override
     void apply(final Project rootProject) {
         rootProject.extensions.create('junitJacoco', JunitJacocoExtension)
