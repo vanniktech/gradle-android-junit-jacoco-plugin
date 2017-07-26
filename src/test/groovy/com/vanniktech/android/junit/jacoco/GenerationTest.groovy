@@ -13,7 +13,7 @@ public class GenerationTest {
     public void addJacocoAndroidAppWithFlavors() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).withRedBlueFlavors().get()
 
-        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithFlavors(androidAppProject)
     }
@@ -22,7 +22,7 @@ public class GenerationTest {
     public void addJacocoAndroidLibraryWithFlavors() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).withRedBlueFlavors().get()
 
-        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithFlavors(androidLibraryProject)
     }
@@ -31,7 +31,7 @@ public class GenerationTest {
     public void addJacocoAndroidApp() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
 
-        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithoutFlavors(androidAppProject)
     }
@@ -40,7 +40,7 @@ public class GenerationTest {
     public void addJacocoAndroidLibrary() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
 
-        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithoutFlavors(androidLibraryProject)
     }
@@ -49,7 +49,7 @@ public class GenerationTest {
     public void addJacocoJava() {
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        Generation.addJacoco(javaProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(javaProject, new JunitJacocoExtension())
 
         assertJacocoJava(javaProject)
     }
@@ -62,9 +62,9 @@ public class GenerationTest {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        Generation.addJacoco(androidAppProject, extension)
-        Generation.addJacoco(androidLibraryProject, extension)
-        Generation.addJacoco(javaProject, extension)
+        GenerationPlugin.addJacoco(androidAppProject, extension)
+        GenerationPlugin.addJacoco(androidLibraryProject, extension)
+        GenerationPlugin.addJacoco(javaProject, extension)
 
         assert androidAppProject.jacoco.toolVersion == extension.jacocoVersion
         assert androidLibraryProject.jacoco.toolVersion == extension.jacocoVersion
@@ -82,7 +82,7 @@ public class GenerationTest {
         for (final def project : projects) {
             extension.ignoreProjects = [project.name]
 
-            assert !Generation.addJacoco(project, extension)
+            assert !GenerationPlugin.addJacoco(project, extension)
             assert !project.plugins.hasPlugin(JacocoPlugin)
         }
     }
@@ -91,7 +91,7 @@ public class GenerationTest {
     public void androidAppBuildExecutesJacocoTask() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
 
-        Generation.addJacoco(androidAppProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
 
         assert taskDependsOn(androidAppProject.check, 'jacocoTestReportDebug')
         assert taskDependsOn(androidAppProject.check, 'jacocoTestReportRelease')
@@ -101,7 +101,7 @@ public class GenerationTest {
     public void androidLibraryBuildExecutesJacocoTask() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
 
-        Generation.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
         assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportDebug')
         assert taskDependsOn(androidLibraryProject.check, 'jacocoTestReportRelease')
@@ -111,7 +111,7 @@ public class GenerationTest {
     public void javaBuildExecutesJacocoTask() {
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
-        Generation.addJacoco(javaProject, new JunitJacocoExtension())
+        GenerationPlugin.addJacoco(javaProject, new JunitJacocoExtension())
 
         assert taskDependsOn(javaProject.check, 'jacocoTestReport')
     }
@@ -270,7 +270,7 @@ public class GenerationTest {
 
     @Test
     public void getExcludesDefault() {
-        final def excludes = Generation.getExcludes(new JunitJacocoExtension())
+        final def excludes = GenerationPlugin.getExcludes(new JunitJacocoExtension())
 
         assert excludes.size == 18
         assert excludes.contains('**/R.class')
@@ -299,7 +299,7 @@ public class GenerationTest {
         extension.excludes = new ArrayList<>()
         extension.excludes.add("**/*.java")
 
-        final def excludes = Generation.getExcludes(extension)
+        final def excludes = GenerationPlugin.getExcludes(extension)
 
         assert excludes == extension.excludes
     }
