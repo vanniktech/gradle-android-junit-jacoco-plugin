@@ -68,7 +68,11 @@ class GenerationPlugin implements Plugin<Project> {
             )
 
             final def coverageSourceDirs = [
-                    'src/main/java',
+                'src/main/clojure',
+                'src/main/groovy',
+                'src/main/java',
+                'src/main/kotlin',
+                'src/main/scala'
             ]
 
             additionalSourceDirs = subProject.files(coverageSourceDirs)
@@ -134,7 +138,11 @@ class GenerationPlugin implements Plugin<Project> {
                 )
 
                 final def coverageSourceDirs = [
+                        "src/main/clojure",
+                        "src/main/groovy",
                         "src/main/java",
+                        "src/main/kotlin",
+                        "src/main/scala",
                         "src/$buildTypeName/java"
                 ]
 

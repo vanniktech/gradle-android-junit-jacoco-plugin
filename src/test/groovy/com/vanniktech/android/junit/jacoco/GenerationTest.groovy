@@ -138,12 +138,10 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/test${flavor.capitalize()}${buildType.capitalize()}UnitTest.exec")
 
-            assert additionalSourceDirs.size() == 3
             assert additionalSourceDirs.contains(project.file('src/main/java'))
             assert additionalSourceDirs.contains(project.file("src/${buildType}/java"))
             assert additionalSourceDirs.contains(project.file("src/${flavor}/java"))
 
-            assert sourceDirectories.size() == 3
             assert sourceDirectories.contains(project.file('src/main/java'))
             assert sourceDirectories.contains(project.file("src/${buildType}/java"))
             assert sourceDirectories.contains(project.file("src/${flavor}/java"))
@@ -175,11 +173,9 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testDebugUnitTest.exec")
 
-            assert additionalSourceDirs.size() == 2
             assert additionalSourceDirs.contains(project.file('src/main/java'))
             assert additionalSourceDirs.contains(project.file('src/debug/java'))
 
-            assert sourceDirectories.size() == 2
             assert sourceDirectories.contains(project.file('src/main/java'))
             assert sourceDirectories.contains(project.file('src/debug/java'))
 
@@ -204,11 +200,9 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testReleaseUnitTest.exec")
 
-            assert additionalSourceDirs.size() == 2
             assert additionalSourceDirs.contains(project.file('src/main/java'))
             assert additionalSourceDirs.contains(project.file('src/release/java'))
 
-            assert sourceDirectories.size() == 2
             assert sourceDirectories.contains(project.file('src/main/java'))
             assert sourceDirectories.contains(project.file('src/release/java'))
 
@@ -239,10 +233,8 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/test.exec")
 
-            assert additionalSourceDirs.size() == 1
             assert additionalSourceDirs.contains(project.file('src/main/java'))
 
-            assert sourceDirectories.size() == 1
             assert sourceDirectories.contains(project.file('src/main/java'))
 
             assert classDirectories.dir == project.file('build/classes/main/')
