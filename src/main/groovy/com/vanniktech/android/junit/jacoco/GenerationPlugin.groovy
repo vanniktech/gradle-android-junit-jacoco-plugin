@@ -143,11 +143,19 @@ class GenerationPlugin implements Plugin<Project> {
                         "src/main/java",
                         "src/main/kotlin",
                         "src/main/scala",
-                        "src/$buildTypeName/java"
+                        "src/$buildTypeName/clojure",
+                        "src/$buildTypeName/groovy",
+                        "src/$buildTypeName/java",
+                        "src/$buildTypeName/kotlin",
+                        "src/$buildTypeName/scala"
                 ]
 
                 if (productFlavorName) {
+                    coverageSourceDirs.add("src/$productFlavorName/clojure")
+                    coverageSourceDirs.add("src/$productFlavorName/groovy")
                     coverageSourceDirs.add("src/$productFlavorName/java")
+                    coverageSourceDirs.add("src/$productFlavorName/kotlin")
+                    coverageSourceDirs.add("src/$productFlavorName/scala")
                 }
 
                 additionalSourceDirs = subProject.files(coverageSourceDirs)
