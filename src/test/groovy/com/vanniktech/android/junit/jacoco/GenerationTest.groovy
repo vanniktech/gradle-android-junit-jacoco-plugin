@@ -9,7 +9,9 @@ import org.junit.Test
 import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
 
 public class GenerationTest {
-    @Test
+  def LANGUAGES = ["clojure", "groovy", "java", "kotlin", "scala"]
+
+  @Test
     public void addJacocoAndroidAppWithFlavors() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).withRedBlueFlavors().get()
 
@@ -138,15 +140,19 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/test${flavor.capitalize()}${buildType.capitalize()}UnitTest.exec")
 
-            assert additionalSourceDirs.size() == 3
-            assert additionalSourceDirs.contains(project.file('src/main/java'))
-            assert additionalSourceDirs.contains(project.file("src/${buildType}/java"))
-            assert additionalSourceDirs.contains(project.file("src/${flavor}/java"))
+            assert additionalSourceDirs.size() == 15
+            LANGUAGES.every {
+              assert additionalSourceDirs.contains(project.file("src/main/$it"))
+              assert additionalSourceDirs.contains(project.file("src/${buildType}/$it"))
+              assert additionalSourceDirs.contains(project.file("src/${flavor}/$it"))
+            }
 
-            assert sourceDirectories.size() == 3
-            assert sourceDirectories.contains(project.file('src/main/java'))
-            assert sourceDirectories.contains(project.file("src/${buildType}/java"))
-            assert sourceDirectories.contains(project.file("src/${flavor}/java"))
+            assert sourceDirectories.size() == 15
+            LANGUAGES.every {
+              assert sourceDirectories.contains(project.file("src/main/$it"))
+              assert sourceDirectories.contains(project.file("src/${buildType}/$it"))
+              assert sourceDirectories.contains(project.file("src/${flavor}/$it"))
+            }
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml"
@@ -175,13 +181,17 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testDebugUnitTest.exec")
 
-            assert additionalSourceDirs.size() == 2
-            assert additionalSourceDirs.contains(project.file('src/main/java'))
-            assert additionalSourceDirs.contains(project.file('src/debug/java'))
+            assert additionalSourceDirs.size() == 10
+            LANGUAGES.every {
+              assert additionalSourceDirs.contains(project.file("src/main/$it"))
+              assert additionalSourceDirs.contains(project.file("src/debug/$it"))
+            }
 
-            assert sourceDirectories.size() == 2
-            assert sourceDirectories.contains(project.file('src/main/java'))
-            assert sourceDirectories.contains(project.file('src/debug/java'))
+            assert sourceDirectories.size() == 10
+            LANGUAGES.every {
+             assert sourceDirectories.contains(project.file("src/main/$it"))
+             assert sourceDirectories.contains(project.file("src/debug/$it"))
+            }
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.xml'
@@ -204,13 +214,17 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testReleaseUnitTest.exec")
 
-            assert additionalSourceDirs.size() == 2
-            assert additionalSourceDirs.contains(project.file('src/main/java'))
-            assert additionalSourceDirs.contains(project.file('src/release/java'))
+            assert additionalSourceDirs.size() == 10
+            LANGUAGES.every {
+              assert additionalSourceDirs.contains(project.file("src/main/$it"))
+              assert additionalSourceDirs.contains(project.file("src/release/$it"))
+            }
 
-            assert sourceDirectories.size() == 2
-            assert sourceDirectories.contains(project.file('src/main/java'))
-            assert sourceDirectories.contains(project.file('src/release/java'))
+            assert sourceDirectories.size() == 10
+            LANGUAGES.every {
+              assert sourceDirectories.contains(project.file("src/main/$it"))
+              assert sourceDirectories.contains(project.file("src/release/$it"))
+            }
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release/jacoco.xml'
@@ -239,11 +253,15 @@ public class GenerationTest {
 
             assert executionData.singleFile == project.file("${project.buildDir}/jacoco/test.exec")
 
-            assert additionalSourceDirs.size() == 1
-            assert additionalSourceDirs.contains(project.file('src/main/java'))
+            assert additionalSourceDirs.size() == 5
+            LANGUAGES.every {
+              assert additionalSourceDirs.contains(project.file("src/main/$it"))
+            }
 
-            assert sourceDirectories.size() == 1
-            assert sourceDirectories.contains(project.file('src/main/java'))
+            assert sourceDirectories.size() == 5
+            LANGUAGES.every {
+              assert sourceDirectories.contains(project.file("src/main/$it"))
+            }
 
             assert classDirectories.dir == project.file('build/classes/main/')
 
