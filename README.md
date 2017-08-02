@@ -54,7 +54,7 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-android-junit-jacoco-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.7.0-SNAPSHOT'
+classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.8.0-SNAPSHOT'
 ```
 
 ### Configuration
