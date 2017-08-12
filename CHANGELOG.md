@@ -1,7 +1,14 @@
 # Change Log
 
-Version 0.7.0 *(In development)*
+Version 0.8.0 *(In development)*
 --------------------------------
+
+Version 0.7.0 *(2017-08-02)*
+----------------------------
+
+- Support popular JVM languages [\#75](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/75) ([jaredsburrows](https://github.com/jaredsburrows))
+- \[Tests\] - Add tests for GenerationPlugin [\#71](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/71) ([jaredsburrows](https://github.com/jaredsburrows))
+- Don't add jacoco tasks for ignored build variants [\#69](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/69) ([passsy](https://github.com/passsy))
 
 Version 0.6.0 *(2017-03-20)*
 ----------------------------

@@ -28,7 +28,7 @@ When having `debug` & `release` build types and `red` & `blue` flavors the follo
   - Gets executed when the `check` task is executed
   - Generated Jacoco reports can be found under `build/reports/jacoco/`.
 
-Works with the latest Gradle Android Tools version 2.1.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 2.3.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
@@ -40,7 +40,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.6.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.7.0'
     }
 }
 
@@ -54,7 +54,7 @@ Information: [This plugin is also available on Gradle plugins](https://plugins.g
 Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-android-junit-jacoco-plugin). Current one is:
 
 ```groovy
-classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.7.0-SNAPSHOT'
+classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.8.0-SNAPSHOT'
 ```
 
 ### Configuration
