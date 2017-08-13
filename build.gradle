@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.gradle.publish:plugin-publish-plugin:0.9.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1'
         classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.7.0'
     }
 }
@@ -16,6 +17,7 @@ apply plugin: 'java'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
 
 repositories {
     jcenter()
@@ -74,6 +76,10 @@ artifacts {
     archives groovydocJar
     archives javadocJar
     archives sourcesJar
+}
+
+coveralls {
+  jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
 }
 
 apply from: file('gradle/gradle-mvn-push.gradle')
