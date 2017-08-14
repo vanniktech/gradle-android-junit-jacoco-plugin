@@ -1,7 +1,7 @@
 # gradle-android-junit-jacoco-plugin
 
 [![Build Status](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin.svg?branch=master)](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
-[![Coveralls Code Coverage](https://img.shields.io/coveralls/vanniktech/gradle-android-junit-jacoco-plugin/master.svg?label=Code%20Coverage)](https://coveralls.io/github/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
+[![Codecov](https://codecov.io/github/vanniktech/gradle-android-junit-jacoco-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 ![Java 7 required](https://img.shields.io/badge/java-7-brightgreen.svg)
 
