@@ -1,14 +1,16 @@
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
     dependencies {
         classpath 'com.gradle.publish:plugin-publish-plugin:0.9.1'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1'
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.7.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.8.0-SNAPSHOT'
     }
 }
 
@@ -83,3 +85,14 @@ coveralls {
 }
 
 apply from: file('gradle/gradle-mvn-push.gradle')
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+        }
+    }
+}
