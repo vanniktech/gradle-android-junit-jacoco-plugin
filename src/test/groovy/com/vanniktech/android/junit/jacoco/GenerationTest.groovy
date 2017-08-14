@@ -263,7 +263,7 @@ public class GenerationTest {
               assert sourceDirectories.contains(project.file("src/main/$it"))
             }
 
-            assert classDirectories.dir == project.file('build/classes/main/')
+            assert classDirectories.dir == project.file('build/classes/')
 
             assert reports.xml.enabled
             assert reports.html.enabled

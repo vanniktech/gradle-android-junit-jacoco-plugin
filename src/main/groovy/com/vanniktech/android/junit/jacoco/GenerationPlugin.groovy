@@ -63,8 +63,8 @@ class GenerationPlugin implements Plugin<Project> {
             }
 
             classDirectories = subProject.fileTree(
-                    dir: 'build/classes/main/',
-                    excludes: getExcludes(extension)
+                    dir: 'build/classes/', // Starting from Gradle 4.+ each language has it's own classes folder like build/classes/java/main or build/classes/java/test.
+                    excludes: getExcludes(extension) + '**/test/**' // We'll exclude the test directory.
             )
 
             final def coverageSourceDirs = [
