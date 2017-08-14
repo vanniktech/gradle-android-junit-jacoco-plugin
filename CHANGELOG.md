@@ -1,7 +1,9 @@
 # Change Log
 
-Version 0.8.0 *(In development)*
---------------------------------
+Version 0.8.0 *(2017-08-14)*
+----------------------------
+
+- Fix Jacoco generation for Java. [\#82](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/82) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.7.0 *(2017-08-02)*
 ----------------------------
