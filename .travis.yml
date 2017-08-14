@@ -7,12 +7,16 @@ groovy:
 jdk:
     - oraclejdk8
 
+before_install:
+    - pip install --user codecov
+
 install: true
 
-script: ./gradlew clean build coveralls
+script: ./gradlew clean build
 
 after_success:
     - .buildscript/deploy_snapshot.sh
+    - codecov
 
 env:
     global:
