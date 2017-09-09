@@ -290,7 +290,7 @@ public class GenerationTest {
     public void getExcludesDefault() {
         final def excludes = GenerationPlugin.getExcludes(new JunitJacocoExtension())
 
-        assert excludes.size == 18
+        assert excludes.size == 19
         assert excludes.contains('**/R.class')
         assert excludes.contains('**/R2.class')
         assert excludes.contains('**/R$*.class')
@@ -305,6 +305,7 @@ public class GenerationTest {
         assert excludes.contains('**/*Dagger*.*')
         assert excludes.contains('**/*MembersInjector*.*')
         assert excludes.contains('**/*_Provide*Factory*.*')
+        assert excludes.contains('**/*_Factory*.*')
         assert excludes.contains('**/*$JsonObjectMapper.*')
         assert excludes.contains('**/*$inlined$*.*')
         assert excludes.contains('**/*$Icepick.*')
