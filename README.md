@@ -28,6 +28,12 @@ When having `debug` & `release` build types and `red` & `blue` flavors the follo
   - Gets executed when the `check` task is executed
   - Generated Jacoco reports can be found under `build/reports/jacoco/`.
 
+In addition the plugin generates `mergeJacocoReports` & `jacocoTestReportMerged` tasks.
+
+`mergeJacocoReports` will merge all of the jacoco reports together.
+
+`jacocoTestReportMerged` will output an xml and html file for the merged report.
+
 Works with the latest Gradle Android Tools version 2.3.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
@@ -40,7 +46,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.8.0'
+        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.9.0'
     }
 }
 
