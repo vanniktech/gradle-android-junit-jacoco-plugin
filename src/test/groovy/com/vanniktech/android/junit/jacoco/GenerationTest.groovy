@@ -159,7 +159,8 @@ public class GenerationTest {
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}"
 
-            assert classDirectories.dir == project.file("build/intermediates/classes/${flavor}/${buildType}")
+            assert classDirectories.dir == project.file("build/")
+            assert contentEquals(classDirectories.includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString()])
 
             assert taskDependsOn(task, "test${flavor.capitalize()}${buildType.capitalize()}UnitTest")
             assert taskDependsOn(project.tasks.findByName('check'), "jacocoTestReport${flavor.capitalize()}${buildType.capitalize()}")
@@ -198,7 +199,8 @@ public class GenerationTest {
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug'
 
-            assert classDirectories.dir == project.file('build/intermediates/classes/debug')
+            assert classDirectories.dir == project.file("build/")
+            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**'])
 
             assert taskDependsOn(debugTask, 'testDebugUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportDebug')
@@ -231,7 +233,8 @@ public class GenerationTest {
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release'
 
-            assert classDirectories.dir == project.file('build/intermediates/classes/release')
+            assert classDirectories.dir == project.file("build/")
+            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**'])
 
             assert taskDependsOn(releaseTask, 'testReleaseUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRelease')
@@ -263,7 +266,8 @@ public class GenerationTest {
               assert sourceDirectories.contains(project.file("src/main/$it"))
             }
 
-            assert classDirectories.dir == project.file('build/classes/')
+            assert classDirectories.dir == project.file('build/')
+            assert contentEquals(classDirectories.includes, ["**/classes/**"])
 
             assert reports.xml.enabled
             assert reports.html.enabled
@@ -272,13 +276,17 @@ public class GenerationTest {
         }
     }
 
+    static boolean contentEquals(Collection<?> c1, Collection<?> c2) {
+        return c1.containsAll(c2) && c2.containsAll(c1)
+    }
+
     static boolean taskDependsOn(final Task task, final String taskName) {
         final def it = task.dependsOn.iterator()
 
         while (it.hasNext()) {
             final def item = it.next()
 
-            if (item.toString().equals(taskName)) {
+            if (item.toString() == taskName) {
                 return true
             }
         }

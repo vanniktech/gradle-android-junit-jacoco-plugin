@@ -74,8 +74,9 @@ class GenerationPlugin implements Plugin<Project> {
             }
 
             classDirectories = subProject.fileTree(
-                    dir: 'build/classes/', // Starting from Gradle 4.+ each language has it's own classes folder like build/classes/java/main or build/classes/java/test.
-                    excludes: getExcludes(extension) + '**/test/**' // We'll exclude the test directory.
+                    dir: subProject.buildDir,
+                    includes: ["**/classes/**"],
+                    excludes: getExcludes(extension)
             )
 
             final def coverageSourceDirs = [
@@ -152,8 +153,14 @@ class GenerationPlugin implements Plugin<Project> {
                     }
                 }
 
+                def classPaths = ["**/intermediates/classes/${sourcePath}/**"]
+                if (isKotlinAndroid(subProject)) {
+                    classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
+                }
+
                 classDirectories = subProject.fileTree(
-                        dir: "${subProject.buildDir}/intermediates/classes/${sourcePath}",
+                        dir: subProject.buildDir,
+                        includes: classPaths,
                         excludes: getExcludes(extension)
                 )
 
@@ -278,6 +285,10 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isJavaProject(final Project project) {
         return project.plugins.hasPlugin('org.gradle.java')
+    }
+
+    protected static boolean isKotlinAndroid(final Project project) {
+        return project.plugins.hasPlugin('org.jetbrains.kotlin.android')
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
