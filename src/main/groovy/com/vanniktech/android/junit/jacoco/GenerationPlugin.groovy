@@ -64,7 +64,7 @@ class GenerationPlugin implements Plugin<Project> {
 
             classDirectories = subProject.fileTree(
                     dir: subProject.buildDir,
-                    includes: ["**/classes/**"], // Starting from Gradle 4.+ each language has it's own classes folder like build/classes/java/main or build/classes/java/test.
+                    includes: ["**/classes/**"],
                     excludes: getExcludes(extension)
             )
 
