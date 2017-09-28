@@ -145,11 +145,11 @@ class GenerationPlugin implements Plugin<Project> {
                 reports {
                     xml {
                         enabled = true
-                        destination "${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml"
+                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml")
                     }
                     html {
                         enabled = true
-                        destination "${subProject.buildDir}/reports/jacoco/${sourceName}"
+                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}")
                     }
                 }
 
@@ -234,11 +234,11 @@ class GenerationPlugin implements Plugin<Project> {
             reports {
                 xml {
                     enabled = true
-                    destination "${project.buildDir}/reports/jacoco/jacoco.xml"
+                    destination project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
                 }
                 html {
                     enabled = true
-                    destination "${project.buildDir}/reports/jacoco"
+                    destination project.file("${project.buildDir}/reports/jacoco")
                 }
             }
 
