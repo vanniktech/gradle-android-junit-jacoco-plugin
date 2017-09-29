@@ -156,6 +156,8 @@ public class GenerationTest {
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml"
+            assert reports.csv.enabled
+            assert reports.csv.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.csv"
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}"
 
@@ -196,6 +198,8 @@ public class GenerationTest {
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.xml'
+            assert reports.csv.enabled
+            assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.csv'
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug'
 
@@ -230,6 +234,8 @@ public class GenerationTest {
 
             assert reports.xml.enabled
             assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release/jacoco.xml'
+            assert reports.csv.enabled
+            assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release/jacoco.csv'
             assert reports.html.enabled
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release'
 
@@ -270,6 +276,7 @@ public class GenerationTest {
             assert contentEquals(classDirectories.includes, ["**/classes/**"])
 
             assert reports.xml.enabled
+            assert reports.csv.enabled
             assert reports.html.enabled
 
             assert taskDependsOn(task, 'test')
