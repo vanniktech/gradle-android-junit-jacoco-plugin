@@ -70,6 +70,7 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml.enabled = true
+                csv.enabled = true
                 html.enabled = true
             }
 
@@ -146,6 +147,10 @@ class GenerationPlugin implements Plugin<Project> {
                     xml {
                         enabled = true
                         destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml")
+                    }
+                    csv {
+                        enabled = true
+                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.csv")
                     }
                     html {
                         enabled = true
@@ -235,6 +240,10 @@ class GenerationPlugin implements Plugin<Project> {
                 xml {
                     enabled = true
                     destination project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
+                }
+                csv {
+                    enabled = true
+                    destination project.file("${project.buildDir}/reports/jacoco/jacoco.csv")
                 }
                 html {
                     enabled = true
