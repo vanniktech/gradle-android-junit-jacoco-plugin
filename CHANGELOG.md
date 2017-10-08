@@ -1,7 +1,11 @@
 # Change Log
 
-Version 0.10.0 *(In development)*
----------------------------------
+Version 0.10.0 *(2017-10-08)*
+-----------------------------
+
+- Update JUnit Jacoco Gradle Plugin to 0.9.0 [\#96](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/96) ([vanniktech](https://github.com/vanniktech))
+- Generate csv reports [\#95](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/95) ([alexrwegener](https://github.com/alexrwegener))
+- Remove deprecated method calls [\#94](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/94) ([vRallev](https://github.com/vRallev))
 
 Version 0.9.0 *(2017-09-12)*
 ----------------------------
