@@ -161,6 +161,9 @@ class GenerationPlugin implements Plugin<Project> {
                 def classPaths = ["**/intermediates/classes/${sourcePath}/**"]
                 if (isKotlinAndroid(subProject)) {
                     classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
+                    if (productFlavorName) {
+                        classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**" // without a slash
+                    }
                 }
 
                 classDirectories = subProject.fileTree(
