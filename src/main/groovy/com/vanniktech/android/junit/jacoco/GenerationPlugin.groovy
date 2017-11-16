@@ -301,6 +301,6 @@ class GenerationPlugin implements Plugin<Project> {
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
-        return extension.ignoreProjects?.contains(project.name)
+        return extension.ignoreProjects?.contains(project.name) || extension.ignoreProjects?.contains(project.path)
     }
 }
