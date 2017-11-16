@@ -305,7 +305,7 @@ public class GenerationTest {
     public void getExcludesDefault() {
         final def excludes = GenerationPlugin.getExcludes(new JunitJacocoExtension())
 
-        assert excludes.size == 19
+        assert excludes.size == 20
         assert excludes.contains('**/R.class')
         assert excludes.contains('**/R2.class')
         assert excludes.contains('**/R$*.class')
