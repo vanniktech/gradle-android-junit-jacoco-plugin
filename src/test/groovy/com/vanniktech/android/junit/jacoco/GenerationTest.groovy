@@ -324,6 +324,7 @@ public class GenerationTest {
         assert excludes.contains('**/*$JsonObjectMapper.*')
         assert excludes.contains('**/*$inlined$*.*')
         assert excludes.contains('**/*$Icepick.*')
+        assert excludes.contains('**/*$StateSaver.*')
         assert excludes.contains('**/*AutoValue_*.*')
     }
 
