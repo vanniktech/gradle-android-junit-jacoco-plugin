@@ -162,7 +162,7 @@ class GenerationPlugin implements Plugin<Project> {
                 if (isKotlinAndroid(subProject)) {
                     classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
                     if (productFlavorName) {
-                        classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**" // without a slash
+                        classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**"
                     }
                 }
 
