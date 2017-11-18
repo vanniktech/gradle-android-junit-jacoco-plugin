@@ -283,6 +283,7 @@ class GenerationPlugin implements Plugin<Project> {
          '**/*$JsonObjectMapper.*', // LoganSquare auto-generated code.
          '**/*$inlined$*.*', // Kotlin specific, Jacoco can not handle several "$" in class name.
          '**/*$Icepick.*', // Icepick auto-generated code.
+         '**/*$StateSaver.*', // android-state auto-generated code.
          '**/*AutoValue_*.*' // AutoValue auto-generated code.
         ] : extension.excludes
     }
