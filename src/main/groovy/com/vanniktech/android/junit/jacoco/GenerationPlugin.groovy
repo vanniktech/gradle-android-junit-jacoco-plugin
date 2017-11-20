@@ -301,19 +301,19 @@ class GenerationPlugin implements Plugin<Project> {
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
-        boolean result = extension.ignoreProjects?.contains(project.name) || extension.ignoreProjects?.contains(project.path)
-        if (result) {
+        if (extension.ignoreProjects?.contains(project.name) || extension.ignoreProjects?.contains(project.path)) {
             // regex could be slower
             return true
         }
 
-        extension.ignoreProjects?.each {
-            if (project.name.find(it) || project.path.find(it)) {
-                result = true
-                return true
+        if (extension.ignoreProjects != null) {
+            for (String ignoredProject : extension.ignoreProjects) {
+                if (project.name.find(ignoredProject) || project.path.find(ignoredProject)) {
+                    return true
+                }
             }
         }
 
-        return result
+        return false
     }
 }
