@@ -90,6 +90,68 @@ public class GenerationTest {
     }
 
     @Test
+    public void ignoreProjectsPath() {
+        final def extension = new JunitJacocoExtension()
+        final def projects = [
+                ProjectHelper.prepare(ANDROID_APPLICATION).get(),
+                ProjectHelper.prepare(ANDROID_LIBRARY).get(),
+                ProjectHelper.prepare(JAVA).get()] as Project[]
+
+        for (final def project : projects) {
+            extension.ignoreProjects = [project.path]
+
+            assert !GenerationPlugin.addJacoco(project, extension)
+            assert !project.plugins.hasPlugin(JacocoPlugin)
+        }
+    }
+
+    @Test
+    public void ignoreProjectsRegexPath() {
+        final def extension = new JunitJacocoExtension()
+        final def projects = [
+                ProjectHelper.prepare(ANDROID_APPLICATION).get(),
+                ProjectHelper.prepare(ANDROID_LIBRARY).get(),
+                ProjectHelper.prepare(JAVA).get()] as Project[]
+
+        for (final def project : projects) {
+            extension.ignoreProjects = [".*"]
+
+            assert !GenerationPlugin.addJacoco(project, extension)
+            assert !project.plugins.hasPlugin(JacocoPlugin)
+        }
+    }
+
+    @Test
+    public void ignoreProjectsRegexName() {
+        final def extension = new JunitJacocoExtension()
+        final def projects = [
+                ProjectHelper.prepare(ANDROID_APPLICATION).get(),
+                ProjectHelper.prepare(ANDROID_LIBRARY).get()] as Project[]
+
+        for (final def project : projects) {
+            extension.ignoreProjects = ["android*"]
+
+            assert !GenerationPlugin.addJacoco(project, extension)
+            assert !project.plugins.hasPlugin(JacocoPlugin)
+        }
+    }
+
+    @Test
+    public void ignoreProjectsWrongRegexName() {
+        final def extension = new JunitJacocoExtension()
+        final def projects = [
+                ProjectHelper.prepare(ANDROID_APPLICATION).get(),
+                ProjectHelper.prepare(ANDROID_LIBRARY).get()] as Project[]
+
+        for (final def project : projects) {
+            extension.ignoreProjects = ["androidFFF*"]
+
+            assert GenerationPlugin.addJacoco(project, extension)
+            assert project.plugins.hasPlugin(JacocoPlugin)
+        }
+    }
+
+    @Test
     public void androidAppBuildExecutesJacocoTask() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
 
