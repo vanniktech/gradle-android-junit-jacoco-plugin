@@ -335,7 +335,7 @@ public class GenerationTest {
             }
 
             assert classDirectories.dir == project.file('build/')
-            assert contentEquals(classDirectories.includes, ["**/classes/**"])
+            assert contentEquals(classDirectories.includes, ['**/classes/**/main/**'])
 
             assert reports.xml.enabled
             assert reports.csv.enabled
