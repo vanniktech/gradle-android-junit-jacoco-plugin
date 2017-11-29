@@ -76,7 +76,7 @@ class GenerationPlugin implements Plugin<Project> {
 
             classDirectories = subProject.fileTree(
                     dir: subProject.buildDir,
-                    includes: ["**/classes/**"],
+                    includes: ['**/classes/**/main/**'],
                     excludes: getExcludes(extension)
             )
 
