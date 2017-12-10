@@ -42,12 +42,12 @@ Works with the latest Gradle Android Tools version 2.3.3. This plugin is compile
 
 ```groovy
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.10.0'
-    }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
+  }
 }
 
 apply plugin: 'com.vanniktech.android.junit.jacoco'
