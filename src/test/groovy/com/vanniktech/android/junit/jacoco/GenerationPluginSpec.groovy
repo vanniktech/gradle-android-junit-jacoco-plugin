@@ -109,9 +109,15 @@ final class GenerationPluginSpec extends Specification {
         release {}
       }
 
+      flavorDimensions "number"
+  
       productFlavors {
-        flavor1 {}
-        flavor2 {}
+        flavor1 {
+          dimension "number"
+        }
+        flavor2 {
+          dimension "number"
+        }
       }
     }
 
