@@ -2,6 +2,8 @@ package com.vanniktech.android.junit.jacoco
 
 import com.android.build.gradle.internal.SdkHandler
 import org.gradle.testfixtures.ProjectBuilder
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -11,11 +13,20 @@ final class GenerationPluginSpec extends Specification {
   final static BUILD_TOOLS_VERSION = "27.0.1"
   final static APPLICATION_ID = "com.example"
   // Test fixture that emulates a local android sdk
-  final static TEST_ANDROID_SDK = getClass().getResource("/android-sdk/").toURI()
+  final static TEST_ANDROID_SDK = getClass().getResource("/android-sdk").toURI()
   def project
 
+  @Rule public TemporaryFolder tempDir = new TemporaryFolder()
+
   def "setup"() {
-    project = ProjectBuilder.builder().build()
+    File testProjectDir = tempDir.newFolder("testProject")
+    def manifest = new File('src/main/AndroidManifest.xml',testProjectDir)
+    manifest.parentFile.mkdirs()
+    manifest.write("<manifest package=\"com.example.test\">\n<application />\n</manifest>")
+
+    project = ProjectBuilder.builder()
+      .withProjectDir(testProjectDir)
+      .build()
 
     // Set mock test sdk, we only need to test the plugins tasks
     SdkHandler.sTestSdkFolder = project.file TEST_ANDROID_SDK
