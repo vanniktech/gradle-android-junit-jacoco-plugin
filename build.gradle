@@ -1,15 +1,15 @@
 buildscript {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
+  repositories {
+    google()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+  }
 
-    dependencies {
-        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-    }
+  dependencies {
+    classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
+    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
+  }
 }
 
 apply plugin: 'groovy'
@@ -19,17 +19,17 @@ apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 
 repositories {
-    jcenter()
-    google()
+  jcenter()
+  google()
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile 'com.android.tools.build:gradle:3.0.1'
+  compile gradleApi()
+  compile localGroovy()
+  compile 'com.android.tools.build:gradle:3.0.1'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
@@ -38,44 +38,44 @@ group = GROUP
 version = VERSION_NAME
 
 pluginBundle {
-    website = POM_URL
-    vcsUrl = POM_SCM_URL
+  website = POM_URL
+  vcsUrl = POM_SCM_URL
 
-    plugins {
-        androidJacoco {
-            id = 'com.vanniktech.android.junit.jacoco'
-            displayName = POM_NAME
-            tags = ['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage']
-            description = POM_DESCRIPTION
-        }
+  plugins {
+    androidJacoco {
+      id = 'com.vanniktech.android.junit.jacoco'
+      displayName = POM_NAME
+      tags = ['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage']
+      description = POM_DESCRIPTION
     }
+  }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4.1'
-    distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = '4.4.1'
+  distributionType = Wrapper.DistributionType.ALL
 }
 
 task groovydocJar(type: Jar, dependsOn: groovydoc) {
-    classifier = 'groovydoc'
-    from 'build/docs/groovydoc'
+  classifier = 'groovydoc'
+  from 'build/docs/groovydoc'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
+  classifier = 'javadoc'
+  from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
+  from sourceSets.main.allSource
+  classifier = 'sources'
 }
 
 artifacts {
-    archives jar
-    archives groovydocJar
-    archives javadocJar
-    archives sourcesJar
+  archives jar
+  archives groovydocJar
+  archives javadocJar
+  archives sourcesJar
 }
 
 apply from: file('gradle/gradle-mvn-push.gradle')
