@@ -300,6 +300,14 @@ class GenerationPlugin implements Plugin<Project> {
         return project.plugins.hasPlugin('org.gradle.java')
     }
 
+    protected static boolean isAndroidInstantApp(final Project project) {
+        return project.plugins.hasPlugin('com.android.instantapp')
+    }
+
+    protected static boolean isAndroidFeature(final Project project) {
+        return project.plugins.hasPlugin('com.android.feature')
+    }
+
     protected static boolean isKotlinAndroid(final Project project) {
         return project.plugins.hasPlugin('org.jetbrains.kotlin.android')
     }
