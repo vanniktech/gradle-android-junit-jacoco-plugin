@@ -43,7 +43,8 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         if (!shouldIgnore(subProject, extension)) {
-            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject)) {
+            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject) ||
+                    isAndroidFeature(subProject) || isAndroidInstantApp(subProject)) {
                 addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
                 return true
             } else if (isJavaProject(subProject)) {
