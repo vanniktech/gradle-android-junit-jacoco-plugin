@@ -43,7 +43,8 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         if (!shouldIgnore(subProject, extension)) {
-            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject)) {
+            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject) ||
+                    isAndroidFeature(subProject) || isAndroidInstantApp(subProject)) {
                 addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
                 return true
             } else if (isJavaProject(subProject)) {
@@ -298,6 +299,14 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isJavaProject(final Project project) {
         return project.plugins.hasPlugin('org.gradle.java')
+    }
+
+    protected static boolean isAndroidInstantApp(final Project project) {
+        return project.plugins.hasPlugin('com.android.instantapp')
+    }
+
+    protected static boolean isAndroidFeature(final Project project) {
+        return project.plugins.hasPlugin('com.android.feature')
     }
 
     protected static boolean isKotlinAndroid(final Project project) {
