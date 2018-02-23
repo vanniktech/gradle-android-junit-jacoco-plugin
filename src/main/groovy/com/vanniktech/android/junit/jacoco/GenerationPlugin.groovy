@@ -220,11 +220,11 @@ class GenerationPlugin implements Plugin<Project> {
         }
 
         def mergeTask = project.task("mergeJacocoReports", type: JacocoMerge) {
-            executionData project.files().asFileTree // start with an empty collection
+            executionData project.files().asFileTree // Start with an empty collection.
             destinationFile project.file("${project.buildDir}/jacoco/mergedReport.exec")
 
             doFirst {
-                // filter non existing files
+                // Filter non existing files.
                 def realExecutionData = project.files().asFileTree
 
                 executionData.each {
@@ -255,7 +255,7 @@ class GenerationPlugin implements Plugin<Project> {
                 }
             }
 
-            // start with empty collections
+            // Start with empty collections.
             classDirectories = project.files()
             additionalSourceDirs = project.files()
             sourceDirectories = project.files()
@@ -267,13 +267,13 @@ class GenerationPlugin implements Plugin<Project> {
     static List<String> getExcludes(final JunitJacocoExtension extension) {
         extension.excludes == null ? [
          '**/R.class',
-         '**/R2.class', // ButterKnife Gradle Plugin
+         '**/R2.class', // ButterKnife Gradle Plugin.
          '**/R$*.class',
-         '**/R2$*.class', // ButterKnife Gradle Plugin
+         '**/R2$*.class', // ButterKnife Gradle Plugin.
          '**/*$$*',
-         '**/*$ViewInjector*.*', // Older ButterKnife Versions
-         '**/*$ViewBinder*.*', // Older ButterKnife Versions
-         '**/*_ViewBinding*.*', // Newer ButterKnife Versions
+         '**/*$ViewInjector*.*', // Older ButterKnife Versions.
+         '**/*$ViewBinder*.*', // Older ButterKnife Versions.
+         '**/*_ViewBinding*.*', // Newer ButterKnife Versions.
          '**/BuildConfig.*',
          '**/Manifest*.*',
          '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
@@ -315,7 +315,7 @@ class GenerationPlugin implements Plugin<Project> {
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
         if (extension.ignoreProjects?.contains(project.name) || extension.ignoreProjects?.contains(project.path)) {
-            // regex could be slower
+            // Regex could be slower.
             return true
         }
 
