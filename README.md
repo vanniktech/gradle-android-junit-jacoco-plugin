@@ -39,27 +39,34 @@ Works with the latest Gradle Android Tools version 2.3.3. This plugin is compile
 
 **root/build.gradle**
 
-```groovy
+```gradle
 buildscript {
   repositories {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
+    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0"
   }
 }
 
-apply plugin: 'com.vanniktech.android.junit.jacoco'
+apply plugin: "com.vanniktech.android.junit.jacoco"
 ```
 
 Information: [This plugin is also available on Gradle plugins](https://plugins.gradle.org/plugin/com.vanniktech.android.junit.jacoco)
 
-### Snapshots
+### Snapshot
 
-Can be found [here](https://oss.sonatype.org/#nexus-search;quick~gradle-android-junit-jacoco-plugin). Current one is:
+```gradle
+buildscript {
+  repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+  }
+  dependencies {
+    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.12.0-SNAPSHOT"
+  }
+}
 
-```groovy
-classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.12.0-SNAPSHOT'
+apply plugin: "com.vanniktech.android.junit.jacoco"
 ```
 
 ### Configuration
