@@ -1,9 +1,5 @@
 # gradle-android-junit-jacoco-plugin
 
-[![Build Status](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin.svg?branch=master)](https://travis-ci.org/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
-[![Codecov](https://codecov.io/github/vanniktech/gradle-android-junit-jacoco-plugin/coverage.svg?branch=master)](https://codecov.io/github/vanniktech/gradle-android-junit-jacoco-plugin?branch=master)
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 Gradle plugin that generates Jacoco reports from a Gradle Project. Android Application, Android Library, Kotlin and Java Plugins are supported by this plugin. When this plugin is applied it goes over every subproject and creates the corresponding Jacoco tasks.
 
 ### Android project
