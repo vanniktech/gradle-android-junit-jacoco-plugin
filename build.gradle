@@ -1,14 +1,15 @@
 buildscript {
   repositories {
+    mavenCentral()
     google()
-    jcenter()
-    maven { url "https://plugins.gradle.org/m2/" }
+    gradlePluginPortal()
   }
 
   dependencies {
     classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.1.0'
   }
 }
 
@@ -17,10 +18,12 @@ apply plugin: 'java'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
+apply plugin: "com.vanniktech.maven.publish"
 
 repositories {
-  jcenter()
+  mavenCentral()
   google()
+  jcenter()
 }
 
 dependencies {
@@ -33,9 +36,6 @@ dependencies {
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_7
-
-group = GROUP
-version = VERSION_NAME
 
 pluginBundle {
   website = POM_URL
@@ -55,27 +55,3 @@ task wrapper(type: Wrapper) {
   gradleVersion = '4.5'
   distributionType = Wrapper.DistributionType.ALL
 }
-
-task groovydocJar(type: Jar, dependsOn: groovydoc) {
-  classifier = 'groovydoc'
-  from 'build/docs/groovydoc'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
-  from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-  from sourceSets.main.allSource
-  classifier = 'sources'
-}
-
-artifacts {
-  archives jar
-  archives groovydocJar
-  archives javadocJar
-  archives sourcesJar
-}
-
-apply from: file('gradle/gradle-mvn-push.gradle')
