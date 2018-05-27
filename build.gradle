@@ -6,19 +6,29 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
+    classpath 'com.gradle.publish:plugin-publish-plugin:0.9.10'
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.1.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.2.0'
   }
 }
 
 apply plugin: 'groovy'
-apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
+
+gradlePlugin {
+  plugins {
+    androidJUnitJacocoPlugin {
+      id = 'com.vanniktech.android.junit.jacoco.GenerationPlugin'
+      implementationClass = 'com.vanniktech.android.junit.jacoco.GenerationPlugin'
+    }
+  }
+}
 
 repositories {
   mavenCentral()
@@ -27,10 +37,12 @@ repositories {
 }
 
 dependencies {
-  compile gradleApi()
-  compile localGroovy()
-  compile 'com.android.tools.build:gradle:3.0.1'
+  api gradleApi()
+  api localGroovy()
 
+  compileOnly 'com.android.tools.build:gradle:3.1.2'
+
+  testCompile 'com.android.tools.build:gradle:3.1.2'
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
 }
@@ -52,6 +64,6 @@ pluginBundle {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.5'
+  gradleVersion = '4.7'
   distributionType = Wrapper.DistributionType.ALL
 }

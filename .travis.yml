@@ -1,38 +1,42 @@
-language: groovy
+language: android
 
-groovy:
-    - 2.3.6
-    - 2.3.9
-
-jdk:
-    - oraclejdk8
+jdk: oraclejdk8
 
 before_install:
-    - pip install --user codecov
-
-install: true
+  # Download SDK
+  - yes | sdkmanager "tools" &>/dev/null
+  - yes | sdkmanager "platform-tools" &>/dev/null
+  - yes | sdkmanager "build-tools;27.0.3" &>/dev/null
+  - yes | sdkmanager "platforms;android-27" &>/dev/null
+  # Update remaining dependencies and accept licenses
+  - yes | sdkmanager --update &>/dev/null
+  - yes | sdkmanager --licenses &>/dev/null
 
 script: ./gradlew clean build
 
 after_success:
-    - .buildscript/deploy_snapshot.sh
-    - codecov
+  - bash <(curl -s https://codecov.io/bash)
+  - .buildscript/deploy_snapshot.sh
 
 env:
-    global:
-        - secure: "NffOKEC6OevydbbST6Q7w20JB0SYzQxAGjskbHBy3LcE6mEXzos9IIL/yxgLv9RG3+rOAM8fgcfKLNHTgryF7n60fPFkVWy0PSaoSZU80Kl/tPb/H8lpSzS4HJR5yPNiq2o4Ldo0QbL6NvapalVguSUVSJmOGJzKFRGNIwGedbtwZhDXjZajOcu+nSnLvID2Zh7AYGKnYZ9UFmp2eijox99jS4ROQDqzNOBlFRGs6+1zP1tpxhNqnjb4xlPcgmiwiCl3RcztXaEGeSnYWj4bXaraHzmofmV/Kwh3TZH6c0NFoEUxlPHq0+YegBHhvxMZT8xv2TvF4hV/nXkCujw0UlCf0i9gpbG4mpnXLoHlzidMb+5+oOx67+LojRpdpgfMJ25lfdUm/hD9fF4smBtVAKgR99O3E2DlPCggKwulv65Tqrukyl2J59f5oQBnFYgkLcuV20dIov6zjh89h/sEfKec2ECJKIS8RtCXaEgVhIS63mavZMWFoDagHOle1oLTzpOgzyO2hc3Yyrf/JvzHGZr843GJxK1358nAVgdUF0gotJMCiHzbNCXkHDI3jcXNpTXndN00MXnFt8Scd9QekboJhmhIHkBuwQ4lFrIduYDVVx21tQxh2PT0I4w57/RIGb7aY+cVUfe71Je4GSWL5+as5mmf9SVmzEDLi5NSsqY="
-        - secure: "Zak/kktQmLPsGaiiS2sFU73y1ePAbbUODoxzHDcx9LowfmH9Kd+8kRtVnozLjDujzALRyDlImtMmdhupphpX3ZGu3BhujtcDxv+daYM7a9LXekfDWspM/NtHSAOLMkgIgwDEhwkMg8XpOwhoUPVF0b3OegDiwEMHFI2qiV3DmdpiokW9SFHHPopSRfqAC1wHSkJLPLCk+zlnhuDpiMXmhpNR+B7ukrEohYgXAK26oDp8eVHM7SACADoG0th/omexodz+f9OnxSK8uhoD/KeVB475bShP55ntpRIB3nPC6vaNOgVbyjO2y+PEAOwyftksCIopQBOLjqvqZJ4Ewo7dDxRhuwJjcYq+YvawxD6UUaU8agPcSAi2nlTcU/R5U9PBINih7JbJTGhVnGJ2kpfYkk48uE/wY0VmEHNje9XVyETcc5HF/2HpMictdpG6T8Vm26yWT4SgSNwQ2hBEsPnhe07IVqqlKzK+xX7ELw+h7uAR7KkKV+uqMLIInX06BIgfCaqRoVuNY9AlHB6LJ/JFdS+UJ366FEjcmXWhOYvmNvMNinrbnOPOmcskgPvC1bYr2TO0by8zsjk0UsGXzvvNwZ0xQSikYzS/FkhxpI1xYUZGHuj4XgE+tYMUOB9Bk61U7GOgSZfYrdPPh4Ql8zTBE8y9RSmBddhiwtsiYG52X5Y="
+  global:
+    - secure: "NffOKEC6OevydbbST6Q7w20JB0SYzQxAGjskbHBy3LcE6mEXzos9IIL/yxgLv9RG3+rOAM8fgcfKLNHTgryF7n60fPFkVWy0PSaoSZU80Kl/tPb/H8lpSzS4HJR5yPNiq2o4Ldo0QbL6NvapalVguSUVSJmOGJzKFRGNIwGedbtwZhDXjZajOcu+nSnLvID2Zh7AYGKnYZ9UFmp2eijox99jS4ROQDqzNOBlFRGs6+1zP1tpxhNqnjb4xlPcgmiwiCl3RcztXaEGeSnYWj4bXaraHzmofmV/Kwh3TZH6c0NFoEUxlPHq0+YegBHhvxMZT8xv2TvF4hV/nXkCujw0UlCf0i9gpbG4mpnXLoHlzidMb+5+oOx67+LojRpdpgfMJ25lfdUm/hD9fF4smBtVAKgR99O3E2DlPCggKwulv65Tqrukyl2J59f5oQBnFYgkLcuV20dIov6zjh89h/sEfKec2ECJKIS8RtCXaEgVhIS63mavZMWFoDagHOle1oLTzpOgzyO2hc3Yyrf/JvzHGZr843GJxK1358nAVgdUF0gotJMCiHzbNCXkHDI3jcXNpTXndN00MXnFt8Scd9QekboJhmhIHkBuwQ4lFrIduYDVVx21tQxh2PT0I4w57/RIGb7aY+cVUfe71Je4GSWL5+as5mmf9SVmzEDLi5NSsqY="
+    - secure: "Zak/kktQmLPsGaiiS2sFU73y1ePAbbUODoxzHDcx9LowfmH9Kd+8kRtVnozLjDujzALRyDlImtMmdhupphpX3ZGu3BhujtcDxv+daYM7a9LXekfDWspM/NtHSAOLMkgIgwDEhwkMg8XpOwhoUPVF0b3OegDiwEMHFI2qiV3DmdpiokW9SFHHPopSRfqAC1wHSkJLPLCk+zlnhuDpiMXmhpNR+B7ukrEohYgXAK26oDp8eVHM7SACADoG0th/omexodz+f9OnxSK8uhoD/KeVB475bShP55ntpRIB3nPC6vaNOgVbyjO2y+PEAOwyftksCIopQBOLjqvqZJ4Ewo7dDxRhuwJjcYq+YvawxD6UUaU8agPcSAi2nlTcU/R5U9PBINih7JbJTGhVnGJ2kpfYkk48uE/wY0VmEHNje9XVyETcc5HF/2HpMictdpG6T8Vm26yWT4SgSNwQ2hBEsPnhe07IVqqlKzK+xX7ELw+h7uAR7KkKV+uqMLIInX06BIgfCaqRoVuNY9AlHB6LJ/JFdS+UJ366FEjcmXWhOYvmNvMNinrbnOPOmcskgPvC1bYr2TO0by8zsjk0UsGXzvvNwZ0xQSikYzS/FkhxpI1xYUZGHuj4XgE+tYMUOB9Bk61U7GOgSZfYrdPPh4Ql8zTBE8y9RSmBddhiwtsiYG52X5Y="
 
 branches:
-    except:
-        - gh-pages
+  except:
+    - gh-pages
 
 notifications:
-    email: false
+  email: false
 
 sudo: false
 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
-    directories:
-        - $HOME/.gradle
-        - $HOME/.m2
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache

@@ -1,9 +1,6 @@
 package com.vanniktech.android.junit.jacoco
 
-import com.android.build.gradle.internal.SdkHandler
 import org.gradle.testfixtures.ProjectBuilder
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -12,24 +9,16 @@ final class GenerationPluginSpec extends Specification {
   final static COMPILE_SDK_VERSION = 27
   final static BUILD_TOOLS_VERSION = "27.0.1"
   final static APPLICATION_ID = "com.example"
-  // Test fixture that emulates a local android sdk
-  final static TEST_ANDROID_SDK = getClass().getResource("/android-sdk").toURI()
+
   def project
 
-  @Rule public TemporaryFolder tempDir = new TemporaryFolder()
-
   def "setup"() {
-    File testProjectDir = tempDir.newFolder("testProject")
-    def manifest = new File('src/main/AndroidManifest.xml',testProjectDir)
-    manifest.parentFile.mkdirs()
-    manifest.write("<manifest package=\"com.example.test\">\n<application />\n</manifest>")
-
     project = ProjectBuilder.builder()
-      .withProjectDir(testProjectDir)
-      .build()
+        .build()
 
-    // Set mock test sdk, we only need to test the plugins tasks
-    SdkHandler.sTestSdkFolder = project.file TEST_ANDROID_SDK
+    def manifest = new File(project.projectDir, 'src/main/AndroidManifest.xml')
+    manifest.parentFile.mkdirs()
+    manifest.write('<manifest package="com.example.test"/>')
   }
 
   @Unroll "#projectPlugin project"() {
@@ -37,7 +26,7 @@ final class GenerationPluginSpec extends Specification {
     project.apply plugin: projectPlugin
 
     when:
-    project.apply plugin: "com.vanniktech.android.junit.jacoco"
+    project.plugins.apply(GenerationPlugin)
 
     then:
     noExceptionThrown()
@@ -49,7 +38,7 @@ final class GenerationPluginSpec extends Specification {
   def "android - all tasks created"() {
     given:
     project.apply plugin: "com.android.application"
-    project.apply plugin: "com.vanniktech.android.junit.jacoco"
+    project.plugins.apply(GenerationPlugin)
     project.android {
       compileSdkVersion COMPILE_SDK_VERSION
       buildToolsVersion BUILD_TOOLS_VERSION
@@ -69,7 +58,7 @@ final class GenerationPluginSpec extends Specification {
   def "android [buildTypes] - all tasks created"() {
     given:
     project.apply plugin: "com.android.application"
-    project.apply plugin: "com.vanniktech.android.junit.jacoco"
+    project.plugins.apply(GenerationPlugin)
     project.android {
       compileSdkVersion COMPILE_SDK_VERSION
       buildToolsVersion BUILD_TOOLS_VERSION
@@ -95,7 +84,7 @@ final class GenerationPluginSpec extends Specification {
   def "android [buildTypes + productFlavors] - all tasks created"() {
     given:
     project.apply plugin: "com.android.application"
-    project.apply plugin: "com.vanniktech.android.junit.jacoco"
+    project.plugins.apply(GenerationPlugin)
     project.android {
       compileSdkVersion COMPILE_SDK_VERSION
       buildToolsVersion BUILD_TOOLS_VERSION
@@ -110,7 +99,7 @@ final class GenerationPluginSpec extends Specification {
       }
 
       flavorDimensions "number"
-  
+
       productFlavors {
         flavor1 {
           dimension "number"
@@ -134,7 +123,7 @@ final class GenerationPluginSpec extends Specification {
   def "android [buildTypes + productFlavors + flavorDimensions] - all tasks created"() {
     given:
     project.apply plugin: "com.android.application"
-    project.apply plugin: "com.vanniktech.android.junit.jacoco"
+    project.plugins.apply(GenerationPlugin)
     project.android {
       compileSdkVersion COMPILE_SDK_VERSION
       buildToolsVersion BUILD_TOOLS_VERSION
