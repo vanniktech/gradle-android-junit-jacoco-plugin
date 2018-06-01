@@ -24,7 +24,7 @@ apply plugin: "com.vanniktech.maven.publish"
 gradlePlugin {
   plugins {
     androidJUnitJacocoPlugin {
-      id = 'com.vanniktech.android.junit.jacoco.GenerationPlugin'
+      id = 'com.vanniktech.android.junit.jacoco'
       implementationClass = 'com.vanniktech.android.junit.jacoco.GenerationPlugin'
     }
   }
