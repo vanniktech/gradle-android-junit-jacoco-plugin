@@ -224,7 +224,7 @@ public class GenerationTest {
             assert reports.html.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}"
 
             assert classDirectories.dir == project.file("build/")
-            assert contentEquals(classDirectories.includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString()])
+            assert contentEquals(classDirectories.includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString(), "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString()])
 
             assert taskDependsOn(task, "test${flavor.capitalize()}${buildType.capitalize()}UnitTest")
             assert taskDependsOn(project.tasks.findByName('check'), "jacocoTestReport${flavor.capitalize()}${buildType.capitalize()}")
@@ -266,7 +266,7 @@ public class GenerationTest {
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug'
 
             assert classDirectories.dir == project.file("build/")
-            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**'])
+            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
 
             assert taskDependsOn(debugTask, 'testDebugUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportDebug')
@@ -302,7 +302,7 @@ public class GenerationTest {
             assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release'
 
             assert classDirectories.dir == project.file("build/")
-            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**'])
+            assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
 
             assert taskDependsOn(releaseTask, 'testReleaseUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRelease')
