@@ -159,7 +159,11 @@ class GenerationPlugin implements Plugin<Project> {
                     }
                 }
 
-                def classPaths = ["**/intermediates/classes/${sourcePath}/**"]
+                def classPaths = [
+                  "**/intermediates/classes/${sourcePath}/**",
+                  "**/intermediates/javac/${sourceName}/*/classes/**" // path for a newer Android Gradle Plugin
+                ]
+
                 if (isKotlinAndroid(subProject)) {
                     classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
                     if (productFlavorName) {
