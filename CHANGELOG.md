@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.12.0 *(In development)*
----------------------------------
+Version 0.12.0 *(2018-06-30)*
+-----------------------------
+
+- Add the new path for Java class files in newer Android Gradle Plugin … [\#122](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/122) ([vRallev](https://github.com/vRallev))
+- Fix id for Gradle Plugin that was added in \#118 [\#120](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/120) ([vanniktech](https://github.com/vanniktech))
+- Unify setup, improve a few things and bump versions. [\#118](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/118) ([vanniktech](https://github.com/vanniktech))
+- Use Gradle Maven Publish Plugin for publishing. [\#117](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/117) ([vanniktech](https://github.com/vanniktech))
+- Instant app support [\#111](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/111) ([dazza5000](https://github.com/dazza5000))
 
 Version 0.11.0 *(2017-12-10)*
 -----------------------------
