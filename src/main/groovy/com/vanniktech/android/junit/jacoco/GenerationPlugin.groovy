@@ -161,7 +161,7 @@ class GenerationPlugin implements Plugin<Project> {
 
                 def classPaths = [
                   "**/intermediates/classes/${sourcePath}/**",
-                  "**/intermediates/javac/${sourceName}/*/classes/**" // path for a newer Android Gradle Plugin
+                  "**/intermediates/javac/${sourceName}/*/classes/**" // Android Gradle Plugin 3.2.x support.
                 ]
 
                 if (isKotlinAndroid(subProject)) {
