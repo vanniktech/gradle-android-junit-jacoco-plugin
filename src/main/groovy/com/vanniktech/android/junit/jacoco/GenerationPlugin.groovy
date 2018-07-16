@@ -43,8 +43,7 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         if (!shouldIgnore(subProject, extension)) {
-            if (isAndroidApplication(subProject) || isAndroidLibrary(subProject) ||
-                    isAndroidFeature(subProject) || isAndroidInstantApp(subProject)) {
+            if (isAndroidProject(subProject)) {
                 addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
                 return true
             } else if (isJavaProject(subProject)) {
@@ -120,7 +119,7 @@ class GenerationPlugin implements Plugin<Project> {
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
             variants = subProject.android.applicationVariants
-        } else if (isAndroidLibrary(subProject)) {
+        } else {
             variants = subProject.android.libraryVariants
         }
 
@@ -293,28 +292,28 @@ class GenerationPlugin implements Plugin<Project> {
         ] : extension.excludes
     }
 
-    protected static boolean isAndroidLibrary(final Project project) {
-        return project.plugins.hasPlugin('com.android.library')
+    private static boolean isAndroidProject(final Project project) {
+        final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
+        final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
+        final boolean isAndroidTest = project.plugins.hasPlugin('com.android.test')
+        final boolean isAndroidFeature = project.plugins.hasPlugin('com.android.feature')
+        final boolean isAndroidInstantApp = project.plugins.hasPlugin('com.android.instantapp')
+        return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidFeature || isAndroidInstantApp
     }
 
-    protected static boolean isAndroidApplication(final Project project) {
-        return project.plugins.hasPlugin('com.android.application')
-    }
-
-    protected static boolean isJavaProject(final Project project) {
-        return project.plugins.hasPlugin('org.gradle.java')
-    }
-
-    protected static boolean isAndroidInstantApp(final Project project) {
-        return project.plugins.hasPlugin('com.android.instantapp')
-    }
-
-    protected static boolean isAndroidFeature(final Project project) {
-        return project.plugins.hasPlugin('com.android.feature')
+    private static boolean isJavaProject(final Project project) {
+        final boolean isJava = project.plugins.hasPlugin('java')
+        final boolean isJavaLibrary = project.plugins.hasPlugin('java-library')
+        final boolean isJavaGradlePlugin = project.plugins.hasPlugin('java-gradle-plugin')
+        return isJava || isJavaLibrary || isJavaGradlePlugin
     }
 
     protected static boolean isKotlinAndroid(final Project project) {
         return project.plugins.hasPlugin('org.jetbrains.kotlin.android')
+    }
+
+    protected static boolean isAndroidApplication(final Project project) {
+        return project.plugins.hasPlugin('com.android.application')
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {

@@ -10,15 +10,15 @@ import org.gradle.testfixtures.ProjectBuilder
 
 /** Provides projects for testing */
 final class ProjectHelper {
-    public static ProjectHelper prepare(ProjectType projectType) {
+    static ProjectHelper prepare(ProjectType projectType) {
         return new ProjectHelper(projectType)
     }
 
-    private final ProjectType projectType;
-    private final Project project;
+    private final ProjectType projectType
+    private final Project project
 
     private ProjectHelper(ProjectType projectType) {
-        this.projectType = projectType;
+        this.projectType = projectType
 
         switch (projectType) {
             case ProjectType.JAVA:
@@ -72,7 +72,7 @@ final class ProjectHelper {
     }
 
     /** Adds flavors to project, only for Android based projects */
-    public ProjectHelper withRedBlueFlavors() {
+    ProjectHelper withRedBlueFlavors() {
         if (projectType == ProjectType.JAVA) {
             throw new UnsupportedOperationException('Not supported with Java project')
         }
@@ -112,19 +112,19 @@ final class ProjectHelper {
         return this
     }
 
-    public Project get() {
+    Project get() {
         return project
     }
 
-    public enum ProjectType {
+    enum ProjectType {
         ANDROID_APPLICATION('com.android.application'),
         ANDROID_LIBRARY('com.android.library'),
-        JAVA('java');
+        JAVA('java')
 
-        private final String pluginName;
+        private final String pluginName
 
         ProjectType(String pluginName) {
-            this.pluginName = pluginName;
+            this.pluginName = pluginName
         }
     }
 }
