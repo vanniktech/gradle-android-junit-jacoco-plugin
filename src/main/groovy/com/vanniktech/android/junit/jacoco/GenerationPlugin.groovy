@@ -28,6 +28,13 @@ class GenerationPlugin implements Plugin<Project> {
                     addJacoco(subProject, extension, mergeTask, mergedReportTask)
                 }
             }
+
+            rootProject.afterEvaluate {
+                // Reapply the Jacoco version because the extension was probably configured later
+                rootProject.jacoco {
+                    toolVersion rootProject.junitJacoco.jacocoVersion
+                }
+            }
         } else {
             rootProject.afterEvaluate {
                 final def extension = rootProject.junitJacoco
