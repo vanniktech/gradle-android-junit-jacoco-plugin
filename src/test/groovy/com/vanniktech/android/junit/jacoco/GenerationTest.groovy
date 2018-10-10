@@ -43,6 +43,19 @@ class GenerationTest {
         assertJacocoAndroidWithoutFlavors(androidLibraryProject)
     }
 
+    @Test void addJacocoAndroidFeature() {
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_FEATURE).get()
+
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject)
+    }
+
+    @Test void addJacocoAndroidTest() {
+        def androidTestProject = ProjectHelper.prepare(ANDROID_TEST).get()
+        assert !GenerationPlugin.addJacoco(androidTestProject, new JunitJacocoExtension())
+    }
+
     @Test void addJacocoJava() {
         def javaProject = ProjectHelper.prepare(JAVA).get()
 
