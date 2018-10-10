@@ -115,6 +115,10 @@ class GenerationPlugin implements Plugin<Project> {
             it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
         }
 
+        if (extension.configureInstrumentationCoverage) {
+            subProject.android.jacoco.version = extension.jacocoVersion
+        }
+
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
             variants = subProject.android.applicationVariants
@@ -129,7 +133,8 @@ class GenerationPlugin implements Plugin<Project> {
         variants.all { variant ->
 
             def productFlavorName = variant.getFlavorName()
-            def buildTypeName = variant.getBuildType().name
+            def buildType = variant.getBuildType()
+            def buildTypeName = buildType.name
 
             def sourceName, sourcePath
             if (!productFlavorName) {
@@ -139,85 +144,124 @@ class GenerationPlugin implements Plugin<Project> {
                 sourcePath = "${productFlavorName}/${buildTypeName}"
             }
 
-            final def testTaskName = "test${sourceName.capitalize()}UnitTest"
-            final def taskName = "jacocoTestReport${sourceName.capitalize()}"
+            final def jvmTaskName = "jacocoTestReport${sourceName.capitalize()}"
+            final def combinedTaskName = "combinedTestReport${sourceName.capitalize()}"
 
-            subProject.task(taskName, type: JacocoReport, dependsOn: testTaskName) {
-                group = 'Reporting'
-                description = "Generate Jacoco coverage reports after running ${sourceName} tests."
+            final def jvmTestTaskName = "test${sourceName.capitalize()}UnitTest"
+            final def instrumentationTestTaskName = "create${sourceName.capitalize()}CoverageReport"
 
-                reports {
-                    xml {
-                        enabled = true
-                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.xml")
-                    }
-                    csv {
-                        enabled = true
-                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}/jacoco.csv")
-                    }
-                    html {
-                        enabled = true
-                        destination subProject.file("${subProject.buildDir}/reports/jacoco/${sourceName}")
-                    }
-                }
+            addJacocoTask(false, subProject, extension, mergeTask, mergedReportTask, jvmTaskName,
+                jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
 
-                def classPaths = [
-                  "**/intermediates/classes/${sourcePath}/**",
-                  "**/intermediates/javac/${sourceName}/*/classes/**" // Android Gradle Plugin 3.2.x support.
-                ]
-
-                if (isKotlinAndroid(subProject)) {
-                    classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
-                    if (productFlavorName) {
-                        classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**"
-                    }
-                }
-
-                classDirectories = subProject.fileTree(
-                        dir: subProject.buildDir,
-                        includes: classPaths,
-                        excludes: getExcludes(extension)
-                )
-
-                final def coverageSourceDirs = [
-                        "src/main/clojure",
-                        "src/main/groovy",
-                        "src/main/java",
-                        "src/main/kotlin",
-                        "src/main/scala",
-                        "src/$buildTypeName/clojure",
-                        "src/$buildTypeName/groovy",
-                        "src/$buildTypeName/java",
-                        "src/$buildTypeName/kotlin",
-                        "src/$buildTypeName/scala"
-                ]
-
-                if (productFlavorName) {
-                    coverageSourceDirs.add("src/$productFlavorName/clojure")
-                    coverageSourceDirs.add("src/$productFlavorName/groovy")
-                    coverageSourceDirs.add("src/$productFlavorName/java")
-                    coverageSourceDirs.add("src/$productFlavorName/kotlin")
-                    coverageSourceDirs.add("src/$productFlavorName/scala")
-                }
-
-                additionalSourceDirs = subProject.files(coverageSourceDirs)
-                sourceDirectories = subProject.files(coverageSourceDirs)
-                executionData = subProject.files("${subProject.buildDir}/jacoco/${testTaskName}.exec")
-
-                if (mergeTask != null) {
-                    mergeTask.executionData += executionData
-                }
-                if (mergedReportTask != null) {
-                    mergedReportTask.classDirectories += classDirectories
-                    mergedReportTask.additionalSourceDirs += additionalSourceDirs
-                    mergedReportTask.sourceDirectories += sourceDirectories
-                }
+            if (extension.configureInstrumentationCoverage && buildType.testCoverageEnabled) {
+                addJacocoTask(true, subProject, extension, mergeTask, mergedReportTask, combinedTaskName,
+                    jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
             }
-
-            subProject.check.dependsOn "${taskName}"
         }
 
         return true
+    }
+
+    private static void addJacocoTask(final boolean combined, final Project subProject, final JunitJacocoExtension extension,
+                                      JacocoMerge mergeTask, JacocoReport mergedReportTask, final String taskName,
+                                      final String jvmTestTaskName, final String instrumentationTestTaskName, final String sourceName,
+                                      final String sourcePath, final String productFlavorName, final String buildTypeName) {
+        final def destinationDir
+        if (combined) {
+            destinationDir = "${subProject.buildDir}/reports/jacocoCombined"
+        } else {
+            destinationDir = "${subProject.buildDir}/reports/jacoco"
+        }
+
+        subProject.task(taskName, type: JacocoReport) {
+            group = 'Reporting'
+            description = "Generate Jacoco coverage reports after running ${sourceName} tests."
+
+            if (combined) {
+                dependsOn jvmTestTaskName, instrumentationTestTaskName
+            } else {
+                dependsOn jvmTestTaskName
+            }
+
+            reports {
+                xml {
+                    enabled = true
+                    destination subProject.file("$destinationDir/${sourceName}/jacoco.xml")
+                }
+                csv {
+                    enabled = true
+                    destination subProject.file("$destinationDir/${sourceName}/jacoco.csv")
+                }
+                html {
+                    enabled = true
+                    destination subProject.file("$destinationDir/${sourceName}")
+                }
+            }
+
+            def classPaths = [
+                "**/intermediates/classes/${sourcePath}/**",
+                "**/intermediates/javac/${sourceName}/*/classes/**" // Android Gradle Plugin 3.2.x support.
+            ]
+
+            if (isKotlinAndroid(subProject)) {
+                classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
+                if (productFlavorName) {
+                    classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**"
+                }
+            }
+
+            classDirectories = subProject.fileTree(
+                dir: subProject.buildDir,
+                includes: classPaths,
+                excludes: getExcludes(extension)
+            )
+
+            final def coverageSourceDirs = [
+                "src/main/clojure",
+                "src/main/groovy",
+                "src/main/java",
+                "src/main/kotlin",
+                "src/main/scala",
+                "src/$buildTypeName/clojure",
+                "src/$buildTypeName/groovy",
+                "src/$buildTypeName/java",
+                "src/$buildTypeName/kotlin",
+                "src/$buildTypeName/scala"
+            ]
+
+            if (productFlavorName) {
+                coverageSourceDirs.add("src/$productFlavorName/clojure")
+                coverageSourceDirs.add("src/$productFlavorName/groovy")
+                coverageSourceDirs.add("src/$productFlavorName/java")
+                coverageSourceDirs.add("src/$productFlavorName/kotlin")
+                coverageSourceDirs.add("src/$productFlavorName/scala")
+            }
+
+            additionalSourceDirs = subProject.files(coverageSourceDirs)
+            sourceDirectories = subProject.files(coverageSourceDirs)
+            executionData = subProject.files("${subProject.buildDir}/jacoco/${jvmTestTaskName}.exec")
+
+            if (combined) {
+                // add instrumentation coverage execution data
+                executionData += subProject.fileTree("${subProject.buildDir}/outputs/code_coverage").matching {
+                    include "**/*.ec"
+                }
+            }
+
+            // add if true in extension or for the unit test Jacoco task
+            def addToMergeTask = !combined || extension.includeInstrumentationCoverageInMergedReport
+
+            if (mergeTask != null && addToMergeTask) {
+                mergeTask.executionData += executionData
+            }
+            if (mergedReportTask != null && addToMergeTask) {
+                mergedReportTask.classDirectories += classDirectories
+                mergedReportTask.additionalSourceDirs += additionalSourceDirs
+                mergedReportTask.sourceDirectories += sourceDirectories
+            }
+        }
+
+        subProject.check.dependsOn "${taskName}"
     }
 
     private static addJacocoMergeToRootProject(final Project project, final JunitJacocoExtension extension) {
