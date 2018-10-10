@@ -2,6 +2,7 @@ package com.vanniktech.android.junit.jacoco
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.TestExtension
 import com.android.build.gradle.api.BaseVariant
 import com.android.builder.model.BuildType
 import groovy.mock.interceptor.MockFor
@@ -46,6 +47,7 @@ final class ProjectHelper {
                 project.android.applicationVariants.metaClass.all = { delegate.each(it) }
                 break
             case ProjectType.ANDROID_LIBRARY:
+            case ProjectType.ANDROID_FEATURE:
                 project = ProjectBuilder.builder().withName('android library').build()
                 def androidMock = new MockFor(LibraryExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
@@ -65,6 +67,12 @@ final class ProjectHelper {
                 project.metaClass.android = androidMock
                 // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
+                break
+            case ProjectType.ANDROID_TEST:
+                project = ProjectBuilder.builder().withName('android test').build()
+                def androidMock = new MockFor(TestExtension)
+                androidMock.metaClass.testOptions = null
+                project.metaClass.android = androidMock
                 break
         }
 
@@ -103,6 +111,7 @@ final class ProjectHelper {
                 project.android.applicationVariants.metaClass.all = { delegate.each(it) }
                 break
             case ProjectType.ANDROID_LIBRARY:
+            case ProjectType.ANDROID_FEATURE:
                 project.android.metaClass.libraryVariants = variants
                 // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
@@ -119,6 +128,8 @@ final class ProjectHelper {
     enum ProjectType {
         ANDROID_APPLICATION('com.android.application'),
         ANDROID_LIBRARY('com.android.library'),
+        ANDROID_FEATURE('com.android.feature'),
+        ANDROID_TEST('com.android.test'),
         JAVA('java')
 
         private final String pluginName

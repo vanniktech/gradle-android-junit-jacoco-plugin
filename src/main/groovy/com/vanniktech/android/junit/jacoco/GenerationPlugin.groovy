@@ -44,18 +44,16 @@ class GenerationPlugin implements Plugin<Project> {
     protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         if (!shouldIgnore(subProject, extension)) {
             if (isAndroidProject(subProject)) {
-                addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
-                return true
+                return addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
             } else if (isJavaProject(subProject)) {
-                addJacocoJava(subProject, extension, mergeTask, mergedReportTask)
-                return true
+                return addJacocoJava(subProject, extension, mergeTask, mergedReportTask)
             }
         }
 
         return false
     }
 
-    private static void addJacocoJava(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
+    private static boolean addJacocoJava(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -103,9 +101,10 @@ class GenerationPlugin implements Plugin<Project> {
         }
 
         subProject.check.dependsOn 'jacocoTestReport'
+        return true
     }
 
-    private static void addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
+    private static boolean addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -119,8 +118,12 @@ class GenerationPlugin implements Plugin<Project> {
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
             variants = subProject.android.applicationVariants
-        } else {
+        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject)) {
+            // FeatureExtension extends LibraryExtension
             variants = subProject.android.libraryVariants
+        } else {
+            // test plugin or something else
+            return false
         }
 
         variants.all { variant ->
@@ -213,6 +216,8 @@ class GenerationPlugin implements Plugin<Project> {
 
             subProject.check.dependsOn "${taskName}"
         }
+
+        return true
     }
 
     private static addJacocoMergeToRootProject(final Project project, final JunitJacocoExtension extension) {
@@ -314,6 +319,14 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isAndroidApplication(final Project project) {
         return project.plugins.hasPlugin('com.android.application')
+    }
+
+    protected static boolean isAndroidLibrary(final Project project) {
+        return project.plugins.hasPlugin('com.android.library')
+    }
+
+    protected static boolean isAndroidFeature(final Project project) {
+        return project.plugins.hasPlugin('com.android.feature')
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
