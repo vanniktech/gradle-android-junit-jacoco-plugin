@@ -28,6 +28,13 @@ class GenerationPlugin implements Plugin<Project> {
                     addJacoco(subProject, extension, mergeTask, mergedReportTask)
                 }
             }
+
+            rootProject.afterEvaluate {
+                rootProject.jacoco {
+                    toolVersion rootProject.junitJacoco.jacocoVersion
+                }
+            }
+
         } else {
             rootProject.afterEvaluate {
                 final def extension = rootProject.junitJacoco
@@ -119,8 +126,11 @@ class GenerationPlugin implements Plugin<Project> {
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
             variants = subProject.android.applicationVariants
-        } else {
+        } else if (isAndroidLibrary(subProject)) {
             variants = subProject.android.libraryVariants
+        } else {
+            // could be a test project or any other kind
+            return
         }
 
         variants.all { variant ->
@@ -314,6 +324,10 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isAndroidApplication(final Project project) {
         return project.plugins.hasPlugin('com.android.application')
+    }
+
+    protected static boolean isAndroidLibrary(final Project project) {
+        return project.plugins.hasPlugin('com.android.library')
     }
 
     private static boolean shouldIgnore(final Project project, final JunitJacocoExtension extension) {
