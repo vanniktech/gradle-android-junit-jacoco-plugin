@@ -10,5 +10,6 @@ class JunitJacocoExtensionTest {
     assert extension.ignoreProjects.size() == 0
     assert extension.excludes == null
     assert !extension.includeNoLocationClasses
+    assert !extension.includeInstrumentationCoverageInMergedReport
   }
 }

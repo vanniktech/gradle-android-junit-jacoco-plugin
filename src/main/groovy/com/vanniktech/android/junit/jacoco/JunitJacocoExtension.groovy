@@ -28,4 +28,11 @@ class JunitJacocoExtension {
      * @since 0.6.0
      */
     boolean includeNoLocationClasses
+
+    /**
+     * Whether or not to include instrumentation coverage in the final global merged report.
+     * Note that this will run all instrumentation tests when true.
+     * @since 0.13.0
+     */
+    boolean includeInstrumentationCoverageInMergedReport = false
 }

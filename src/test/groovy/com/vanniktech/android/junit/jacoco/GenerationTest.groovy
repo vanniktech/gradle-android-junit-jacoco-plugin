@@ -32,7 +32,7 @@ class GenerationTest {
 
         GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
 
-        assertJacocoAndroidWithoutFlavors(androidAppProject)
+        assertJacocoAndroidWithoutFlavors(androidAppProject, true)
     }
 
     @Test void addJacocoAndroidLibrary() {
@@ -40,7 +40,7 @@ class GenerationTest {
 
         GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        assertJacocoAndroidWithoutFlavors(androidLibraryProject)
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject, true)
     }
 
     @Test void addJacocoAndroidFeature() {
@@ -48,7 +48,34 @@ class GenerationTest {
 
         GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
-        assertJacocoAndroidWithoutFlavors(androidLibraryProject)
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject, true)
+    }
+
+    @Test void addJacocoAndroidAppWithoutInstrumentationCoverage() {
+        def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+        androidAppProject.android.buildTypes.each { it.testCoverageEnabled = false }
+
+        GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
+
+        assertJacocoAndroidWithoutFlavors(androidAppProject, false)
+    }
+
+    @Test void addJacocoAndroidLibraryWithoutInstrumentationCoverage() {
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+        androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
+
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject, false)
+    }
+
+    @Test void addJacocoAndroidFeatureWithoutInstrumentationCoverage() {
+        def androidLibraryProject = ProjectHelper.prepare(ANDROID_FEATURE).get()
+        androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
+
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
+
+        assertJacocoAndroidWithoutFlavors(androidLibraryProject, false)
     }
 
     @Test void addJacocoAndroidTest() {
@@ -76,7 +103,9 @@ class GenerationTest {
         GenerationPlugin.addJacoco(javaProject, extension)
 
         assert androidAppProject.jacoco.toolVersion == extension.jacocoVersion
+        assert androidAppProject.android.jacoco.version == extension.jacocoVersion
         assert androidLibraryProject.jacoco.toolVersion == extension.jacocoVersion
+        assert androidLibraryProject.android.jacoco.version == extension.jacocoVersion
         assert javaProject.jacoco.toolVersion == extension.jacocoVersion
     }
 
@@ -230,7 +259,7 @@ class GenerationTest {
         }
     }
 
-    private void assertJacocoAndroidWithoutFlavors(final Project project) {
+    private void assertJacocoAndroidWithoutFlavors(final Project project, final boolean hasCoverage) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
         assert project.jacoco.toolVersion == '0.8.2'
@@ -271,6 +300,46 @@ class GenerationTest {
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportDebug')
         }
 
+        final def debugTaskCombined = project.tasks.findByName('combinedTestReportDebug')
+        if (hasCoverage) {
+            assert debugTaskCombined instanceof JacocoReport
+
+            debugTaskCombined.with {
+                assert description == 'Generate Jacoco coverage reports after running debug tests.'
+                assert group == 'Reporting'
+
+                assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testDebugUnitTest.exec")
+
+                assert additionalSourceDirs.size() == 10
+                LANGUAGES.every {
+                    assert additionalSourceDirs.contains(project.file("src/main/$it"))
+                    assert additionalSourceDirs.contains(project.file("src/debug/$it"))
+                }
+
+                assert sourceDirectories.size() == 10
+                LANGUAGES.every {
+                    assert sourceDirectories.contains(project.file("src/main/$it"))
+                    assert sourceDirectories.contains(project.file("src/debug/$it"))
+                }
+
+                assert reports.xml.enabled
+                assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug/jacoco.xml'
+                assert reports.csv.enabled
+                assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug/jacoco.csv'
+                assert reports.html.enabled
+                assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug'
+
+                assert classDirectories.dir == project.file("build/")
+                assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
+
+                assert taskDependsOn(debugTaskCombined, 'testDebugUnitTest')
+                assert taskDependsOn(debugTaskCombined, 'createDebugCoverageReport')
+                assert taskDependsOn(project.tasks.findByName('check'), 'combinedTestReportDebug')
+            }
+        } else {
+            assert debugTaskCombined == null
+        }
+
         final def releaseTask = project.tasks.findByName('jacocoTestReportRelease')
 
         assert releaseTask instanceof JacocoReport
@@ -305,6 +374,47 @@ class GenerationTest {
 
             assert taskDependsOn(releaseTask, 'testReleaseUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRelease')
+        }
+
+        final def releaseTaskCombined = project.tasks.findByName('combinedTestReportRelease')
+
+        if (hasCoverage) {
+            assert releaseTaskCombined instanceof JacocoReport
+
+            releaseTaskCombined.with {
+                assert description == 'Generate Jacoco coverage reports after running release tests.'
+                assert group == 'Reporting'
+
+                assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testReleaseUnitTest.exec")
+
+                assert additionalSourceDirs.size() == 10
+                LANGUAGES.every {
+                    assert additionalSourceDirs.contains(project.file("src/main/$it"))
+                    assert additionalSourceDirs.contains(project.file("src/release/$it"))
+                }
+
+                assert sourceDirectories.size() == 10
+                LANGUAGES.every {
+                    assert sourceDirectories.contains(project.file("src/main/$it"))
+                    assert sourceDirectories.contains(project.file("src/release/$it"))
+                }
+
+                assert reports.xml.enabled
+                assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release/jacoco.xml'
+                assert reports.csv.enabled
+                assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release/jacoco.csv'
+                assert reports.html.enabled
+                assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release'
+
+                assert classDirectories.dir == project.file("build/")
+                assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
+
+                assert taskDependsOn(releaseTaskCombined, 'testReleaseUnitTest')
+                assert taskDependsOn(releaseTaskCombined, 'createReleaseCoverageReport')
+                assert taskDependsOn(project.tasks.findByName('check'), 'combinedTestReportRelease')
+            }
+        } else {
+            assert releaseTaskCombined == null
         }
     }
 
