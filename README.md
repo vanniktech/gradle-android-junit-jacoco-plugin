@@ -10,19 +10,19 @@ Gradle plugin that generates Jacoco reports from a Gradle Project. Android Appli
   - Gets executed when the `check` task is executed
   - Generated Jacoco reports can be found under `build/reports/jacoco/<Flavor>/<BuildType>`.
 
-*Instrumentation tests*
+*Instrumented tests*
 - Task `combinedTestReport<Flavor><BuildType>`
-  - Executes the `test<Flavor><BuildType>UnitTest` and `create<Flavor><BuildType>CoverageReports` tasks before (JVM and instrumentation tests)
+  - Executes the `test<Flavor><BuildType>UnitTest` and `create<Flavor><BuildType>CoverageReports` tasks before (JVM and instrumented tests)
   - Gets executed when the `check` task is executed
   - Generated Jacoco reports can be found under `build/reports/jacocoCombined/<Flavor>/<BuildType>`.
 Note that this task is only generated, if you set `testCoverageEnabled = true` for your [build type](https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.BuildType.html#com.android.build.gradle.internal.dsl.BuildType:testCoverageEnabled), e.g.
 ```groovy
 android {
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
+  buildTypes {
+    debug {
+      testCoverageEnabled true
     }
+  }
 }
 ```
 
@@ -92,7 +92,6 @@ junitJacoco {
   ignoreProjects = [] // type String array
   excludes // type String List
   includeNoLocationClasses = false // type boolean
-  configureInstrumentationCoverage = true // type boolean
   includeInstrumentationCoverageInMergedReport = false// type boolean
 }
 ```

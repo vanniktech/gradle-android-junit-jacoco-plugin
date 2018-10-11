@@ -30,14 +30,6 @@ class JunitJacocoExtension {
     boolean includeNoLocationClasses
 
     /**
-     * Whether or not to use this plugin for configuring the Jacoco version and creating
-     * a task to combine the coverage reports for instrumentation and unit tests. The default
-     * value is true.
-     * @since 0.13.0
-     */
-    boolean configureInstrumentationCoverage = true
-
-    /**
      * Whether or not to include instrumentation coverage in the final global merged report.
      * Note that this will run all instrumentation tests when true.
      * @since 0.13.0

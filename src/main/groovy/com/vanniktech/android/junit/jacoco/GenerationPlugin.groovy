@@ -115,9 +115,7 @@ class GenerationPlugin implements Plugin<Project> {
             it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
         }
 
-        if (extension.configureInstrumentationCoverage) {
-            subProject.android.jacoco.version = extension.jacocoVersion
-        }
+        subProject.android.jacoco.version = extension.jacocoVersion
 
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
@@ -153,7 +151,7 @@ class GenerationPlugin implements Plugin<Project> {
             addJacocoTask(false, subProject, extension, mergeTask, mergedReportTask, jvmTaskName,
                 jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
 
-            if (extension.configureInstrumentationCoverage && buildType.testCoverageEnabled) {
+            if (buildType.testCoverageEnabled) {
                 addJacocoTask(true, subProject, extension, mergeTask, mergedReportTask, combinedTaskName,
                     jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
             }

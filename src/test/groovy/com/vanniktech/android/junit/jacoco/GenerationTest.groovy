@@ -53,30 +53,27 @@ class GenerationTest {
 
     @Test void addJacocoAndroidAppWithoutInstrumentationCoverage() {
         def androidAppProject = ProjectHelper.prepare(ANDROID_APPLICATION).get()
+        androidAppProject.android.buildTypes.each { it.testCoverageEnabled = false }
 
-        def extension = new JunitJacocoExtension()
-        extension.configureInstrumentationCoverage = false
-        GenerationPlugin.addJacoco(androidAppProject, extension)
+        GenerationPlugin.addJacoco(androidAppProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithoutFlavors(androidAppProject, false)
     }
 
     @Test void addJacocoAndroidLibraryWithoutInstrumentationCoverage() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
+        androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
 
-        def extension = new JunitJacocoExtension()
-        extension.configureInstrumentationCoverage = false
-        GenerationPlugin.addJacoco(androidLibraryProject, extension)
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithoutFlavors(androidLibraryProject, false)
     }
 
     @Test void addJacocoAndroidFeatureWithoutInstrumentationCoverage() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_FEATURE).get()
+        androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
 
-        def extension = new JunitJacocoExtension()
-        extension.configureInstrumentationCoverage = false
-        GenerationPlugin.addJacoco(androidLibraryProject, extension)
+        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
 
         assertJacocoAndroidWithoutFlavors(androidLibraryProject, false)
     }

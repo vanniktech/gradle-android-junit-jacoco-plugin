@@ -9,6 +9,7 @@ import com.android.builder.model.BuildType
 import groovy.mock.interceptor.MockFor
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
+
 /** Provides projects for testing */
 final class ProjectHelper {
     static ProjectHelper prepare(ProjectType projectType) {
