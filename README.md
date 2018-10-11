@@ -92,7 +92,7 @@ junitJacoco {
   ignoreProjects = [] // type String array
   excludes // type String List
   includeNoLocationClasses = false // type boolean
-  includeInstrumentationCoverageInMergedReport = false// type boolean
+  includeInstrumentationCoverageInMergedReport = false // type boolean
 }
 ```
 
