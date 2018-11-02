@@ -208,6 +208,30 @@ class GenerationTest {
         assert taskDependsOn(javaProject.check, 'jacocoTestReport')
     }
 
+    @Test void mergedJacocoReportDoesNotHaveDependencies() {
+        def rootProject = ProjectHelper.prepare(ROOT).get()
+
+        def mergeJacocoReports = rootProject.tasks.findByName("mergeJacocoReports")
+        def jacocoTestReportMerged = rootProject.tasks.findByName("jacocoTestReportMerged")
+
+        assert mergeJacocoReports != null
+        assert jacocoTestReportMerged != null
+
+        values().findAll { it != ROOT && it != ANDROID_TEST }.each {
+            def project = ProjectHelper.prepare(it, rootProject).get()
+            GenerationPlugin.addJacoco(project, new JunitJacocoExtension(), mergeJacocoReports, jacocoTestReportMerged)
+            if (it == JAVA) {
+                assertJacocoJava(project)
+            } else {
+                assertJacocoAndroidWithoutFlavors(project, true)
+            }
+        }
+
+        assert mergeJacocoReports.dependsOn.isEmpty()
+        assert jacocoTestReportMerged.dependsOn.size() == 1
+        assert jacocoTestReportMerged.dependsOn.contains(mergeJacocoReports)
+    }
+
     private void assertJacocoAndroidWithFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 

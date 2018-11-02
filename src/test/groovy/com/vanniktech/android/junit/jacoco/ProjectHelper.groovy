@@ -13,21 +13,32 @@ import org.gradle.testfixtures.ProjectBuilder
 /** Provides projects for testing */
 final class ProjectHelper {
     static ProjectHelper prepare(ProjectType projectType) {
-        return new ProjectHelper(projectType)
+        return prepare(projectType, null)
+    }
+
+    static ProjectHelper prepare(ProjectType projectType, Project parent) {
+        return new ProjectHelper(projectType, parent)
     }
 
     private final ProjectType projectType
     private final Project project
 
-    private ProjectHelper(ProjectType projectType) {
+    private ProjectHelper(ProjectType projectType, Project parent) {
         this.projectType = projectType
 
+        def builder = ProjectBuilder.builder().withParent(parent)
+
         switch (projectType) {
+            case ProjectType.ROOT:
+                project = builder.withName('root').build()
+                project.extensions.create('junitJacoco', JunitJacocoExtension)
+                GenerationPlugin.addJacocoMergeToRootProject(project, project.junitJacoco)
+                break
             case ProjectType.JAVA:
-                project = ProjectBuilder.builder().withName('java').build()
+                project = builder.withName('java').build()
                 break
             case ProjectType.ANDROID_APPLICATION:
-                project = ProjectBuilder.builder().withName('android app').build()
+                project = builder.withName('android app').build()
                 def androidMock = new MockFor(AppExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
@@ -51,7 +62,7 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_FEATURE:
-                project = ProjectBuilder.builder().withName('android library').build()
+                project = builder.withName('android library').build()
                 def androidMock = new MockFor(LibraryExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
@@ -74,7 +85,7 @@ final class ProjectHelper {
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
                 break
             case ProjectType.ANDROID_TEST:
-                project = ProjectBuilder.builder().withName('android test').build()
+                project = builder.withName('android test').build()
                 def androidMock = new MockFor(TestExtension)
                 androidMock.metaClass.testOptions = null
                 androidMock.metaClass.jacoco = mockJacocoOptions()
@@ -82,7 +93,9 @@ final class ProjectHelper {
                 break
         }
 
-        project.plugins.apply(projectType.pluginName)
+        if (projectType.pluginName != null) {
+            project.plugins.apply(projectType.pluginName)
+        }
     }
 
     private static def mockJacocoOptions(){
@@ -93,8 +106,8 @@ final class ProjectHelper {
 
     /** Adds flavors to project, only for Android based projects */
     ProjectHelper withRedBlueFlavors() {
-        if (projectType == ProjectType.JAVA) {
-            throw new UnsupportedOperationException('Not supported with Java project')
+        if (projectType == ProjectType.JAVA || projectType == ProjectType.ROOT) {
+            throw new UnsupportedOperationException('Not supported with Java or plain projects')
         }
 
         def customFlavors = [
@@ -143,7 +156,8 @@ final class ProjectHelper {
         ANDROID_LIBRARY('com.android.library'),
         ANDROID_FEATURE('com.android.feature'),
         ANDROID_TEST('com.android.test'),
-        JAVA('java')
+        JAVA('java'),
+        ROOT(null)
 
         private final String pluginName
 
