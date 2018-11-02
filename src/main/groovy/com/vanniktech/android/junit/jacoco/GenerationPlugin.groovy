@@ -256,7 +256,7 @@ class GenerationPlugin implements Plugin<Project> {
         subProject.check.dependsOn "${taskName}"
     }
 
-    private static addJacocoMergeToRootProject(final Project project, final JunitJacocoExtension extension) {
+    protected static addJacocoMergeToRootProject(final Project project, final JunitJacocoExtension extension) {
         project.plugins.apply('jacoco')
 
         project.afterEvaluate {
