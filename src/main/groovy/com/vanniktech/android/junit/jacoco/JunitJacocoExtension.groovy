@@ -18,7 +18,13 @@ class JunitJacocoExtension {
     String[] ignoreProjects = []
 
     /**
-     * Patterns of files that should be ignored
+     * Patterns of class files that should be included
+     * @since 0.14.0
+     */
+    List<String> includes = null
+
+    /**
+     * Patterns of class files that should be ignored
      * @since 0.5.0
      */
     List<String> excludes = null

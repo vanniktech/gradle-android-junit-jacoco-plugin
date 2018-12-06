@@ -496,6 +496,23 @@ class GenerationTest {
         return false
     }
 
+    @Test void getIncludesDefault() {
+        final def includes = GenerationPlugin.getIncludes(new JunitJacocoExtension())
+
+        assert includes.size == 1
+        assert includes.contains('**/classes/**/main/**')
+    }
+
+    @Test void getIncludesCustom() {
+      final def extension = new JunitJacocoExtension()
+      extension.includes = new ArrayList<>()
+      extension.includes.add("**/toto/**")
+
+      final def includes = GenerationPlugin.getIncludes(extension)
+
+      assert includes == extension.includes
+    }
+
     @Test void getExcludesDefault() {
         final def excludes = GenerationPlugin.getExcludes(new JunitJacocoExtension())
 

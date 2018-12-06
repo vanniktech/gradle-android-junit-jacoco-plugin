@@ -68,7 +68,7 @@ class GenerationPlugin implements Plugin<Project> {
 
             classDirectories = subProject.fileTree(
                     dir: subProject.buildDir,
-                    includes: ['**/classes/**/main/**'],
+                    includes: getIncludes(extension),
                     excludes: getExcludes(extension)
             )
 
@@ -309,6 +309,10 @@ class GenerationPlugin implements Plugin<Project> {
         }
 
         return [mergeTask, mergedReportTask]
+    }
+
+    static List<String> getIncludes(final JunitJacocoExtension extension) {
+        extension.includes == null ? ['**/classes/**/main/**'] : extension.includes
     }
 
     static List<String> getExcludes(final JunitJacocoExtension extension) {

@@ -90,7 +90,8 @@ Those are all available configurations - shown with default values and their typ
 junitJacoco {
   jacocoVersion = '0.8.2' // type String
   ignoreProjects = [] // type String array
-  excludes // type String List
+  includes = [] // type String List
+  excludes = [] // type String List
   includeNoLocationClasses = false // type boolean
   includeInstrumentationCoverageInMergedReport = false // type boolean
 }
