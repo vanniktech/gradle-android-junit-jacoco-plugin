@@ -195,7 +195,7 @@ class GenerationPlugin implements Plugin<Project> {
                 "**/intermediates/javac/${sourceName}/*/classes/**" // Android Gradle Plugin 3.2.x support.
             ]
 
-            if (isKotlinAndroid(subProject)) {
+            if (isKotlinAndroid(subProject) || isKotlinMultiplatform(subProject)) {
                 classPaths << "**/tmp/kotlin-classes/${sourcePath}/**"
                 if (productFlavorName) {
                     classPaths << "**/tmp/kotlin-classes/${productFlavorName}${buildTypeName.capitalize()}/**"
@@ -354,6 +354,10 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isKotlinAndroid(final Project project) {
         return project.plugins.hasPlugin('org.jetbrains.kotlin.android')
+    }
+
+    protected static boolean isKotlinMultiplatform(final Project project) {
+        return project.plugins.hasPlugin('org.jetbrains.kotlin.multiplatform')
     }
 
     protected static boolean isAndroidApplication(final Project project) {
