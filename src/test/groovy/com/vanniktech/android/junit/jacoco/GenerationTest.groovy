@@ -6,6 +6,8 @@ import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.Test
 
+import java.nio.file.Paths
+
 import static com.vanniktech.android.junit.jacoco.ProjectHelper.ProjectType.*
 
 class GenerationTest {
@@ -269,11 +271,11 @@ class GenerationTest {
             }
 
             assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml"
+            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml")
             assert reports.csv.enabled
-            assert reports.csv.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.csv"
+            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.csv")
             assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + "/reports/jacoco/${flavor}${buildType.capitalize()}"
+            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}")
 
             assert classDirectories.dir == project.file("build/")
             assert contentEquals(classDirectories.includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString(), "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString()])
@@ -311,11 +313,11 @@ class GenerationTest {
             }
 
             assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.xml'
+            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.xml")
             assert reports.csv.enabled
-            assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug/jacoco.csv'
+            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.csv")
             assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/debug'
+            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug")
 
             assert classDirectories.dir == project.file("build/")
             assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
@@ -347,11 +349,11 @@ class GenerationTest {
                 }
 
                 assert reports.xml.enabled
-                assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug/jacoco.xml'
+                assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.xml')
                 assert reports.csv.enabled
-                assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug/jacoco.csv'
+                assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.csv')
                 assert reports.html.enabled
-                assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/debug'
+                assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug')
 
                 assert classDirectories.dir == project.file("build/")
                 assert contentEquals(classDirectories.includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
@@ -387,11 +389,11 @@ class GenerationTest {
             }
 
             assert reports.xml.enabled
-            assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release/jacoco.xml'
+            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.xml')
             assert reports.csv.enabled
-            assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release/jacoco.csv'
+            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.csv')
             assert reports.html.enabled
-            assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacoco/release'
+            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release')
 
             assert classDirectories.dir == project.file("build/")
             assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
@@ -424,11 +426,11 @@ class GenerationTest {
                 }
 
                 assert reports.xml.enabled
-                assert reports.xml.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release/jacoco.xml'
+                assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.xml')
                 assert reports.csv.enabled
-                assert reports.csv.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release/jacoco.csv'
-                assert reports.html.enabled
-                assert reports.html.destination.toString() == project.buildDir.absolutePath + '/reports/jacocoCombined/release'
+                assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.csv')
+              assert reports.html.enabled
+                assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release')
 
                 assert classDirectories.dir == project.file("build/")
                 assert contentEquals(classDirectories.includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
