@@ -38,6 +38,7 @@ final class ProjectHelper {
                 project = builder.withName('java').build()
                 break
             case ProjectType.ANDROID_APPLICATION:
+            case ProjectType.ANDROID_KOTLIN_APPLICATION:
                 project = builder.withName('android app').build()
                 def androidMock = new MockFor(AppExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
@@ -62,6 +63,7 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_FEATURE:
+            case ProjectType.ANDROID_KOTLIN_MULTIPLATFORM:
                 project = builder.withName('android library').build()
                 def androidMock = new MockFor(LibraryExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
@@ -93,8 +95,12 @@ final class ProjectHelper {
                 break
         }
 
-        if (projectType.pluginName != null) {
-            project.plugins.apply(projectType.pluginName)
+        if (projectType.pluginNames != null) {
+            for (String pluginName : projectType.pluginNames) {
+                if (pluginName) {
+                    project.plugins.apply(pluginName)
+                }
+            }
         }
     }
 
@@ -153,16 +159,18 @@ final class ProjectHelper {
 
     enum ProjectType {
         ANDROID_APPLICATION('com.android.application'),
+        ANDROID_KOTLIN_APPLICATION('com.android.application', 'org.jetbrains.kotlin.android'),
+        ANDROID_KOTLIN_MULTIPLATFORM('com.android.library', 'org.jetbrains.kotlin.multiplatform'),
         ANDROID_LIBRARY('com.android.library'),
         ANDROID_FEATURE('com.android.feature'),
         ANDROID_TEST('com.android.test'),
         JAVA('java'),
         ROOT(null)
 
-        private final String pluginName
+        private final String[] pluginNames
 
-        ProjectType(String pluginName) {
-            this.pluginName = pluginName
+        ProjectType(String... pluginNames) {
+            this.pluginNames = pluginNames
         }
     }
 }
