@@ -88,9 +88,9 @@ class GenerationPlugin implements Plugin<Project> {
                 mergeTask.executionData += executionData
             }
             if (mergedReportTask != null) {
-                mergedReportTask.classDirectories += classDirectories
-                mergedReportTask.additionalSourceDirs += additionalSourceDirs
-                mergedReportTask.sourceDirectories += sourceDirectories
+                mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
+                mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.files + mergedReportTask.additionalSourceDirs.files)
+                mergedReportTask.sourceDirectories.setFrom(sourceDirectories.files + mergedReportTask.sourceDirectories.files)
             }
         }
 
@@ -247,9 +247,9 @@ class GenerationPlugin implements Plugin<Project> {
                 mergeTask.executionData += executionData
             }
             if (mergedReportTask != null && addToMergeTask) {
-                mergedReportTask.classDirectories += classDirectories
-                mergedReportTask.additionalSourceDirs += additionalSourceDirs
-                mergedReportTask.sourceDirectories += sourceDirectories
+                mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
+                mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.files + mergedReportTask.additionalSourceDirs.files)
+                mergedReportTask.sourceDirectories.setFrom(sourceDirectories.files + mergedReportTask.sourceDirectories.files)
             }
         }
 
