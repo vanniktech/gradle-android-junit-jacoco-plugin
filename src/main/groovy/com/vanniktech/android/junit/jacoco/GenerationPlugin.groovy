@@ -106,14 +106,10 @@ class GenerationPlugin implements Plugin<Project> {
             toolVersion extension.jacocoVersion
         }
 
-        subProject.android.testOptions?.unitTests?.all {
-            it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
-        }
-
         subProject.tasks.withType(Test) {
             it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
         }
-        
+
         subProject.android.jacoco.version = extension.jacocoVersion
 
         Collection<BaseVariant> variants = []
