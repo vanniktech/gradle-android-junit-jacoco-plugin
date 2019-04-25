@@ -86,7 +86,7 @@ class GenerationPlugin implements Plugin<Project> {
             executionData = subProject.files("${subProject.buildDir}/jacoco/test.exec")
 
             if (mergeTask != null) {
-                mergeTask.executionData = executionData
+                mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
             }
             if (mergedReportTask != null) {
                 mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
@@ -236,14 +236,17 @@ class GenerationPlugin implements Plugin<Project> {
 
             if (combined) {
                 // add instrumentation coverage execution data
-
+                def codeCoverageDirs = subProject.fileTree("${subProject.buildDir}/outputs/code_coverage").matching {
+                    include "**/*.ec"
+                }
+                executionData.setFrom(codeCoverageDirs.files + executionData.files)
             }
 
             // add if true in extension or for the unit test Jacoco task
             def addToMergeTask = !combined || extension.includeInstrumentationCoverageInMergedReport
 
             if (mergeTask != null && addToMergeTask) {
-                mergeTask.executionData = executionData
+                mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
             }
             if (mergedReportTask != null && addToMergeTask) {
                 mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
@@ -275,7 +278,7 @@ class GenerationPlugin implements Plugin<Project> {
 
                 executionData.each {
                     if (it.exists()) {
-                        realExecutionData = project.files(it)
+                        realExecutionData.setFrom(project.files(it) + realExecutionData.files)
                     }
                 }
 
