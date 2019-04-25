@@ -1,7 +1,6 @@
 package com.vanniktech.android.junit.jacoco
 
 import org.junit.Test
-import org.gradle.testing.jacoco.tasks.JacocoReport
 
 class JunitJacocoExtensionTest {
   @Test void defaults() {
