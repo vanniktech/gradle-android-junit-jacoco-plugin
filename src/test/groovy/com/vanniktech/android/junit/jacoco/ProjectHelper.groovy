@@ -9,6 +9,7 @@ import com.android.builder.model.BuildType
 import groovy.mock.interceptor.MockFor
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 /** Provides projects for testing */
 final class ProjectHelper {

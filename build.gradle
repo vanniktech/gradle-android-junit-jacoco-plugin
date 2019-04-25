@@ -40,10 +40,10 @@ dependencies {
   api gradleApi()
   api localGroovy()
 
-  compileOnly 'com.android.tools.build:gradle:3.1.2'
+  compileOnly 'com.android.tools.build:gradle:3.4.0'
 
-  testCompile 'com.android.tools.build:gradle:3.1.2'
-  testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.11'
+  testCompile 'com.android.tools.build:gradle:3.4.0'
+  testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.30'
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
 }
@@ -63,7 +63,7 @@ pluginBundle {
   }
 }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.8'
+wrapper {
+  gradleVersion = '5.1.1'
   distributionType = Wrapper.DistributionType.ALL
 }

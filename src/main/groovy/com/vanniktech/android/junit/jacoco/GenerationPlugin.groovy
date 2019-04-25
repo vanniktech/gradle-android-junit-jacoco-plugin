@@ -86,7 +86,7 @@ class GenerationPlugin implements Plugin<Project> {
             executionData = subProject.files("${subProject.buildDir}/jacoco/test.exec")
 
             if (mergeTask != null) {
-                mergeTask.executionData += executionData
+                mergeTask.executionData = executionData
             }
             if (mergedReportTask != null) {
                 mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
@@ -159,7 +159,7 @@ class GenerationPlugin implements Plugin<Project> {
                                       JacocoMerge mergeTask, JacocoReport mergedReportTask, final String taskName,
                                       final String jvmTestTaskName, final String instrumentationTestTaskName, final String sourceName,
                                       final String sourcePath, final String productFlavorName, final String buildTypeName) {
-        final def destinationDir
+        def destinationDir
         if (combined) {
             destinationDir = "${subProject.buildDir}/reports/jacocoCombined"
         } else {
@@ -236,16 +236,14 @@ class GenerationPlugin implements Plugin<Project> {
 
             if (combined) {
                 // add instrumentation coverage execution data
-                executionData += subProject.fileTree("${subProject.buildDir}/outputs/code_coverage").matching {
-                    include "**/*.ec"
-                }
+
             }
 
             // add if true in extension or for the unit test Jacoco task
             def addToMergeTask = !combined || extension.includeInstrumentationCoverageInMergedReport
 
             if (mergeTask != null && addToMergeTask) {
-                mergeTask.executionData += executionData
+                mergeTask.executionData = executionData
             }
             if (mergedReportTask != null && addToMergeTask) {
                 mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
@@ -277,7 +275,7 @@ class GenerationPlugin implements Plugin<Project> {
 
                 executionData.each {
                     if (it.exists()) {
-                        realExecutionData += project.files(it)
+                        realExecutionData = project.files(it)
                     }
                 }
 
