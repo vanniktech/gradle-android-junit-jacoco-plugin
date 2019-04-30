@@ -1,7 +1,15 @@
 # Change Log
 
-Version 0.14.0 *(In development)*
----------------------------------
+Version 0.14.0 *(2019-04-30)*
+-----------------------------
+
+- Update dependencies. [\#154](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/154) ([vanniktech](https://github.com/vanniktech))
+- Add support for Gradle 5 [\#153](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/153) ([henriquenfaria](https://github.com/henriquenfaria))
+- Fix StackOverflowError with Gradle 5.0 regarding FileCollection [\#151](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/151) ([Laimiux](https://github.com/Laimiux))
+- Cope with new Android DSL to configure includeNoLocationClasses [\#150](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/150) ([aygalinc](https://github.com/aygalinc))
+- Add support for kotlin multiplatform plugin [\#141](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/141) ([henriquenfaria](https://github.com/henriquenfaria))
+- Remove sudo: false from travis config. [\#135](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/135) ([vanniktech](https://github.com/vanniktech))
+- Don't run tests when creating the merged test coverage report. Instead it's required to run specific tests manually before. [\#134](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/134) ([vRallev](https://github.com/vRallev))
 
 Version 0.13.0 *(2018-10-11)*
 -----------------------------

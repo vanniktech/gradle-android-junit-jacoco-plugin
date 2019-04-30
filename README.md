@@ -46,7 +46,7 @@ In addition the plugin generates `mergeJacocoReports` & `jacocoTestReportMerged`
 
 `jacocoTestReportMerged` will output an xml and html file for the merged report.
 
-Works with the latest Gradle Android Tools version 2.3.3. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
+Works with the latest Gradle Android Tools version 3.4.0. This plugin is compiled using Java 7 hence you also need Java 7 in order to use it.
 
 # Set up
 
@@ -58,7 +58,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.13.0"
+    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.14.0"
   }
 }
 
