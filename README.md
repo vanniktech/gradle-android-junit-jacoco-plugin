@@ -75,7 +75,7 @@ buildscript {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
   }
   dependencies {
-    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.14.0-SNAPSHOT"
+    classpath "com.vanniktech:gradle-android-junit-jacoco-plugin:0.15.0-SNAPSHOT"
   }
 }
 
