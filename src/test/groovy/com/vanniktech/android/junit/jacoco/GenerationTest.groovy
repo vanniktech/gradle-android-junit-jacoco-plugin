@@ -492,8 +492,9 @@ class GenerationTest {
               assert sourceDirectories.contains(project.file("src/main/$it"))
             }
 
-            assert classDirectories.getFrom().first().dir == project.file("build/")
-            assert contentEquals(classDirectories.getFrom().first().includes, ['**/classes/**/main/**'])
+            assert classDirectories.size() == 2 // First one is empty and the second fileTree is the one we plant.
+            assert classDirectories.getFrom()[1].dir == project.file("build/")
+            assert contentEquals(classDirectories.getFrom()[1].includes, ['**/classes/**/main/**'])
 
             assert reports.xml.enabled
             assert reports.csv.enabled

@@ -67,11 +67,11 @@ class GenerationPlugin implements Plugin<Project> {
                 html.enabled = true
             }
 
-            classDirectories = subProject.fileTree(
+            getClassDirectories().from(subProject.fileTree(
                     dir: subProject.buildDir,
                     includes: ['**/classes/**/main/**'],
                     excludes: getExcludes(extension)
-            )
+            ))
 
             final def coverageSourceDirs = [
                 'src/main/clojure',
@@ -81,9 +81,9 @@ class GenerationPlugin implements Plugin<Project> {
                 'src/main/scala'
             ]
 
-            additionalSourceDirs = subProject.files(coverageSourceDirs)
-            sourceDirectories = subProject.files(coverageSourceDirs)
-            executionData = subProject.files("${subProject.buildDir}/jacoco/test.exec")
+            getAdditionalSourceDirs().from(subProject.files(coverageSourceDirs))
+            getSourceDirectories().from(subProject.files(coverageSourceDirs))
+            getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/test.exec")))
 
             if (mergeTask != null) {
                 mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
@@ -124,7 +124,6 @@ class GenerationPlugin implements Plugin<Project> {
         }
 
         variants.all { variant ->
-
             def productFlavorName = variant.getFlavorName()
             def buildType = variant.getBuildType()
             def buildTypeName = buildType.name
@@ -203,11 +202,11 @@ class GenerationPlugin implements Plugin<Project> {
                 }
             }
 
-            classDirectories = subProject.fileTree(
+            getClassDirectories().from(subProject.fileTree(
                 dir: subProject.buildDir,
                 includes: classPaths,
                 excludes: getExcludes(extension)
-            )
+            ))
 
             final def coverageSourceDirs = [
                 "src/main/clojure",
@@ -230,9 +229,9 @@ class GenerationPlugin implements Plugin<Project> {
                 coverageSourceDirs.add("src/$productFlavorName/scala")
             }
 
-            additionalSourceDirs = subProject.files(coverageSourceDirs)
-            sourceDirectories = subProject.files(coverageSourceDirs)
-            executionData = subProject.files("${subProject.buildDir}/jacoco/${jvmTestTaskName}.exec")
+            getAdditionalSourceDirs().from(subProject.files(coverageSourceDirs))
+            getSourceDirectories().from(subProject.files(coverageSourceDirs))
+            getExecutionData().from(subProject.files("${subProject.buildDir}/jacoco/${jvmTestTaskName}.exec"))
 
             if (combined) {
                 // add instrumentation coverage execution data
@@ -305,9 +304,9 @@ class GenerationPlugin implements Plugin<Project> {
             }
 
             // Start with empty collections.
-            classDirectories = project.files()
-            additionalSourceDirs = project.files()
-            sourceDirectories = project.files()
+            getClassDirectories().from(project.files())
+            getAdditionalSourceDirs().from(project.files())
+            getSourceDirectories().from(project.files())
         }
 
         return [mergeTask, mergedReportTask]
