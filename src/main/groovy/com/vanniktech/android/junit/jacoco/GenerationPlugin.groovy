@@ -273,7 +273,7 @@ class GenerationPlugin implements Plugin<Project> {
 
             doFirst {
                 // Filter non existing files.
-                def realExecutionData = project.files().asFileTree
+                def realExecutionData = project.files()
 
                 executionData.each {
                     if (it.exists()) {
