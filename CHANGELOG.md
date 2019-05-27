@@ -1,7 +1,10 @@
 # Change Log
 
-Version 0.15.0 *(In development)*
----------------------------------
+Version 0.15.0 *(2019-05-27)*
+-----------------------------
+
+- Fixed "No signature of method: org.gradle.api.internal.file.CompositeFileCollection$1.setFrom\(\)" bug for mergeJacocoReports task. [\#157](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/157) ([vasdeepika](https://github.com/vasdeepika))
+- Fix Gradle 6.0 deprecation warnings. [\#155](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/155) ([vanniktech](https://github.com/vanniktech))
 
 Version 0.14.0 *(2019-04-30)*
 -----------------------------
