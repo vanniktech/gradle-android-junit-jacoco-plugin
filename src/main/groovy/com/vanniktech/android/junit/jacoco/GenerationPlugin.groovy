@@ -115,7 +115,7 @@ class GenerationPlugin implements Plugin<Project> {
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject)) {
             variants = subProject.android.applicationVariants
-        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject) || isAndoirdDynamicFeature(subProject)) {
+        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject) || isAndroidDynamicFeature(subProject)) {
             // FeatureExtension extends LibraryExtension
             variants = subProject.android.libraryVariants
         } else {
@@ -374,7 +374,7 @@ class GenerationPlugin implements Plugin<Project> {
         return project.plugins.hasPlugin('com.android.feature')
     }
   
-    protected static boolean isAndoirdDynamicFeature(final Project project) {
+    protected static boolean isAndroidDynamicFeature(final Project project) {
         return project.plugins.hasPlugin('com.android.dynamic-feature')
     }
 
