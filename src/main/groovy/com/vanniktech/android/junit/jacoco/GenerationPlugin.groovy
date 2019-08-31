@@ -342,9 +342,9 @@ class GenerationPlugin implements Plugin<Project> {
         final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
         final boolean isAndroidTest = project.plugins.hasPlugin('com.android.test')
         final boolean isAndroidFeature = project.plugins.hasPlugin('com.android.feature')
-        final boolean isAndoirdDynamicFeature = project.plugins.hasPlugin('com.android.dynamic-feature')
+        final boolean isAndroidDynamicFeature = project.plugins.hasPlugin('com.android.dynamic-feature')
         final boolean isAndroidInstantApp = project.plugins.hasPlugin('com.android.instantapp')
-        return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidFeature || isAndoirdDynamicFeature || isAndroidInstantApp
+        return isAndroidLibrary(Project) || isAndroidApp(Project) || isAndroidTest(Project) || isAndroidFeature(Project) || isAndroidDynamicFeature(Project) || isAndroidInstantApp
     }
 
     private static boolean isJavaProject(final Project project) {
