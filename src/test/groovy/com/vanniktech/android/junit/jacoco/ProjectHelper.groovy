@@ -63,6 +63,7 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_FEATURE:
+            case ProjectType.ANDROID_DYNAMIC_FEATURE:
             case ProjectType.ANDROID_KOTLIN_MULTIPLATFORM:
                 project = builder.withName('android library').build()
                 def androidMock = new MockFor(LibraryExtension)
@@ -144,6 +145,7 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_FEATURE:
+            case ProjectType.ANDROID_DYNAMIC_FEATURE:
                 project.android.metaClass.libraryVariants = variants
                 // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
@@ -163,6 +165,7 @@ final class ProjectHelper {
         ANDROID_KOTLIN_MULTIPLATFORM('com.android.library', 'org.jetbrains.kotlin.multiplatform'),
         ANDROID_LIBRARY('com.android.library'),
         ANDROID_FEATURE('com.android.feature'),
+        ANDROID_DYNAMIC_FEATURE('com.android.dynamic-feature'),
         ANDROID_TEST('com.android.test'),
         JAVA('java'),
         ROOT(null)
