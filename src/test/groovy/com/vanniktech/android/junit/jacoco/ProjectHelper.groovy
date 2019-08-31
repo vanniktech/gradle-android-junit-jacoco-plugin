@@ -145,7 +145,7 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_FEATURE:
-            case ProjectType.ANDROID_DYNAMIC_FEATURE
+            case ProjectType.ANDROID_DYNAMIC_FEATURE:
                 project.android.metaClass.libraryVariants = variants
                 // mock .all{ } function from android gradle lib with standard groovy .each{ }
                 project.android.libraryVariants.metaClass.all = { delegate.each(it) }
