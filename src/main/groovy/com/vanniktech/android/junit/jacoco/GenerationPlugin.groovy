@@ -113,9 +113,9 @@ class GenerationPlugin implements Plugin<Project> {
         subProject.android.jacoco.version = extension.jacocoVersion
 
         Collection<BaseVariant> variants = []
-        if (isAndroidApplication(subProject)) {
+        if (isAndroidApplication(subProject) || isAndroidDynamicFeature(subProject)) {
             variants = subProject.android.applicationVariants
-        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject) || isAndroidDynamicFeature(subProject)) {
+        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject)) {
             // FeatureExtension extends LibraryExtension
             variants = subProject.android.libraryVariants
         } else {
