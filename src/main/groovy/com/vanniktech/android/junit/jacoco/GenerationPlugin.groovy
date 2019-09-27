@@ -89,9 +89,9 @@ class GenerationPlugin implements Plugin<Project> {
                 mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
             }
             if (mergedReportTask != null) {
-                mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
-                mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.files + mergedReportTask.additionalSourceDirs.files)
-                mergedReportTask.sourceDirectories.setFrom(sourceDirectories.files + mergedReportTask.sourceDirectories.files)
+                mergedReportTask.classDirectories.setFrom(classDirectories.getFrom() + mergedReportTask.classDirectories.getFrom())
+                mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.getFrom() + mergedReportTask.additionalSourceDirs.getFrom())
+                mergedReportTask.sourceDirectories.setFrom(sourceDirectories.getFrom() + mergedReportTask.sourceDirectories.getFrom())
             }
         }
 
@@ -248,9 +248,9 @@ class GenerationPlugin implements Plugin<Project> {
                 mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
             }
             if (mergedReportTask != null && addToMergeTask) {
-                mergedReportTask.classDirectories.setFrom(classDirectories.files + mergedReportTask.classDirectories.files)
-                mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.files + mergedReportTask.additionalSourceDirs.files)
-                mergedReportTask.sourceDirectories.setFrom(sourceDirectories.files + mergedReportTask.sourceDirectories.files)
+              mergedReportTask.classDirectories.setFrom(classDirectories.getFrom() + mergedReportTask.classDirectories.getFrom())
+              mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.getFrom() + mergedReportTask.additionalSourceDirs.getFrom())
+              mergedReportTask.sourceDirectories.setFrom(sourceDirectories.getFrom() + mergedReportTask.sourceDirectories.getFrom())
             }
         }
 
