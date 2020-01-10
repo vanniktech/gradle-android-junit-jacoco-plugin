@@ -192,7 +192,8 @@ class GenerationPlugin implements Plugin<Project> {
 
             def classPaths = [
                 "**/intermediates/classes/${sourcePath}/**",
-                "**/intermediates/javac/${sourceName}/*/classes/**" // Android Gradle Plugin 3.2.x support.
+                "**/intermediates/javac/${sourceName}/*/classes/**", // Android Gradle Plugin 3.2.x support.
+                "**/intermediates/javac/${sourceName}/classes/**" // Android Gradle Plugin 3.4 and 3.5 support.
             ]
 
             if (isKotlinAndroid(subProject) || isKotlinMultiplatform(subProject)) {
@@ -373,7 +374,7 @@ class GenerationPlugin implements Plugin<Project> {
     protected static boolean isAndroidFeature(final Project project) {
         return project.plugins.hasPlugin('com.android.feature')
     }
-  
+
     protected static boolean isAndroidDynamicFeature(final Project project) {
         return project.plugins.hasPlugin('com.android.dynamic-feature')
     }
