@@ -295,13 +295,26 @@ class GenerationTest {
             assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}")
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
-            assert contentEquals(classDirectories.getFrom().first().includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString(), "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString()])
+
+            assert contentEquals(classDirectories.getFrom().first().includes, [
+               "**/intermediates/classes/${flavor}/${buildType}/**".toString(),
+               "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString(),
+               "**/intermediates/javac/${flavor}${buildType.capitalize()}/classes/**".toString()
+              ])
 
             if (hasKotlin(project)) {
-                assert contentEquals(classDirectories.getFrom().first().includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString(), "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString(),
-                                                                 "**/tmp/kotlin-classes/${buildType}/**".toString(), "**/tmp/kotlin-classes/${flavor}${buildType.capitalize()}/**".toString()])
+                assert contentEquals(classDirectories.getFrom().first().includes, [
+                  "**/intermediates/classes/${flavor}/${buildType}/**",
+                  "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**",
+                  "**/intermediates/javac/${flavor}${buildType.capitalize()}/classes/**",
+                  "**/tmp/kotlin-classes/${buildType}/**",
+                  "**/tmp/kotlin-classes/${flavor}${buildType.capitalize()}/**"])
             } else {
-                assert contentEquals(classDirectories.getFrom().first().includes, ["**/intermediates/classes/${flavor}/${buildType}/**".toString(), "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString()])
+                assert contentEquals(classDirectories.getFrom().first().includes, [
+                  "**/intermediates/classes/${flavor}/${buildType}/**".toString(),
+                  "**/intermediates/javac/${flavor}${buildType.capitalize()}/*/classes/**".toString(),
+                  "**/intermediates/javac/${flavor}${buildType.capitalize()}/classes/**".toString()
+                ])
             }
 
             assert taskDependsOn(task, "test${flavor.capitalize()}${buildType.capitalize()}UnitTest")
@@ -345,9 +358,18 @@ class GenerationTest {
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
             if (hasKotlin(project)) {
-              assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**', '**/tmp/kotlin-classes/debug/**'])
+              assert contentEquals(classDirectories.getFrom().first().includes, [
+                '**/intermediates/classes/debug/**',
+                '**/intermediates/javac/debug/*/classes/**',
+                "**/intermediates/javac/debug/classes/**",
+                '**/tmp/kotlin-classes/debug/**'
+              ])
             } else {
-              assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
+              assert contentEquals(classDirectories.getFrom().first().includes, [
+                '**/intermediates/classes/debug/**',
+                '**/intermediates/javac/debug/*/classes/**',
+                "**/intermediates/javac/debug/classes/**"
+              ])
             }
 
             assert taskDependsOn(debugTask, 'testDebugUnitTest')
@@ -385,9 +407,18 @@ class GenerationTest {
 
                 assert classDirectories.getFrom().first().dir == project.file("build/")
                 if (hasKotlin(project)) {
-                  assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**', '**/tmp/kotlin-classes/debug/**'])
+                  assert contentEquals(classDirectories.getFrom().first().includes, [
+                    '**/intermediates/classes/debug/**',
+                    '**/intermediates/javac/debug/*/classes/**',
+                    "**/intermediates/javac/debug/classes/**",
+                    '**/tmp/kotlin-classes/debug/**'
+                  ])
                 } else {
-                  assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/debug/**', '**/intermediates/javac/debug/*/classes/**'])
+                  assert contentEquals(classDirectories.getFrom().first().includes, [
+                    '**/intermediates/classes/debug/**',
+                    '**/intermediates/javac/debug/*/classes/**',
+                    "**/intermediates/javac/debug/classes/**",
+                  ])
                 }
 
                 assert taskDependsOn(debugTaskCombined, 'testDebugUnitTest')
@@ -429,9 +460,18 @@ class GenerationTest {
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
             if (hasKotlin(project)) {
-              assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**', '**/tmp/kotlin-classes/release/**'])
+              assert contentEquals(classDirectories.getFrom().first().includes, [
+                '**/intermediates/classes/release/**',
+                '**/intermediates/javac/release/*/classes/**',
+                "**/intermediates/javac/release/classes/**",
+                '**/tmp/kotlin-classes/release/**'
+              ])
             } else {
-              assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
+              assert contentEquals(classDirectories.getFrom().first().includes, [
+                '**/intermediates/classes/release/**',
+                '**/intermediates/javac/release/*/classes/**',
+                "**/intermediates/javac/release/classes/**"
+              ])
             }
 
             assert taskDependsOn(releaseTask, 'testReleaseUnitTest')
@@ -470,9 +510,18 @@ class GenerationTest {
 
                 assert classDirectories.getFrom().first().dir == project.file("build/")
                 if (hasKotlin(project)) {
-                  assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**', '**/tmp/kotlin-classes/release/**'])
+                  assert contentEquals(classDirectories.getFrom().first().includes, [
+                    '**/intermediates/classes/release/**',
+                    '**/intermediates/javac/release/*/classes/**',
+                    "**/intermediates/javac/release/classes/**",
+                    '**/tmp/kotlin-classes/release/**'
+                  ])
                 } else {
-                  assert contentEquals(classDirectories.getFrom().first().includes, ['**/intermediates/classes/release/**', '**/intermediates/javac/release/*/classes/**'])
+                  assert contentEquals(classDirectories.getFrom().first().includes, [
+                    '**/intermediates/classes/release/**',
+                    '**/intermediates/javac/release/*/classes/**',
+                    "**/intermediates/javac/release/classes/**",
+                  ])
                 }
 
               assert taskDependsOn(releaseTaskCombined, 'testReleaseUnitTest')
