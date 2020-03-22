@@ -1,7 +1,13 @@
 # Change Log
 
-Version 0.16.0 *(In development)*
----------------------------------
+Version 0.16.0 *(2020-03-22)*
+-----------------------------
+
+- "Plugin not found" when using snapshot version [\#159](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/issues/159)
+- Fix java classes being skipped in AGP \>= 3.4 [\#166](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/166) ([jeppeman](https://github.com/jeppeman))
+- Fix slow file traversal in configuration phase [\#163](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/163) ([fo2rist](https://github.com/fo2rist))
+- Fix "Could not get unknown property 'libraryVariants'" for dynamic-feature modules [\#160](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/160) ([igorwojda](https://github.com/igorwojda))
+- Add support for Android "dynamic-feature" module type [\#158](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/158) ([igorwojda](https://github.com/igorwojda))
 
 Version 0.15.0 *(2019-05-27)*
 -----------------------------
