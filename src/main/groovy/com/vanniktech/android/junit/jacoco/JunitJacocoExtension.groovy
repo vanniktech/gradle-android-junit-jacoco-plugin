@@ -21,7 +21,28 @@ class JunitJacocoExtension {
      * Patterns of files that should be ignored
      * @since 0.5.0
      */
-    List<String> excludes = null
+    List<String> excludes = [
+      '**/R.class',
+      '**/R2.class', // ButterKnife Gradle Plugin.
+      '**/R$*.class',
+      '**/R2$*.class', // ButterKnife Gradle Plugin.
+      '**/*$$*',
+      '**/*$ViewInjector*.*', // Older ButterKnife Versions.
+      '**/*$ViewBinder*.*', // Older ButterKnife Versions.
+      '**/*_ViewBinding*.*', // Newer ButterKnife Versions.
+      '**/BuildConfig.*',
+      '**/Manifest*.*',
+      '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
+      '**/*Dagger*.*', // Dagger auto-generated code.
+      '**/*MembersInjector*.*', // Dagger auto-generated code.
+      '**/*_Provide*Factory*.*', // Dagger auto-generated code.
+      '**/*_Factory*.*', // Dagger auto-generated code.
+      '**/*$JsonObjectMapper.*', // LoganSquare auto-generated code.
+      '**/*$inlined$*.*', // Kotlin specific, Jacoco can not handle several "$" in class name.
+      '**/*$Icepick.*', // Icepick auto-generated code.
+      '**/*$StateSaver.*', // android-state auto-generated code.
+      '**/*AutoValue_*.*' // AutoValue auto-generated code.
+    ]
 
     /**
      * Whether or not to include no location classes
