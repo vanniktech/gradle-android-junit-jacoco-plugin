@@ -618,13 +618,33 @@ class GenerationTest {
         assert excludes.contains('**/*AutoValue_*.*')
     }
 
-    @Test void getExcludesCustom() {
-        final def extension = new JunitJacocoExtension()
-        extension.excludes = new ArrayList<>()
-        extension.excludes.add("**/*.java")
+  @Test void getExcludesCustom() {
+    final def extension = new JunitJacocoExtension()
+    extension.excludes = new ArrayList<>()
+    extension.excludes.add("**/*.java")
 
-        final def excludes = GenerationPlugin.getExcludes(extension)
+    final def excludes = GenerationPlugin.getExcludes(extension)
 
-        assert excludes == extension.excludes
-    }
+    assert excludes == extension.excludes
+  }
+
+  @Test void getExcludesCustomPlus() {
+    final def extension = new JunitJacocoExtension()
+    extension.excludes.add("**/*custom*.java")
+
+    final def excludes = GenerationPlugin.getExcludes(extension)
+
+    assert excludes == extension.excludes
+    assert 1 < excludes.size() // Includes defaults
+  }
+
+  @Test void getExcludesNull() {
+    final def extension = new JunitJacocoExtension()
+    extension.excludes = null
+
+    final def excludes = GenerationPlugin.getExcludes(extension)
+
+    assert null != excludes
+    assert 0 == excludes.size()
+  }
 }
