@@ -1,5 +1,8 @@
 package com.vanniktech.android.junit.jacoco
 
+import org.gradle.api.Action
+import org.gradle.testing.jacoco.tasks.rules.JacocoViolationRule
+
 /**
  * Extension for junit jacoco
  * @since 0.3.0
@@ -35,4 +38,14 @@ class JunitJacocoExtension {
      * @since 0.13.0
      */
     boolean includeInstrumentationCoverageInMergedReport = false
+
+    /**
+     * Coverage verification rules
+     */
+    RuleContainer rules = new RuleContainer()
+
+    RuleContainer violationRules(Action<? super RuleContainer> configureAction) {
+      configureAction.execute(rules)
+      rules
+    }
 }

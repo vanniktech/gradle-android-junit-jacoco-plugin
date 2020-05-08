@@ -3,6 +3,7 @@ package com.vanniktech.android.junit.jacoco
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.junit.Test
 
@@ -328,8 +329,10 @@ class GenerationTest {
         assert project.jacoco.toolVersion == '0.8.2'
 
         final def debugTask = project.tasks.findByName('jacocoTestReportDebug')
+        final def verifyDebugTask = project.tasks.findByName('jacocoTestCoverageVerificationDebug')
 
         assert debugTask instanceof JacocoReport
+        assert verifyDebugTask instanceof JacocoCoverageVerification
 
         debugTask.with {
             assert description == 'Generate Jacoco coverage reports after running debug tests.'
@@ -376,7 +379,46 @@ class GenerationTest {
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportDebug')
         }
 
-        final def debugTaskCombined = project.tasks.findByName('combinedTestReportDebug')
+      verifyDebugTask.with {
+        assert description == 'Verify Jacoco coverage rules after running debug tests.'
+        assert group == 'Reporting'
+
+        assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testDebugUnitTest.exec")
+
+        assert additionalSourceDirs.size() == 10
+        LANGUAGES.every {
+          assert additionalSourceDirs.contains(project.file("src/main/$it"))
+          assert additionalSourceDirs.contains(project.file("src/debug/$it"))
+        }
+
+        assert sourceDirectories.size() == 10
+        LANGUAGES.every {
+          assert sourceDirectories.contains(project.file("src/main/$it"))
+          assert sourceDirectories.contains(project.file("src/debug/$it"))
+        }
+
+        // TODO: Validate Rules
+
+        assert classDirectories.getFrom().first().getFrom().first().dir == project.file("build/")
+        if (hasKotlin(project)) {
+          assert contentEquals(classDirectories.getFrom().first().getFrom().first().includes, [
+            '**/intermediates/classes/debug/**',
+            '**/intermediates/javac/debug/*/classes/**',
+            "**/intermediates/javac/debug/classes/**",
+            '**/tmp/kotlin-classes/debug/**'
+          ])
+        } else {
+          assert contentEquals(classDirectories.getFrom().first().getFrom().first().includes, [
+            '**/intermediates/classes/debug/**',
+            '**/intermediates/javac/debug/*/classes/**',
+            "**/intermediates/javac/debug/classes/**"
+          ])
+        }
+
+        assert taskDependsOn(verifyDebugTask, debugTask.name)
+      }
+
+      final def debugTaskCombined = project.tasks.findByName('combinedTestReportDebug')
         if (hasCoverage) {
             assert debugTaskCombined instanceof JacocoReport
 
@@ -430,8 +472,10 @@ class GenerationTest {
         }
 
         final def releaseTask = project.tasks.findByName('jacocoTestReportRelease')
+        final def verifyReleaseTask = project.tasks.findByName('jacocoTestCoverageVerificationRelease')
 
         assert releaseTask instanceof JacocoReport
+        assert verifyReleaseTask instanceof JacocoCoverageVerification
 
         releaseTask.with {
             assert description == 'Generate Jacoco coverage reports after running release tests.'
@@ -476,6 +520,45 @@ class GenerationTest {
 
             assert taskDependsOn(releaseTask, 'testReleaseUnitTest')
             assert taskDependsOn(project.tasks.findByName('check'), 'jacocoTestReportRelease')
+        }
+
+        verifyReleaseTask.with {
+          assert description == 'Verify Jacoco coverage rules after running release tests.'
+          assert group == 'Reporting'
+
+          assert executionData.singleFile == project.file("${project.buildDir}/jacoco/testReleaseUnitTest.exec")
+
+          assert additionalSourceDirs.size() == 10
+          LANGUAGES.every {
+            assert additionalSourceDirs.contains(project.file("src/main/$it"))
+            assert additionalSourceDirs.contains(project.file("src/release/$it"))
+          }
+
+          assert sourceDirectories.size() == 10
+          LANGUAGES.every {
+            assert sourceDirectories.contains(project.file("src/main/$it"))
+            assert sourceDirectories.contains(project.file("src/release/$it"))
+          }
+
+          // TODO: Validate Rules
+
+          assert classDirectories.getFrom().first().getFrom().first().dir == project.file("build/")
+          if (hasKotlin(project)) {
+            assert contentEquals(classDirectories.getFrom().first().getFrom().first().includes, [
+              '**/intermediates/classes/release/**',
+              '**/intermediates/javac/release/*/classes/**',
+              "**/intermediates/javac/release/classes/**",
+              '**/tmp/kotlin-classes/release/**'
+            ])
+          } else {
+            assert contentEquals(classDirectories.getFrom().first().getFrom().first().includes, [
+              '**/intermediates/classes/release/**',
+              '**/intermediates/javac/release/*/classes/**',
+              "**/intermediates/javac/release/classes/**"
+            ])
+          }
+
+          assert taskDependsOn(verifyReleaseTask, releaseTask.name)
         }
 
         final def releaseTaskCombined = project.tasks.findByName('combinedTestReportRelease')
