@@ -4,6 +4,7 @@ import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
 import org.gradle.testing.jacoco.tasks.JacocoMerge
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
@@ -95,6 +96,34 @@ class GenerationPlugin implements Plugin<Project> {
             }
         }
 
+        subProject.jacocoTestCoverageVerification {
+            dependsOn 'jacocoTestReport'
+            executionData(subProject.jacocoTestReport.executionData)
+            sourceDirectories.setFrom(subProject.jacocoTestReport.sourceDirectories)
+            classDirectories.setFrom(subProject.jacocoTestReport.classDirectories)
+            additionalSourceDirs.setFrom(subProject.jacocoTestReport.additionalSourceDirs)
+            additionalClassDirs.setFrom(subProject.jacocoTestReport.additionalClassDirs)
+            violationRules {
+              setFailOnViolation(extension.rules.failOnViolation)
+              for (Rule r: extension.rules.rules) {
+                rule {
+                  setEnabled(r.enabled)
+                  setElement(r.element)
+                  setIncludes(r.includes)
+                  setExcludes(r.excludes)
+                  for (Limit l: r.limits) {
+                    limit {
+                      setCounter(l.counter)
+                      setValue(l.value)
+                      setMinimum(l.minimum)
+                      setMaximum(l.maximum)
+                    }
+                  }
+                }
+              }
+            }
+        }
+
         subProject.check.dependsOn 'jacocoTestReport'
         return true
     }
@@ -138,12 +167,15 @@ class GenerationPlugin implements Plugin<Project> {
 
             final def jvmTaskName = "jacocoTestReport${sourceName.capitalize()}"
             final def combinedTaskName = "combinedTestReport${sourceName.capitalize()}"
+            final def jvmCoverageTaskName = "jacocoTestCoverageVerification${sourceName.capitalize()}"
 
             final def jvmTestTaskName = "test${sourceName.capitalize()}UnitTest"
             final def instrumentationTestTaskName = "create${sourceName.capitalize()}CoverageReport"
 
-            addJacocoTask(false, subProject, extension, mergeTask, mergedReportTask, jvmTaskName,
+            def reportTask = addJacocoTask(false, subProject, extension, mergeTask, mergedReportTask, jvmTaskName,
                 jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
+
+            addCoverageVerifyTask(subProject, extension, reportTask, sourceName, jvmCoverageTaskName)
 
             if (buildType.testCoverageEnabled) {
                 addJacocoTask(true, subProject, extension, mergeTask, mergedReportTask, combinedTaskName,
@@ -154,7 +186,43 @@ class GenerationPlugin implements Plugin<Project> {
         return true
     }
 
-    private static void addJacocoTask(final boolean combined, final Project subProject, final JunitJacocoExtension extension,
+    private static void addCoverageVerifyTask(final Project subProject,
+                                              final JunitJacocoExtension extension,
+                                              final JacocoReport reportTask,
+                                              final String sourceName,
+                                              final String coverageVerifyTaskName) {
+      subProject.task(coverageVerifyTaskName, type: JacocoCoverageVerification) {
+        group = 'Reporting'
+        description = "Verify Jacoco coverage rules after running ${sourceName} tests."
+        dependsOn(reportTask.name)
+        executionData(reportTask.executionData)
+        sourceDirectories.setFrom(reportTask.sourceDirectories)
+        classDirectories.setFrom(reportTask.classDirectories)
+        additionalSourceDirs.setFrom(reportTask.additionalSourceDirs)
+        additionalClassDirs.setFrom(reportTask.additionalClassDirs)
+        violationRules {
+          setFailOnViolation(extension.rules.failOnViolation)
+          for (Rule r: extension.rules.rules) {
+            rule {
+              setEnabled(r.enabled)
+              setElement(r.element)
+              setIncludes(r.includes)
+              setExcludes(r.excludes)
+              for (Limit l: r.limits) {
+                limit {
+                  setCounter(l.counter)
+                  setValue(l.value)
+                  setMinimum(l.minimum)
+                  setMaximum(l.maximum)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    private static JacocoReport addJacocoTask(final boolean combined, final Project subProject, final JunitJacocoExtension extension,
                                       JacocoMerge mergeTask, JacocoReport mergedReportTask, final String taskName,
                                       final String jvmTestTaskName, final String instrumentationTestTaskName, final String sourceName,
                                       final String sourcePath, final String productFlavorName, final String buildTypeName) {
@@ -165,7 +233,7 @@ class GenerationPlugin implements Plugin<Project> {
             destinationDir = "${subProject.buildDir}/reports/jacoco"
         }
 
-        subProject.task(taskName, type: JacocoReport) {
+        def reportTask = subProject.task(taskName, type: JacocoReport) {
             group = 'Reporting'
             description = "Generate Jacoco coverage reports after running ${sourceName} tests."
 
@@ -264,6 +332,8 @@ class GenerationPlugin implements Plugin<Project> {
         }
 
         subProject.check.dependsOn "${taskName}"
+
+        return reportTask
     }
 
     protected static addJacocoMergeToRootProject(final Project project, final JunitJacocoExtension extension) {
