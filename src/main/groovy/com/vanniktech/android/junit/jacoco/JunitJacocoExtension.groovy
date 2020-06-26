@@ -9,7 +9,7 @@ class JunitJacocoExtension {
      * define the version of jacoco which should be used
      * @since 0.3.0
      */
-    String jacocoVersion = '0.8.2'
+    String jacocoVersion = '0.8.3'
 
     /**
      * subprojects that should be ignored
