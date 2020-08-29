@@ -11,5 +11,8 @@ class JunitJacocoExtensionTest {
     assert extension.excludes != null
     assert !extension.includeNoLocationClasses
     assert !extension.includeInstrumentationCoverageInMergedReport
+    assert extension.xml.enabled
+    assert extension.csv.enabled
+    assert extension.html.enabled
   }
 }

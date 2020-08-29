@@ -56,4 +56,22 @@ class JunitJacocoExtension {
      * @since 0.13.0
      */
     boolean includeInstrumentationCoverageInMergedReport = false
+
+    /**
+     * Whether or not to generate an xml report
+     * @since 0.17.0
+     */
+    ReportConfig xml = new ReportConfig(true)
+
+    /**
+     * Whether or not to generate a csv report
+     * @since 0.17.0
+     */
+    ReportConfig csv = new ReportConfig(true)
+
+    /**
+     * Whether or not to generate a html report
+     * @since 0.17.0
+     */
+    ReportConfig html = new ReportConfig(true)
 }

@@ -62,9 +62,9 @@ class GenerationPlugin implements Plugin<Project> {
             description = 'Generate Jacoco coverage reports.'
 
             reports {
-                xml.enabled = true
-                csv.enabled = true
-                html.enabled = true
+                xml.enabled = extension.xml.enabled
+                csv.enabled = extension.csv.enabled
+                html.enabled = extension.html.enabled
             }
 
             getClassDirectories().from(subProject.fileTree(
@@ -177,15 +177,15 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml {
-                    enabled = true
+                    enabled = extension.xml.enabled
                     destination subProject.file("$destinationDir/${sourceName}/jacoco.xml")
                 }
                 csv {
-                    enabled = true
+                    enabled = extension.csv.enabled
                     destination subProject.file("$destinationDir/${sourceName}/jacoco.csv")
                 }
                 html {
-                    enabled = true
+                    enabled = extension.html.enabled
                     destination subProject.file("$destinationDir/${sourceName}")
                 }
             }
@@ -299,15 +299,15 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml {
-                    enabled = true
+                    enabled = extension.xml.enabled
                     destination project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
                 }
                 csv {
-                    enabled = true
+                    enabled = extension.csv.enabled
                     destination project.file("${project.buildDir}/reports/jacoco/jacoco.csv")
                 }
                 html {
-                    enabled = true
+                    enabled = extension.html.enabled
                     destination project.file("${project.buildDir}/reports/jacoco")
                 }
             }
