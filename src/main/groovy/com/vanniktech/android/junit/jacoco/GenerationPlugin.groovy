@@ -40,7 +40,7 @@ class GenerationPlugin implements Plugin<Project> {
         if (!shouldIgnore(subProject, extension)) {
             if (isAndroidProject(subProject)) {
                 return addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
-            } else if (isJavaProject(subProject)) {
+            } else if (isJavaProject(subProject) || isKotlinMultiplatform(subProject)) {
                 return addJacocoJava(subProject, extension, mergeTask, mergedReportTask)
             }
         }
@@ -83,7 +83,11 @@ class GenerationPlugin implements Plugin<Project> {
 
             getAdditionalSourceDirs().from(subProject.files(coverageSourceDirs))
             getSourceDirectories().from(subProject.files(coverageSourceDirs))
-            getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/test.exec")))
+            if(isKotlinMultiplatform(subProject)){
+                getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/jvmTest.exec")))
+            }else{
+                getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/test.exec")))
+            }
 
             if (mergeTask != null) {
                 mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
