@@ -83,9 +83,9 @@ class GenerationPlugin implements Plugin<Project> {
 
             getAdditionalSourceDirs().from(subProject.files(coverageSourceDirs))
             getSourceDirectories().from(subProject.files(coverageSourceDirs))
-            if(isKotlinMultiplatform(subProject)){
+            if (isKotlinMultiplatform(subProject)) {
                 getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/jvmTest.exec")))
-            }else{
+            } else {
                 getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/test.exec")))
             }
 
