@@ -15,7 +15,7 @@ class JunitJacocoExtension {
      * subprojects that should be ignored
      * @since 0.3.0
      */
-    String[] ignoreProjects = []
+    List<String> ignoreProjects = []
 
     /**
      * Patterns of files that should be ignored
