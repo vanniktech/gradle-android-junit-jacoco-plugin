@@ -35,7 +35,7 @@ Version 0.13.0 *(2018-10-11)*
 - Update Gradle Maven Publish Plugin to 0.6.0 [\#132](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/132) ([vanniktech](https://github.com/vanniktech))
 - Integrate instrumentation tests [\#131](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/131) ([vRallev](https://github.com/vRallev))
 - Don't apply the plugin for Android test projects [\#130](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/130) ([vRallev](https://github.com/vRallev))
-- Use Jacoco 0.8.2 by default [\#129](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/129) ([vRallev](https://github.com/vRallev))
+- Use Jacoco 0.8.3 by default [\#129](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/129) ([vRallev](https://github.com/vRallev))
 - Reapply the Jacoco version after the project has been evaluated [\#128](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/128) ([vRallev](https://github.com/vRallev))
 - Update Plugin Publish Plugin to 0.10.0 [\#126](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/126) ([vanniktech](https://github.com/vanniktech))
 - Support all the Android / Java plugins. [\#124](https://github.com/vanniktech/gradle-android-junit-jacoco-plugin/pull/124) ([vanniktech](https://github.com/vanniktech))
