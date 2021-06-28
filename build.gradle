@@ -7,9 +7,9 @@ buildscript {
 
   dependencies {
     classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
-    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.8.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
+    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
+    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.16.0'
   }
 }
 
@@ -40,15 +40,15 @@ dependencies {
   api gradleApi()
   api localGroovy()
 
-  compileOnly 'com.android.tools.build:gradle:3.4.0'
+  compileOnly 'com.android.tools.build:gradle:4.2.1'
 
-  testCompile 'com.android.tools.build:gradle:3.4.0'
-  testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.31'
-  testCompile 'junit:junit:4.13-beta-2'
+  testCompile 'com.android.tools.build:gradle:4.2.1'
+  testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20'
+  testCompile 'junit:junit:4.13'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_7
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 pluginBundle {
   website = POM_URL
@@ -64,6 +64,6 @@ pluginBundle {
 }
 
 wrapper {
-  gradleVersion = '5.4'
+  gradleVersion = '6.8.3'
   distributionType = Wrapper.DistributionType.ALL
 }
