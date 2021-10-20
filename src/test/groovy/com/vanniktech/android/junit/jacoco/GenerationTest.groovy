@@ -254,7 +254,7 @@ class GenerationTest {
     private void assertJacocoAndroidWithFlavors(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.8.3'
+        assert project.jacoco.toolVersion == '0.8.7'
 
         assertTask(project, 'red', 'debug')
         assertTask(project, 'red', 'release')
@@ -325,7 +325,7 @@ class GenerationTest {
     private void assertJacocoAndroidWithoutFlavors(final Project project, final boolean hasCoverage) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.8.3'
+        assert project.jacoco.toolVersion == '0.8.7'
 
         final def debugTask = project.tasks.findByName('jacocoTestReportDebug')
 
@@ -536,7 +536,7 @@ class GenerationTest {
     private void assertJacocoJava(final Project project) {
         assert project.plugins.hasPlugin(JacocoPlugin)
 
-        assert project.jacoco.toolVersion == '0.8.3'
+        assert project.jacoco.toolVersion == '0.8.7'
 
         final def task = project.tasks.findByName('jacocoTestReport')
 

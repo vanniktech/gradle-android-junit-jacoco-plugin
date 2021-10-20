@@ -88,7 +88,7 @@ Those are all available configurations - shown with default values and their typ
 
 ```groovy
 junitJacoco {
-  jacocoVersion = '0.8.3' // type String
+  jacocoVersion = '0.8.7' // type String
   ignoreProjects = [] // type String array
   excludes // type String List
   includeNoLocationClasses = false // type boolean
