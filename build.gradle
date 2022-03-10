@@ -1,3 +1,6 @@
+import org.gradle.api.internal.classpath.ModuleRegistry
+import org.gradle.api.internal.project.ProjectInternal
+
 buildscript {
   repositories {
     mavenCentral()
@@ -46,6 +49,14 @@ dependencies {
   testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20'
   testCompile 'junit:junit:4.13'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
+
+  // https://github.com/gradle/gradle/issues/16774#issuecomment-893493869
+  def toolingApiBuildersJar = (project as ProjectInternal).services.get(ModuleRegistry.class)
+    .getModule("gradle-tooling-api-builders")
+    .classpath
+    .asFiles
+    .first()
+  testRuntimeOnly(files(toolingApiBuildersJar))
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
