@@ -10,7 +10,6 @@ buildscript {
 
   dependencies {
     classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.16.0'
   }
@@ -19,7 +18,6 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
 apply plugin: 'com.gradle.plugin-publish'
@@ -43,12 +41,12 @@ dependencies {
   api gradleApi()
   api localGroovy()
 
-  compileOnly 'com.android.tools.build:gradle:4.2.1'
+  compileOnly 'com.android.tools.build:gradle:7.1.2'
 
-  testCompile 'com.android.tools.build:gradle:4.2.1'
-  testCompile 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20'
-  testCompile 'junit:junit:4.13'
-  testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', { exclude module: "groovy-all" } // Use localGroovy()
+  testImplementation 'com.android.tools.build:gradle:7.1.2'
+  testImplementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
+  testImplementation 'junit:junit:4.13'
+  testImplementation 'org.spockframework:spock-core:2.2-M1-groovy-3.0', { exclude module: "groovy-all" } // Use localGroovy()
 
   // https://github.com/gradle/gradle/issues/16774#issuecomment-893493869
   def toolingApiBuildersJar = (project as ProjectInternal).services.get(ModuleRegistry.class)
@@ -74,7 +72,13 @@ pluginBundle {
   }
 }
 
+tasks.withType(Test) {
+  testLogging {
+    testLogging.exceptionFormat = 'full'
+  }
+}
+
 wrapper {
-  gradleVersion = '6.8.3'
+  gradleVersion = '7.4'
   distributionType = Wrapper.DistributionType.ALL
 }
