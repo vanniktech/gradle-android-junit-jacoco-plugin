@@ -45,14 +45,6 @@ class GenerationTest {
         assertJacocoAndroidWithoutFlavors(androidLibraryProject, true)
     }
 
-    @Test void addJacocoAndroidFeature() {
-        def androidLibraryProject = ProjectHelper.prepare(ANDROID_FEATURE).get()
-
-        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
-
-        assertJacocoAndroidWithoutFlavors(androidLibraryProject, true)
-    }
-
     @Test void addJacocoAndroidDynamicFeature() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_DYNAMIC_FEATURE).get()
 
@@ -72,15 +64,6 @@ class GenerationTest {
 
     @Test void addJacocoAndroidLibraryWithoutInstrumentationCoverage() {
         def androidLibraryProject = ProjectHelper.prepare(ANDROID_LIBRARY).get()
-        androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
-
-        GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
-
-        assertJacocoAndroidWithoutFlavors(androidLibraryProject, false)
-    }
-
-    @Test void addJacocoAndroidFeatureWithoutInstrumentationCoverage() {
-        def androidLibraryProject = ProjectHelper.prepare(ANDROID_FEATURE).get()
         androidLibraryProject.android.buildTypes.each { it.testCoverageEnabled = false }
 
         GenerationPlugin.addJacoco(androidLibraryProject, new JunitJacocoExtension())
