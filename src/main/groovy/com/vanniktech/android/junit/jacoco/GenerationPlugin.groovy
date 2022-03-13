@@ -119,7 +119,7 @@ class GenerationPlugin implements Plugin<Project> {
         Collection<BaseVariant> variants = []
         if (isAndroidApplication(subProject) || isAndroidDynamicFeature(subProject)) {
             variants = subProject.android.applicationVariants
-        } else if (isAndroidLibrary(subProject) || isAndroidFeature(subProject)) {
+        } else if (isAndroidLibrary(subProject)) {
             // FeatureExtension extends LibraryExtension
             variants = subProject.android.libraryVariants
         } else {
@@ -333,10 +333,9 @@ class GenerationPlugin implements Plugin<Project> {
         final boolean isAndroidLibrary = project.plugins.hasPlugin('com.android.library')
         final boolean isAndroidApp = project.plugins.hasPlugin('com.android.application')
         final boolean isAndroidTest = project.plugins.hasPlugin('com.android.test')
-        final boolean isAndroidFeature = project.plugins.hasPlugin('com.android.feature')
         final boolean isAndroidDynamicFeature = project.plugins.hasPlugin('com.android.dynamic-feature')
         final boolean isAndroidInstantApp = project.plugins.hasPlugin('com.android.instantapp')
-        return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidFeature || isAndroidDynamicFeature || isAndroidInstantApp
+        return isAndroidLibrary || isAndroidApp || isAndroidTest || isAndroidDynamicFeature || isAndroidInstantApp
     }
 
     private static boolean isJavaProject(final Project project) {
@@ -360,10 +359,6 @@ class GenerationPlugin implements Plugin<Project> {
 
     protected static boolean isAndroidLibrary(final Project project) {
         return project.plugins.hasPlugin('com.android.library')
-    }
-
-    protected static boolean isAndroidFeature(final Project project) {
-        return project.plugins.hasPlugin('com.android.feature')
     }
 
     protected static boolean isAndroidDynamicFeature(final Project project) {
