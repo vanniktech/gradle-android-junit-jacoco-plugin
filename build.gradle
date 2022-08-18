@@ -72,7 +72,7 @@ pluginBundle {
   }
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
   testLogging {
     testLogging.exceptionFormat = 'full'
   }
