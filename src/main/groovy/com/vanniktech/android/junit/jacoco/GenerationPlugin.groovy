@@ -110,7 +110,7 @@ class GenerationPlugin implements Plugin<Project> {
             toolVersion extension.jacocoVersion
         }
 
-        subProject.tasks.withType(Test) {
+        subProject.tasks.withType(Test).configureEach {
             it.jacoco.includeNoLocationClasses = extension.includeNoLocationClasses
         }
 
