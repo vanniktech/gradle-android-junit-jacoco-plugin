@@ -61,9 +61,9 @@ class GenerationPlugin implements Plugin<Project> {
             description = 'Generate Jacoco coverage reports.'
 
             reports {
-                xml.enabled = extension.xml.enabled
-                csv.enabled = extension.csv.enabled
-                html.enabled = extension.html.enabled
+                xml.required = extension.xml.enabled
+                csv.required = extension.csv.enabled
+                html.required = extension.html.enabled
             }
 
             getClassDirectories().from(subProject.fileTree(
@@ -178,16 +178,16 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml {
-                    enabled = extension.xml.enabled
-                    destination subProject.file("$destinationDir/${sourceName}/jacoco.xml")
+                    required = extension.xml.enabled
+                    outputLocation subProject.file("$destinationDir/${sourceName}/jacoco.xml")
                 }
                 csv {
-                    enabled = extension.csv.enabled
-                    destination subProject.file("$destinationDir/${sourceName}/jacoco.csv")
+                    required = extension.csv.enabled
+                    outputLocation subProject.file("$destinationDir/${sourceName}/jacoco.csv")
                 }
                 html {
-                    enabled = extension.html.enabled
-                    destination subProject.file("$destinationDir/${sourceName}")
+                    required = extension.html.enabled
+                    outputLocation subProject.file("$destinationDir/${sourceName}")
                 }
             }
 
@@ -280,16 +280,16 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml {
-                    enabled = extension.xml.enabled
-                    destination project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
+                    required = extension.xml.enabled
+                    outputLocation project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
                 }
                 csv {
-                    enabled = extension.csv.enabled
-                    destination project.file("${project.buildDir}/reports/jacoco/jacoco.csv")
+                    required = extension.csv.enabled
+                    outputLocation project.file("${project.buildDir}/reports/jacoco/jacoco.csv")
                 }
                 html {
-                    enabled = extension.html.enabled
-                    destination project.file("${project.buildDir}/reports/jacoco")
+                    required = extension.html.enabled
+                    outputLocation project.file("${project.buildDir}/reports/jacoco")
                 }
             }
 
