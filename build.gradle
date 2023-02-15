@@ -11,7 +11,7 @@ buildscript {
   dependencies {
     classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
     classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
-    classpath 'com.vanniktech:gradle-maven-publish-plugin:0.16.0'
+    classpath "com.vanniktech:gradle-maven-publish-plugin:0.14.2"
   }
 }
 
@@ -37,12 +37,12 @@ String propOrEnv(String... names) {
 }
 
 mavenPublish {
+    releaseSigningEnabled = false
     targets {
         uploadArchives {
           releaseRepositoryUrl = propOrEnv("ARTIFACTORY_URL", "instacart_artifactory_url")
-          repositoryUsername = propOrEnv("ARTIFACTORY_USERNAME", "instacart_artifactory_username") 
+          repositoryUsername = propOrEnv("ARTIFACTORY_USERNAME", "instacart_artifactory_username")
           repositoryPassword = propOrEnv("ARTIFACTORY_PASSWORD", "instacart_artifactory_password")
-          signing = false
         }
     }
 }
