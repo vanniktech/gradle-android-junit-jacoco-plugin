@@ -40,7 +40,8 @@ final class ProjectHelper {
             case ProjectType.ANDROID_APPLICATION:
             case ProjectType.ANDROID_KOTLIN_APPLICATION:
             case ProjectType.ANDROID_DYNAMIC_FEATURE:
-                project = builder.withName('android app').build()
+                def name = "android app ${projectType.name()}"
+                project = builder.withName(name).build()
                 def androidMock = new MockFor(AppExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
@@ -64,7 +65,8 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_KOTLIN_MULTIPLATFORM:
-                project = builder.withName('android library').build()
+                def name = "android library ${projectType.name()}"
+                project = builder.withName(name).build()
                 def androidMock = new MockFor(LibraryExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
