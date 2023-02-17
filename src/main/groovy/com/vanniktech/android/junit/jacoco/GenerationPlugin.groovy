@@ -237,18 +237,10 @@ class GenerationPlugin implements Plugin<Project> {
 
             if (combined) {
                 // add instrumentation coverage execution data
-                doFirst {
-                    def instrumentationTestCoverageDirs = subProject.fileTree("${subProject.buildDir}/outputs/code_coverage")
-                            .matching { include "**/*.ec" }
-                    def allCodeCoverageFiles = instrumentationTestCoverageDirs.files + executionData.files
-                    subProject.logger.with {
-                        info("using following code coverage files for ${taskName}")
-                        allCodeCoverageFiles.each { coverageFile ->
-                            info(coverageFile.path)
-                        }
-                    }
-                    executionData.setFrom(allCodeCoverageFiles)
+                def codeCoverageDirs = subProject.fileTree("${subProject.buildDir}/outputs/code_coverage").matching {
+                    include "**/*.ec"
                 }
+                executionData.setFrom(codeCoverageDirs.files + executionData.files)
             }
 
             // add if true in extension or for the unit test Jacoco task
