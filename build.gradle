@@ -22,31 +22,6 @@ apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
 apply plugin: 'com.gradle.plugin-publish'
 
-
-// Find the first non-null Gradle property or environment variable
-// corresponding to the given names, giving preference to Gradle properties.
-String propOrEnv(String... names) {
-    // hasProperty, getProperty don't work when called directly in a closure;
-    // they need a receiver that knows about properties, like rootProject.
-    def p = rootProject
-    def result = names.findResult { p.hasProperty(it) ? p.getProperty(it) : System.getenv(it) }
-    if (result == null) {
-        logger.error("Missing gradle property or environment variable: $names")
-    }
-    return result
-}
-
-mavenPublish {
-    releaseSigningEnabled = false
-    targets {
-        uploadArchives {
-          releaseRepositoryUrl = propOrEnv("ARTIFACTORY_URL", "instacart_artifactory_url")
-          repositoryUsername = propOrEnv("ARTIFACTORY_USERNAME", "instacart_artifactory_username")
-          repositoryPassword = propOrEnv("ARTIFACTORY_PASSWORD", "instacart_artifactory_password")
-        }
-    }
-}
-
 gradlePlugin {
   plugins {
     androidJUnitJacocoPlugin {
