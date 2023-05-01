@@ -30,9 +30,9 @@ dependencies {
   api gradleApi()
   api localGroovy()
 
-  compileOnly 'com.android.tools.build:gradle:7.1.2'
+  compileOnly 'com.android.tools.build:gradle:8.0.0'
 
-  testImplementation 'com.android.tools.build:gradle:7.1.2'
+  testImplementation 'com.android.tools.build:gradle:8.0.0'
   testImplementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
   testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-3.0', { exclude module: "groovy-all" } // Use localGroovy()
@@ -49,8 +49,8 @@ dependencies {
 sourceCompatibility = JavaVersion.VERSION_17
 
 gradlePlugin {
-  //website = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
-  //vcsUrl = 'https://github.com/vanniktech/gradle-android-junit-jacoco-plugin'
+  website = POM_URL
+  vcsUrl = POM_SCM_URL
 
   plugins {
     androidJUnitJacocoPlugin {
@@ -58,7 +58,7 @@ gradlePlugin {
       implementationClass = POM_IMPLEMENTATION_CLASS
       displayName = POM_NAME
       description = POM_DESCRIPTION
-      //tags.set(['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage'])
+      tags.set(['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage'])
     }
   }
 }
@@ -70,6 +70,6 @@ tasks.withType(Test).configureEach {
 }
 
 wrapper {
-  gradleVersion = '7.4'
+  gradleVersion = '8.0'
   distributionType = Wrapper.DistributionType.ALL
 }
