@@ -4,7 +4,6 @@ import com.android.build.gradle.api.BaseVariant
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
-import org.gradle.testing.jacoco.tasks.JacocoMerge
 import org.gradle.testing.jacoco.tasks.JacocoReport
 
 class GenerationPlugin implements Plugin<Project> {
@@ -15,12 +14,12 @@ class GenerationPlugin implements Plugin<Project> {
         final def hasSubProjects = rootProject.subprojects.size() > 0
 
         if (hasSubProjects) {
-            final def (JacocoMerge mergeTask, JacocoReport mergedReportTask) = addJacocoMergeToRootProject(rootProject, rootProject.junitJacoco)
+            final def JacocoReport mergedReportTask = addJacocoMergeToRootProject(rootProject, rootProject.junitJacoco)
 
             rootProject.subprojects { subProject ->
                 afterEvaluate {
                     final def extension = rootProject.junitJacoco
-                    addJacoco(subProject, extension, mergeTask, mergedReportTask)
+                    addJacoco(subProject, extension, mergedReportTask)
                 }
             }
         } else {
@@ -33,22 +32,22 @@ class GenerationPlugin implements Plugin<Project> {
     }
 
     protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension) {
-        return addJacoco(subProject, extension, null, null)
+        return addJacoco(subProject, extension, null)
     }
 
-    protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
+    protected static boolean addJacoco(final Project subProject, final JunitJacocoExtension extension, JacocoReport mergedReportTask) {
         if (!shouldIgnore(subProject, extension)) {
             if (isAndroidProject(subProject)) {
-                return addJacocoAndroid(subProject, extension, mergeTask, mergedReportTask)
+                return addJacocoAndroid(subProject, extension, mergedReportTask)
             } else if (isJavaProject(subProject) || isKotlinMultiplatform(subProject)) {
-                return addJacocoJava(subProject, extension, mergeTask, mergedReportTask)
+                return addJacocoJava(subProject, extension, mergedReportTask)
             }
         }
 
         return false
     }
 
-    private static boolean addJacocoJava(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
+    private static boolean addJacocoJava(final Project subProject, final JunitJacocoExtension extension, JacocoReport mergedReportTask) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -62,9 +61,9 @@ class GenerationPlugin implements Plugin<Project> {
             description = 'Generate Jacoco coverage reports.'
 
             reports {
-                xml.enabled = extension.xml.enabled
-                csv.enabled = extension.csv.enabled
-                html.enabled = extension.html.enabled
+                xml.required = extension.xml.enabled
+                csv.required = extension.csv.enabled
+                html.required = extension.html.enabled
             }
 
             getClassDirectories().from(subProject.fileTree(
@@ -89,10 +88,8 @@ class GenerationPlugin implements Plugin<Project> {
                 getExecutionData().from(subProject.files(subProject.files("${subProject.buildDir}/jacoco/test.exec")))
             }
 
-            if (mergeTask != null) {
-                mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
-            }
             if (mergedReportTask != null) {
+                mergedReportTask.executionData.setFrom(executionData.files + mergedReportTask.executionData.files)
                 mergedReportTask.classDirectories.setFrom(classDirectories.getFrom() + mergedReportTask.classDirectories.getFrom())
                 mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.getFrom() + mergedReportTask.additionalSourceDirs.getFrom())
                 mergedReportTask.sourceDirectories.setFrom(sourceDirectories.getFrom() + mergedReportTask.sourceDirectories.getFrom())
@@ -103,7 +100,7 @@ class GenerationPlugin implements Plugin<Project> {
         return true
     }
 
-    private static boolean addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension, JacocoMerge mergeTask, JacocoReport mergedReportTask) {
+    private static boolean addJacocoAndroid(final Project subProject, final JunitJacocoExtension extension, JacocoReport mergedReportTask) {
         subProject.plugins.apply('jacoco')
 
         subProject.jacoco {
@@ -146,11 +143,11 @@ class GenerationPlugin implements Plugin<Project> {
             final def jvmTestTaskName = "test${sourceName.capitalize()}UnitTest"
             final def instrumentationTestTaskName = "create${sourceName.capitalize()}CoverageReport"
 
-            addJacocoTask(false, subProject, extension, mergeTask, mergedReportTask, jvmTaskName,
+            addJacocoTask(false, subProject, extension, mergedReportTask, jvmTaskName,
                 jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
 
             if (buildType.testCoverageEnabled) {
-                addJacocoTask(true, subProject, extension, mergeTask, mergedReportTask, combinedTaskName,
+                addJacocoTask(true, subProject, extension, mergedReportTask, combinedTaskName,
                     jvmTestTaskName, instrumentationTestTaskName, sourceName, sourcePath, productFlavorName, buildTypeName)
             }
         }
@@ -159,7 +156,7 @@ class GenerationPlugin implements Plugin<Project> {
     }
 
     private static void addJacocoTask(final boolean combined, final Project subProject, final JunitJacocoExtension extension,
-                                      JacocoMerge mergeTask, JacocoReport mergedReportTask, final String taskName,
+                                      JacocoReport mergedReportTask, final String taskName,
                                       final String jvmTestTaskName, final String instrumentationTestTaskName, final String sourceName,
                                       final String sourcePath, final String productFlavorName, final String buildTypeName) {
         def destinationDir
@@ -181,15 +178,15 @@ class GenerationPlugin implements Plugin<Project> {
 
             reports {
                 xml {
-                    enabled = extension.xml.enabled
+                    required = extension.xml.enabled
                     destination subProject.file("$destinationDir/${sourceName}/jacoco.xml")
                 }
                 csv {
-                    enabled = extension.csv.enabled
+                    required = extension.csv.enabled
                     destination subProject.file("$destinationDir/${sourceName}/jacoco.csv")
                 }
                 html {
-                    enabled = extension.html.enabled
+                    required = extension.html.enabled
                     destination subProject.file("$destinationDir/${sourceName}")
                 }
             }
@@ -240,27 +237,17 @@ class GenerationPlugin implements Plugin<Project> {
 
             if (combined) {
                 // add instrumentation coverage execution data
-                doFirst {
-                    def instrumentationTestCoverageDirs = subProject.fileTree("${subProject.buildDir}/outputs/code_coverage")
-                            .matching { include "**/*.ec" }
-                    def allCodeCoverageFiles = instrumentationTestCoverageDirs.files + executionData.files
-                    subProject.logger.with {
-                        info("using following code coverage files for ${taskName}")
-                        allCodeCoverageFiles.each { coverageFile ->
-                            info(coverageFile.path)
-                        }
-                    }
-                    executionData.setFrom(allCodeCoverageFiles)
+                def codeCoverageDirs = subProject.fileTree("${subProject.buildDir}/outputs/code_coverage").matching {
+                    include "**/*.ec"
                 }
+                executionData.setFrom(codeCoverageDirs.files + executionData.files)
             }
 
             // add if true in extension or for the unit test Jacoco task
             def addToMergeTask = !combined || extension.includeInstrumentationCoverageInMergedReport
 
-            if (mergeTask != null && addToMergeTask) {
-                mergeTask.executionData.setFrom(executionData.files + mergeTask.executionData.files)
-            }
             if (mergedReportTask != null && addToMergeTask) {
+              mergedReportTask.executionData.setFrom(executionData.files + mergedReportTask.executionData.files)
               mergedReportTask.classDirectories.setFrom(classDirectories.getFrom() + mergedReportTask.classDirectories.getFrom())
               mergedReportTask.additionalSourceDirs.setFrom(additionalSourceDirs.getFrom() + mergedReportTask.additionalSourceDirs.getFrom())
               mergedReportTask.sourceDirectories.setFrom(sourceDirectories.getFrom() + mergedReportTask.sourceDirectories.getFrom())
@@ -280,38 +267,20 @@ class GenerationPlugin implements Plugin<Project> {
             }
         }
 
-        def mergeTask = project.task("mergeJacocoReports", type: JacocoMerge) {
+        def mergedReportTask = project.task("jacocoTestReportMerged", type: JacocoReport) {
             executionData project.files().asFileTree // Start with an empty collection.
-            destinationFile project.file("${project.buildDir}/jacoco/mergedReport.exec")
-
-            doFirst {
-                // Filter non existing files.
-                def realExecutionData = project.files()
-
-                executionData.each {
-                    if (it.exists()) {
-                        realExecutionData.setFrom(project.files(it) + realExecutionData.files)
-                    }
-                }
-
-                executionData = realExecutionData
-            }
-        }
-
-        def mergedReportTask = project.task("jacocoTestReportMerged", type: JacocoReport, dependsOn: mergeTask) {
-            executionData mergeTask.destinationFile
 
             reports {
                 xml {
-                    enabled = extension.xml.enabled
+                    required = extension.xml.enabled
                     destination project.file("${project.buildDir}/reports/jacoco/jacoco.xml")
                 }
                 csv {
-                    enabled = extension.csv.enabled
+                    required = extension.csv.enabled
                     destination project.file("${project.buildDir}/reports/jacoco/jacoco.csv")
                 }
                 html {
-                    enabled = extension.html.enabled
+                    required = extension.html.enabled
                     destination project.file("${project.buildDir}/reports/jacoco")
                 }
             }
@@ -322,7 +291,7 @@ class GenerationPlugin implements Plugin<Project> {
             getSourceDirectories().from(project.files())
         }
 
-        return [mergeTask, mergedReportTask]
+        return mergedReportTask
     }
 
     static List<String> getExcludes(final JunitJacocoExtension extension) {
