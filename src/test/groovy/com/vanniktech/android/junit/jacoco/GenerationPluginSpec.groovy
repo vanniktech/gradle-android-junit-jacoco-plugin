@@ -6,9 +6,9 @@ import spock.lang.Unroll
 
 final class GenerationPluginSpec extends Specification {
   final static ANDROID_PLUGINS = ["com.android.application", "com.android.library", "com.android.test", "com.android.dynamic-feature"]
-  final static COMPILE_SDK_VERSION = 28
-  final static BUILD_TOOLS_VERSION = "28.0.3"
-  final static APPLICATION_ID = "com.example"
+  final static COMPILE_SDK_VERSION = 33
+  final static BUILD_TOOLS_VERSION = "33.0.0"
+  final static APPLICATION_ID = "com.vanniktech"
 
   def project
 
