@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import java.nio.file.Paths
 
@@ -213,15 +213,13 @@ class GenerationTest {
     @Test void mergedJacocoReportDoesNotHaveDependencies() {
         def rootProject = ProjectHelper.prepare(ROOT).get()
 
-        def mergeJacocoReports = rootProject.tasks.findByName("mergeJacocoReports")
         def jacocoTestReportMerged = rootProject.tasks.findByName("jacocoTestReportMerged")
 
-        assert mergeJacocoReports != null
         assert jacocoTestReportMerged != null
 
         values().findAll { it != ROOT && it != ANDROID_TEST }.each {
             def project = ProjectHelper.prepare(it, rootProject).get()
-            GenerationPlugin.addJacoco(project, new JunitJacocoExtension(), mergeJacocoReports, jacocoTestReportMerged)
+            GenerationPlugin.addJacoco(project, new JunitJacocoExtension(), jacocoTestReportMerged)
             if (it == JAVA) {
                 assertJacocoJava(project)
             } else {
@@ -229,9 +227,7 @@ class GenerationTest {
             }
         }
 
-        assert mergeJacocoReports.dependsOn.isEmpty()
-        assert jacocoTestReportMerged.dependsOn.size() == 1
-        assert jacocoTestReportMerged.dependsOn.contains(mergeJacocoReports)
+        assert jacocoTestReportMerged.dependsOn.size() == 0
     }
 
     private void assertJacocoAndroidWithFlavors(final Project project) {
@@ -270,12 +266,12 @@ class GenerationTest {
               assert sourceDirectories.contains(project.file("src/${flavor}/$it"))
             }
 
-            assert reports.xml.enabled
-            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml")
-            assert reports.csv.enabled
-            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.csv")
-            assert reports.html.enabled
-            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}")
+            assert reports.xml.required
+            assert reports.xml.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.xml")
+            assert reports.csv.required
+            assert reports.csv.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}/jacoco.csv")
+            assert reports.html.required
+            assert reports.html.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/${flavor}${buildType.capitalize()}")
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
 
@@ -332,12 +328,12 @@ class GenerationTest {
              assert sourceDirectories.contains(project.file("src/debug/$it"))
             }
 
-            assert reports.xml.enabled
-            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.xml")
-            assert reports.csv.enabled
-            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.csv")
-            assert reports.html.enabled
-            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug")
+            assert reports.xml.required
+            assert reports.xml.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.xml")
+            assert reports.csv.required
+            assert reports.csv.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug/jacoco.csv")
+            assert reports.html.required
+            assert reports.html.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, "/reports/jacoco/debug")
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
             if (hasKotlin(project)) {
@@ -381,12 +377,12 @@ class GenerationTest {
                     assert sourceDirectories.contains(project.file("src/debug/$it"))
                 }
 
-                assert reports.xml.enabled
-                assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.xml')
-                assert reports.csv.enabled
-                assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.csv')
-                assert reports.html.enabled
-                assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug')
+                assert reports.xml.required
+                assert reports.xml.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.xml')
+                assert reports.csv.required
+                assert reports.csv.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug/jacoco.csv')
+                assert reports.html.required
+                assert reports.html.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/debug')
 
                 assert classDirectories.getFrom().first().dir == project.file("build/")
                 if (hasKotlin(project)) {
@@ -434,12 +430,12 @@ class GenerationTest {
               assert sourceDirectories.contains(project.file("src/release/$it"))
             }
 
-            assert reports.xml.enabled
-            assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.xml')
-            assert reports.csv.enabled
-            assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.csv')
-            assert reports.html.enabled
-            assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release')
+            assert reports.xml.required
+            assert reports.xml.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.xml')
+            assert reports.csv.required
+            assert reports.csv.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release/jacoco.csv')
+            assert reports.html.required
+            assert reports.html.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacoco/release')
 
             assert classDirectories.getFrom().first().dir == project.file("build/")
             if (hasKotlin(project)) {
@@ -484,12 +480,12 @@ class GenerationTest {
                     assert sourceDirectories.contains(project.file("src/release/$it"))
                 }
 
-                assert reports.xml.enabled
-                assert reports.xml.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.xml')
-                assert reports.csv.enabled
-                assert reports.csv.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.csv')
-                assert reports.html.enabled
-                assert reports.html.destination.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release')
+                assert reports.xml.required
+                assert reports.xml.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.xml')
+                assert reports.csv.required
+                assert reports.csv.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release/jacoco.csv')
+                assert reports.html.required
+                assert reports.html.outputLocation.get().asFile.toPath() == Paths.get(project.buildDir.absolutePath, '/reports/jacocoCombined/release')
 
                 assert classDirectories.getFrom().first().dir == project.file("build/")
                 if (hasKotlin(project)) {
@@ -545,9 +541,9 @@ class GenerationTest {
             assert classDirectories.getFrom()[1].dir == project.file("build/")
             assert contentEquals(classDirectories.getFrom()[1].includes, ['**/classes/**/main/**'])
 
-            assert reports.xml.enabled
-            assert reports.csv.enabled
-            assert reports.html.enabled
+            assert reports.xml.required
+            assert reports.csv.required
+            assert reports.html.required
 
             assert taskDependsOn(task, 'test')
         }

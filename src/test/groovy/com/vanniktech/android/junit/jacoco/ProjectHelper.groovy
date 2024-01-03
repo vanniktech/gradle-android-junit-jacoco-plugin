@@ -1,9 +1,9 @@
 package com.vanniktech.android.junit.jacoco
 
+import com.android.build.api.variant.ApplicationVariant
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.TestExtension
-import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.coverage.JacocoOptions
 import com.android.builder.model.BuildType
 import groovy.mock.interceptor.MockFor
@@ -40,7 +40,8 @@ final class ProjectHelper {
             case ProjectType.ANDROID_APPLICATION:
             case ProjectType.ANDROID_KOTLIN_APPLICATION:
             case ProjectType.ANDROID_DYNAMIC_FEATURE:
-                project = builder.withName('android app').build()
+                def name = "android app ${projectType.name()}"
+                project = builder.withName(name).build()
                 def androidMock = new MockFor(AppExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
@@ -50,7 +51,7 @@ final class ProjectHelper {
                 }
                 androidMock.metaClass.getBuildTypes = { buildTypesMock }
                 def appVariants = buildTypesMock.collect { bt ->
-                    def variant = new MockFor(BaseVariant)
+                    def variant = new MockFor(ApplicationVariant)
                     variant.metaClass.getFlavorName = { null }
                     variant.metaClass.getBuildType = { bt }
                     variant
@@ -64,7 +65,8 @@ final class ProjectHelper {
                 break
             case ProjectType.ANDROID_LIBRARY:
             case ProjectType.ANDROID_KOTLIN_MULTIPLATFORM:
-                project = builder.withName('android library').build()
+                def name = "android library ${projectType.name()}"
+                project = builder.withName(name).build()
                 def androidMock = new MockFor(LibraryExtension)
                 def buildTypesMock = ["debug", "release"].collect { bt ->
                     def type = new MockFor(BuildType)
@@ -74,7 +76,7 @@ final class ProjectHelper {
                 }
                 androidMock.metaClass.getBuildTypes = { buildTypesMock }
                 def appVariants = buildTypesMock.collect { bt ->
-                    def variant = new MockFor(BaseVariant)
+                    def variant = new MockFor(ApplicationVariant)
                     variant.metaClass.getFlavorName = { null }
                     variant.metaClass.getBuildType = { bt }
                     variant
@@ -123,7 +125,7 @@ final class ProjectHelper {
 
         def variants = customFlavors.collect { flavorName, config ->
             project.android.buildTypes.collect { buildType ->
-                def variant = new MockFor(BaseVariant)
+                def variant = new MockFor(ApplicationVariant)
                 variant.metaClass.getBuildType = {
                     def type = new MockFor(BuildType)
                     type.metaClass.getName = { buildType.name }

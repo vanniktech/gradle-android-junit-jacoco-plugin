@@ -9,8 +9,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
-    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.16.0'
+    classpath "com.gradle.publish:plugin-publish-plugin:1.2.0"
     classpath 'com.vanniktech:gradle-maven-publish-plugin:0.16.0'
   }
 }
@@ -18,18 +17,8 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
 apply plugin: "com.vanniktech.maven.publish"
 apply plugin: 'com.gradle.plugin-publish'
-
-gradlePlugin {
-  plugins {
-    androidJUnitJacocoPlugin {
-      id = 'com.vanniktech.android.junit.jacoco'
-      implementationClass = 'com.vanniktech.android.junit.jacoco.GenerationPlugin'
-    }
-  }
-}
 
 repositories {
   mavenCentral()
@@ -41,12 +30,12 @@ dependencies {
   api gradleApi()
   api localGroovy()
 
-  compileOnly 'com.android.tools.build:gradle:7.1.2'
+  compileOnly 'com.android.tools.build:gradle:8.0.0'
 
-  testImplementation 'com.android.tools.build:gradle:7.1.2'
-  testImplementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10'
-  testImplementation 'junit:junit:4.13'
-  testImplementation 'org.spockframework:spock-core:2.2-M1-groovy-3.0', { exclude module: "groovy-all" } // Use localGroovy()
+  testImplementation 'com.android.tools.build:gradle:8.0.0'
+  testImplementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+  testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-3.0', { exclude module: "groovy-all" } // Use localGroovy()
 
   // https://github.com/gradle/gradle/issues/16774#issuecomment-893493869
   def toolingApiBuildersJar = (project as ProjectInternal).services.get(ModuleRegistry.class)
@@ -57,17 +46,19 @@ dependencies {
   testRuntimeOnly(files(toolingApiBuildersJar))
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_17
 
-pluginBundle {
+gradlePlugin {
   website = POM_URL
   vcsUrl = POM_SCM_URL
 
   plugins {
     androidJUnitJacocoPlugin {
+      id = POM_ARTIFACT_ID
+      implementationClass = POM_IMPLEMENTATION_CLASS
       displayName = POM_NAME
-      tags = ['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage']
       description = POM_DESCRIPTION
+      tags.set(['gradle', 'android', 'jacoco', 'app module', 'library module', 'junit', 'unit', 'testing', 'coverage'])
     }
   }
 }
@@ -79,6 +70,6 @@ tasks.withType(Test).configureEach {
 }
 
 wrapper {
-  gradleVersion = '7.4'
+  gradleVersion = '8.0'
   distributionType = Wrapper.DistributionType.ALL
 }

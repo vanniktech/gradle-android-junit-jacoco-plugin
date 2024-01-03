@@ -1,6 +1,6 @@
 package com.vanniktech.android.junit.jacoco
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class JunitJacocoExtensionTest {
   @Test void defaults() {
